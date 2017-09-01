@@ -25,15 +25,15 @@
         <SOURCES />
       </library>
     </orderEntry>
+    <orderEntry type="library" name="KotlinJavaRuntime" level="project" />
     <orderEntry type="module-library" exported="">
       <library>
         <CLASSES>
-          <root url="jar://$MODULE_DIR$/../BuildTools/Spigot/Spigot-API/target/spigot-api-1.12-R0.1-SNAPSHOT-shaded.jar!/" />
+          <root url="jar://$MODULE_DIR$/../BuildTools/Spigot/Spigot-API/target/spigot-api-1.12.1-R0.1-SNAPSHOT-shaded.jar!/" />
         </CLASSES>
         <JAVADOC />
         <SOURCES />
       </library>
     </orderEntry>
-    <orderEntry type="library" name="KotlinJavaRuntime" level="project" />
   </component>
 </module>

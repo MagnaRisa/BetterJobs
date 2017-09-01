@@ -55,7 +55,8 @@ public class CraftyProfessions extends JavaPlugin
         // Setup the Main Configuration class and likewise
         // any other needed config files, notably the WageTables.
         mConfigController = new ConfigController (this);
-        mConfigController.initilizeConfigFiles ();
+        mConfigController.createDefaultConfig ();
+        mConfigController.registerConfigFiles ();
 
         // MAKE SURE TO REMOVE THIS, TEMPORARY UNTIL WE GET THE PLAYER MANAGER/CONTROLLER
         // Setup the database and initialize the table unless it's already created.
@@ -95,7 +96,12 @@ public class CraftyProfessions extends JavaPlugin
     @Override
     public void onDisable ()
     {
+        /*Saving The configs will happen once the commenting yaml parser is implemented,
+        right now we will only be reading from the configs although we will eventually
+        be writing to the config files at a later date.*/
 
+        // this.saveConfig ();
+        // mConfigController.saveConfigs ();
     }
 
     /**

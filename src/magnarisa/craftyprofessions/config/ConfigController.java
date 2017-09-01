@@ -1,14 +1,14 @@
 package magnarisa.craftyprofessions.config;
 
-import javafx.util.Pair;
+import com.google.common.base.Charsets;
 import magnarisa.craftyprofessions.exceptions.ConfigNotFoundException;
-import org.bukkit.configuration.InvalidConfigurationException;
-import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import java.io.File;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.logging.Level;
@@ -26,10 +26,10 @@ public class ConfigController
     private JavaPlugin mPlugin = null;
 
     private File mConfigFile;
-    private FileConfiguration mConfig;
+    private YamlConfiguration mConfig;
 
     private Map<String, File> mWageFiles;
-    private Map<String, FileConfiguration> mWageConfigs;
+    private Map<String, YamlConfiguration> mWageConfigs;
 
     /**
      * The default constructor for the Configuration Controller.
@@ -45,20 +45,27 @@ public class ConfigController
     }
 
     /**
-     * This method will initialize all of the configuration files
+     * This method will register all of the default config files based on the names
+     * within the WAGE_NAMES final variable. To be honest it seems quite crude to do
+     * it this way, but it should be fine until I get further into the production of
+     * the plugin. This means that all of the wage table files that are necessary
+     * for running the plugin are created and registered here.
+     *
+     * TODO:  Create the ability to have custom files created and default files revoked [Future]
      */
-    public void initilizeConfigFiles ()
+    public void registerConfigFiles ()
     {
-        createDefaultConfig ();
-        registerConfigFiles ();
-        saveConfigs ();
+        for (String resource : WAGE_NAMES)
+        {
+            loadFile (resource);
+        }
     }
 
     /**
      *  This method will create the default configuration file of the plugin CraftyProfessions.
      *  The name of the file should always be config.yml
      */
-    private void createDefaultConfig ()
+    public void createDefaultConfig ()
     {
         try
         {
@@ -89,16 +96,16 @@ public class ConfigController
     /**
      * This method will allow the saving of a single config file based on the file name
      *
-     * @param fileName The file to find and save
+     * @param resource The file to find and save
      */
-    public void saveConfig (String fileName) throws IOException, ConfigNotFoundException
+    public void saveConfig (String resource) throws IOException, ConfigNotFoundException
     {
-        FileConfiguration configuration = mWageConfigs.get (fileName);
-        File file = mWageFiles.get (fileName);
+        YamlConfiguration configuration = getSpecialConfig (resource);
+        File file = mWageFiles.get (resource);
 
-        if (configuration == null || file == null)
+        if (file == null)
         {
-            throw new ConfigNotFoundException ("Could not find config labeled " + fileName);
+            throw new ConfigNotFoundException ("Could not find config labeled " + resource);
         }
 
         configuration.save (file);
@@ -111,42 +118,22 @@ public class ConfigController
     {
         try
         {
-            mPlugin.saveDefaultConfig ();
+            mPlugin.saveConfig ();
 
             for (String fileName : WAGE_NAMES)
             {
                 saveConfig (fileName);
             }
         }
-        catch (IOException | ConfigNotFoundException e)
+        catch (ConfigNotFoundException e)
         {
-            mPlugin.getLogger ().log (Level.SEVERE, "Exception caught while saving configs: ", e.getMessage ());
+            mPlugin.getLogger ().log (Level.WARNING, "Could not save config: ", e.getMessage ());
+        }
+        catch (IOException e)
+        {
+            mPlugin.getLogger ().log (Level.WARNING, e.getMessage ());
         }
 
-    }
-
-    /**
-     * This method will register all of the default config files based on the names
-     * within the WAGE_NAMES final variable. To be honest it seems quite crude to do
-     * it this way, but it should be fine until I get further into the production of
-     * the plugin. This means that all of the wage table files that are necessary
-     * for running the plugin are created and registered here.
-     *
-     * TODO:  Create the ability to have custom files created and default files revoked [Future]
-     */
-    private void registerConfigFiles ()
-    {
-        for (String fileName : WAGE_NAMES)
-        {
-            File pushFile;
-            FileConfiguration pushConfig;
-
-            pushFile = checkFile (fileName);
-            //pushConfig = checkConfiguration (pushFile);
-
-            mWageFiles.put (fileName, pushFile);
-            //mWageConfigs.put (fileName, pushConfig);
-        }
     }
 
     /**
@@ -155,45 +142,46 @@ public class ConfigController
      * of the plugin directory, otherwise it will return the file that was created
      * without putting it within the plugin dir.
      *
-     * @param fileName The name of the Configuration File to generate
-     *
-     * @return The created file based on the fileName parameter
+     * @param resource The name of the Configuration File to generate
      */
-    private File checkFile (String fileName)
+    private void loadFile (String resource)
     {
-        File configFile = new File (mPlugin.getDataFolder (), fileName);
+        File resourceFile = new File (mPlugin.getDataFolder (), resource);
 
-        if (!configFile.exists ())
+        if (!resourceFile.exists ())
         {
-            mPlugin.saveResource (configFile.getName (), false);
+            mPlugin.saveResource (resourceFile.getName (), false);
         }
 
-        return configFile;
+        mWageFiles.put (resource, resourceFile);
     }
 
     /**
-     * This method will create a FileConfiguration out of the File passed in as the
-     * parameter. We will then load the config based on the file passed in, once it's
-     * loaded we will return the loaded config file.
+     * This method essentially imitates the getConfig method within the JavaPlugin class
+     * but is used to create or grab special config files pertaining to the Wage Tables of
+     * the plugin
      *
-     * @param file The file to create the FileConfiguration for.
+     * @param resource The file or resource to grab the Configuration for.
      *
-     * @return The File Config created based off the file passed into the method.
+     * @return The configuration of the resource.
      */
-    private FileConfiguration checkConfiguration (File file)
+    public YamlConfiguration getSpecialConfig (String resource)
     {
-        FileConfiguration fileConfig = new YamlConfiguration ();
+        YamlConfiguration config = mWageConfigs.get (resource);
 
-        try
+        if (config == null)
         {
-            fileConfig.load (file);
-        }
-        catch (IOException | InvalidConfigurationException e)
-        {
-            mPlugin.getLogger().log (Level.SEVERE, e.getMessage ());
-            e.printStackTrace ();
+            InputStream configStream = mPlugin.getResource (resource);
+            config = YamlConfiguration.loadConfiguration (mWageFiles.get (resource));
+
+            if (configStream != null)
+            {
+                config.setDefaults (YamlConfiguration.loadConfiguration (new InputStreamReader (configStream, Charsets.UTF_8)));
+            }
+
+            mWageConfigs.put (resource, config);
         }
 
-        return fileConfig;
+        return config;
     }
 }
