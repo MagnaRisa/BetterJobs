@@ -65,6 +65,13 @@ public class CraftyProfessionsSpigot extends JavaPlugin implements ICraftyProfes
     @Override
     public void onEnable ()
     {
+        // If the economy is not found then disable the plugin and stop.
+        if (!setupEconomy ())
+        {
+            getServer ().getPluginManager ().disablePlugin (this);
+            return;
+        }
+
         mLogger = Logger.Instance ();
         mLogger.initLogger (getLogger ());
 
@@ -80,11 +87,6 @@ public class CraftyProfessionsSpigot extends JavaPlugin implements ICraftyProfes
         // We need to register the listeners for the Plugin
         this.registerListeners ();
 
-        if (!setupEconomy ())
-        {
-            getServer ().getPluginManager ().disablePlugin (this);
-            return;
-        }
         setupPermissions ();
         setupChat();
 
