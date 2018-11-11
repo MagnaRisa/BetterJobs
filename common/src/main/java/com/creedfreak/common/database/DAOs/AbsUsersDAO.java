@@ -1,5 +1,6 @@
 package com.creedfreak.common.database.DAOs;
 
+import com.creedfreak.common.database.queries.queryLib;
 import com.google.common.primitives.UnsignedLong;
 import com.creedfreak.common.container.IPlayer;
 import com.creedfreak.common.database.databaseConn.Database;
@@ -66,13 +67,15 @@ public class AbsUsersDAO implements IDaoBase<IPlayer>
         IPlayer retPlayer = null;
 
         // Query the database using the current players UUID
-
+        // TODO Test this with actual database information specifically MariaDB
+        // TODO This means I need to find my credentials for mariadb
+        // queryLib.select
         // From the Result Set build the player from separate Queries.
 
         // Construct the new Player here then return
         // retPlayer = buildPlayer ();
 
-        return null;
+        return retPlayer;
     }
 
     public IPlayer restoreUser (UUID userID)

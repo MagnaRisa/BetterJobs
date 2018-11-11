@@ -12,7 +12,7 @@ import java.sql.ResultSet;
  * any type of SQL Injection while keeping all of the queries in one
  * easy to read and modify class.
  */
-public class queryLib
+public final class queryLib
 {
     // onUserLogin
     // Grab the User and their internal DB ID.
@@ -72,5 +72,15 @@ public class queryLib
         return null;
     }
 
+    public static ResultSet queryUser (Database db, UnsignedLong userID)
+    {
+        ResultSet retunSet;
 
+        db.dbConnect ();
+
+
+        db.dbClose();
+
+        return null;
+    }
 }
