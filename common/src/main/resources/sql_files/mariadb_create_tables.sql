@@ -23,7 +23,7 @@ CREATE TABLE IF NOT EXISTS Users
 	UUID VARCHAR (50) NOT NULL,
 	Username VARCHAR (20) NOT NULL,
 	UserLevel INT UNSIGNED DEFAULT 0,
-	DateOfCreation DATE,
+	DateOfCreation TIMESTAMP,
 	
 	CONSTRAINT Users_UserID_PK PRIMARY KEY (UserID),
 	CONSTRAINT Users_UUID_U UNIQUE (UUID),
@@ -57,16 +57,6 @@ CREATE TABLE IF NOT EXISTS SubProfessions
 	
 	CONSTRAINT SubProfessions_SubProfessionID_PK PRIMARY KEY (SubProfessionID),
 	CONSTRAINT SubProfessions_WageTableRef_U UNIQUE (WageTableRef)
-) Engine=InnoDB CHARACTER SET utf8 COLLATE utf8_bin;
-
--- Create the Levels table
-CREATE TABLE IF NOT EXISTS Levels
-(
-	LevelID INT NOT NULL AUTO_INCREMENT,
-	`Level` INT DEFAULT 0,
-	ExpAmount DOUBLE UNSIGNED DEFAULT 0,
-	
-	CONSTRAINT Levels_LevelID_PK PRIMARY KEY (LevelID)
 ) Engine=InnoDB CHARACTER SET utf8 COLLATE utf8_bin;
 
 -- Create the BonusTypes table
@@ -121,7 +111,7 @@ CREATE TABLE IF NOT EXISTS Careers
 (
 	UserID INT NOT NULL,
 	ProfessionID INT NOT NULL,
-	LevelID INT DEFAULT 0,
+	`Level` INT DEFAULT 0,
 	CurrentExp DOUBLE DEFAULT 0,
 	TotalExp DOUBLE DEFAULT 0,
 	PrestigeLevel INT DEFAULT 0,
@@ -141,7 +131,7 @@ CREATE TABLE IF NOT EXISTS SideJobs
 (
 	UserID INT NOT NULL,
 	SubProfessionID INT NOT NULL,
-	LevelID INT DEFAULT 0,
+	`Level` INT DEFAULT 0,
 	CurrentExp DOUBLE DEFAULT 0,
 	TotalExp DOUBLE DEFAULT 0,
 	

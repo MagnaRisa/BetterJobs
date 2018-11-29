@@ -36,15 +36,7 @@ public final class queryLib
             + "AND Users.UserID = SideJobs.UserID "
             + "AND SubProfessions.SubProfessionID = SideJobs.SubProfessionID";
 
-    // Grab the Level information from a LevelID
-    // db-test: Query marked for testing.
-    private static final String selectLevelInfo
-            = "SELECT * "
-            + "FROM Levels "
-            + "WHERE LevelID = ?";
-
     // Select a (User, Profession) pair's augments.
-    // db-test: Query marked for testing.
     private static final String selectUserProfessionAugs
             = "SELECT * "
             + "FROM Careers, UserProfHasAugments "
