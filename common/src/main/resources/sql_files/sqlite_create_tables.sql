@@ -1,20 +1,20 @@
 -- ---------------------------------------------------------------------------------------------------------------------
 -- This file should NOT be changed. Doing so will cause unforeseeable errors within the program. You have been Warned!
 -- ---------------------------------------------------------------------------------------------------------------------
--- DROP TABLE IF EXISTS SideJobSpecificAugments;
--- DROP TABLE IF EXISTS ProfSpecificAugments;
--- DROP TABLE IF EXISTS UserSideJobHasAugments;
--- DROP TABLE IF EXISTS UserProfHasAugments;
--- DROP TABLE IF EXISTS SideJobs;
--- DROP TABLE IF EXISTS Careers;
--- DROP TABLE IF EXISTS Bonus;
--- DROP TABLE IF EXISTS Specializations;
--- DROP TABLE IF EXISTS Augments;
--- DROP TABLE IF EXISTS BonusTypes;
--- DROP TABLE IF EXISTS Levels;
--- DROP TABLE IF EXISTS SubProfessions;
--- DROP TABLE IF EXISTS Professions;
--- DROP TABLE IF EXISTS Users;
+ DROP TABLE IF EXISTS SideJobSpecificAugments;
+ DROP TABLE IF EXISTS ProfSpecificAugments;
+ DROP TABLE IF EXISTS UserSideJobHasAugments;
+ DROP TABLE IF EXISTS UserProfHasAugments;
+ DROP TABLE IF EXISTS SideJobs;
+ DROP TABLE IF EXISTS Careers;
+ DROP TABLE IF EXISTS Bonus;
+ DROP TABLE IF EXISTS Specializations;
+ DROP TABLE IF EXISTS Augments;
+ DROP TABLE IF EXISTS BonusTypes;
+ DROP TABLE IF EXISTS Levels;
+ DROP TABLE IF EXISTS SubProfessions;
+ DROP TABLE IF EXISTS Professions;
+ DROP TABLE IF EXISTS Users;
 
 
 -- Create the User Table
@@ -24,7 +24,7 @@ CREATE TABLE IF NOT EXISTS Users
 	UUID VARCHAR (50) NOT NULL,
 	Username VARCHAR (20) NOT NULL,
 	UserLevel INT UNSIGNED DEFAULT 0,
-	DateOfCreation DATE,
+	DateOfCreation TIMESTAMP,
 
 	CONSTRAINT Users_UUID_U UNIQUE (UUID)
 );
@@ -55,14 +55,6 @@ CREATE TABLE IF NOT EXISTS SubProfessions
 	FilledAugSlots INT UNSIGNED DEFAULT 0,
 	
 	CONSTRAINT SubProfessions_WageTableRef_U UNIQUE (WageTableRef)
-);
-
--- Create the Levels table
-CREATE TABLE IF NOT EXISTS Levels
-(
-	LevelID INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
-	`Level` INT DEFAULT 0,
-	ExpAmount DOUBLE UNSIGNED DEFAULT 0
 );
 
 -- Create the BonusTypes table
@@ -112,7 +104,7 @@ CREATE TABLE IF NOT EXISTS Careers
 (
 	UserID INT NOT NULL,
 	ProfessionID INT NOT NULL,
-	LevelID INT DEFAULT 0,
+	`Level` INT DEFAULT 0,
 	CurrentExp DOUBLE DEFAULT 0,
 	TotalExp DOUBLE DEFAULT 0,
 	PrestigeLevel INT DEFAULT 0,
@@ -123,10 +115,7 @@ CREATE TABLE IF NOT EXISTS Careers
 		REFERENCES Users (UserID) ON DELETE CASCADE,
 		
 	CONSTRAINT Careers_ProfessionID_FK FOREIGN KEY (ProfessionID)
-		REFERENCES Professions (ProfessionID) ON DELETE CASCADE,
-		
-	CONSTRAINT Careers_LevelID_FK FOREIGN KEY (LevelID)
-		REFERENCES Levels (LevelID) ON DELETE CASCADE
+		REFERENCES Professions (ProfessionID) ON DELETE CASCADE
 );
 
 CREATE INDEX IF NOT EXISTS Careers_ProfessionID_IDX ON Careers (ProfessionID);
@@ -136,7 +125,7 @@ CREATE TABLE IF NOT EXISTS SideJobs
 (
 	UserID INT NOT NULL,
 	SubProfessionID INT NOT NULL,
-	LevelID INT NOT NULL,
+	`Level` INT DEFAULT 0,
 	CurrentExp DOUBLE DEFAULT 0,
 	TotalExp DOUBLE DEFAULT 0,
 	
@@ -144,9 +133,7 @@ CREATE TABLE IF NOT EXISTS SideJobs
 	CONSTRAINT SideJobs_UserID_FK FOREIGN KEY (UserID)
 		REFERENCES Users (UserID) ON DELETE CASCADE,
 	CONSTRAINT SideJobs_SubprofessionID_FK FOREIGN KEY (SubProfessionID)
-		REFERENCES SubProfessions (SubProfessionID) ON DELETE CASCADE,
-	CONSTRAINT SideJobs_LevelID_FK FOREIGN KEY (LevelID)
-		REFERENCES Levels (LevelID) ON DELETE CASCADE
+		REFERENCES SubProfessions (SubProfessionID) ON DELETE CASCADE
 );
 
 CREATE INDEX IF NOT EXISTS SideJobs_SubProfessionID_IDX ON SideJobs (SubProfessionID);
