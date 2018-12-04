@@ -2,7 +2,8 @@ package com.creedfreak.common.database.databaseConn;
 
 import com.creedfreak.common.AbsConfigController;
 import com.creedfreak.common.ICraftyProfessions;
-import javafx.util.Pair;
+import com.creedfreak.common.container.AbsPlayerFactory;
+import com.creedfreak.common.utility.Pair;
 
 import java.sql.*;
 import java.util.ArrayList;
@@ -35,7 +36,7 @@ public class MySQL_Conn extends Database
      * Return: None
      *************************************************************************/
     public MySQL_Conn (ICraftyProfessions plugin, AbsConfigController config,
-                    String hostName, String db, String user, String identifier)
+                       String hostName, String db, String user, String identifier)
     {
         super (plugin, config);
         mHost = hostName;

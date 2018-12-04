@@ -4,6 +4,7 @@ import com.google.common.primitives.UnsignedLong;
 import com.creedfreak.common.database.databaseConn.Database;
 import com.creedfreak.common.professions.Profession;
 
+import java.util.Collection;
 import java.util.List;
 
 public class ProfessionsDAO implements IDaoBase<Profession>
@@ -25,9 +26,19 @@ public class ProfessionsDAO implements IDaoBase<Profession>
 
     }
 
-    public Profession update (Profession row)
+    public void update (Profession row)
     {
-        return row;
+
+    }
+
+    public void updateAll (Collection<Profession> profs)
+    {
+
+    }
+
+    public Profession load ()
+    {
+    	return null;
     }
 
     public List<Profession> loadAll ()

@@ -2,6 +2,7 @@ package com.creedfreak.common.database.databaseConn;
 
 import com.creedfreak.common.ICraftyProfessions;
 import com.creedfreak.common.AbsConfigController;
+import com.creedfreak.common.container.AbsPlayerFactory;
 import com.creedfreak.common.utility.Logger;
 
 import java.util.logging.Level;
@@ -9,7 +10,7 @@ import java.util.logging.Level;
 public class DatabaseFactory
 {
     public static Database buildDatabase (ICraftyProfessions plugin,
-        AbsConfigController config)
+                                          AbsConfigController config, AbsPlayerFactory factory)
     {
         String dbType = config.getString ("DatabaseType");
         Database db = null;

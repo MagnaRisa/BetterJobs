@@ -16,7 +16,7 @@ public final class queryLib
 {
     // onUserLogin
     // Grab the User and their internal DB ID.
-    private static final String selectUserData
+    public static final String selectUserData
             = "SELECT * "
             + "FROM Users "
             + "WHERE UUID = ?";
@@ -46,7 +46,6 @@ public final class queryLib
             + "AND Careers.ProfessionID = UserProfHasAugments.ProfessionID";
 
     // Select a (User, SubProfession) pair's augments
-    // db-test: Query maked for testing.
     private static final String selectUserSideJobAugs
             = "SELECT * "
             + "FROM SideJobs, UserSideJobHasAugments "
@@ -54,25 +53,4 @@ public final class queryLib
             + "AND UserSideJobHasAugments.SubProfessionID = ? "
             + "AND Careers.UserID = UserSideJobHasAugments.UserID "
             + "AND Careers.SubProfessionID = UserSideJobHasAugments.SubProfessionID";
-
-//    private static final String updateUserData
-//            = "UPDATE ";
-
-    // TODO: Implement this properly. Us the DB and ID to find the users careers.
-    public static ResultSet queryUserCareers (Database db, UnsignedLong userID)
-    {
-        return null;
-    }
-
-    public static ResultSet queryUser (Database db, UnsignedLong userID)
-    {
-        ResultSet retunSet;
-
-        db.dbConnect ();
-
-
-        db.dbClose();
-
-        return null;
-    }
 }

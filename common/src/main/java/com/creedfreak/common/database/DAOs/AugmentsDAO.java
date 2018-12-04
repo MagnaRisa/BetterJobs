@@ -4,6 +4,7 @@ import com.google.common.primitives.UnsignedLong;
 import com.creedfreak.common.database.databaseConn.Database;
 import com.creedfreak.common.professions.IAugment;
 
+import java.util.Collection;
 import java.util.List;
 
 public class AugmentsDAO implements IDaoBase<IAugment>
@@ -25,14 +26,23 @@ public class AugmentsDAO implements IDaoBase<IAugment>
         // Delete the augment based on it's Id
     }
 
-    public IAugment update (IAugment row)
+    public void update (IAugment row)
     {
-        return row;
+        // Update a single row in the augments table.
     }
 
-    public List<IAugment> loadAll ()
+    public void updateAll (Collection<IAugment> augments)
+    {
+    	// Update a list of IAugments
+    }
+
+    public  List<IAugment> loadAll ()
     {
         return null;
     }
 
+    public IAugment load ()
+    {
+    	return null;
+    }
 }

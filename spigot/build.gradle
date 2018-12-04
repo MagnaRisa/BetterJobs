@@ -28,7 +28,7 @@ dependencies {
 
     implementation (
             [group: 'org.spigotmc', name: 'spigot-api', version: '1.13.1-R0.1-SNAPSHOT'],
-            [group: 'net.milkbowl.vault', name: 'VaultAPI', version: '1.6']
+            [group: 'net.milkbowl.vault', name: 'VaultAPI', version: '1.7']
     )
 }
 
@@ -36,12 +36,12 @@ dependencies {
  * REPOSITORIES: Dependency Repositories
  */
 repositories {
-    maven { url 'http://nexus.hc.to/content/repositories/pub_releases' }
-    maven { url 'https://hub.spigotmc.org/nexus/content/repositories/snapshots/' }
-    maven { url 'https://hub.spigotmc.org/nexus/content/groups/public/' }
-    maven { url 'https://oss.sonatype.org/content/repositories/snapshots'}
     mavenCentral()
     mavenLocal()
+    maven { url 'https://hub.spigotmc.org/nexus/content/repositories/snapshots/'} 
+    maven { url 'http://nexus.hc.to/content/repositories/pub_releases' } 
+    maven { url 'https://hub.spigotmc.org/nexus/content/groups/public/' }
+    maven { url 'https://oss.sonatype.org/content/repositories/snapshots'}
 }
 
 /**

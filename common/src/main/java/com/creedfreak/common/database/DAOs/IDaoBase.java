@@ -2,15 +2,21 @@ package com.creedfreak.common.database.DAOs;
 
 import com.google.common.primitives.UnsignedLong;
 
+import java.util.Collection;
 import java.util.List;
+import java.util.UUID;
 
 public interface IDaoBase<T>
 {
-    public void save (T row);
+    void save (T row);
 
-    public void delete (UnsignedLong id);
+    void delete (UnsignedLong id);
 
-    public T update (T row);
+    void update (T row);
 
-    public List<T> loadAll ();
+    void  updateAll (Collection<T> rows);
+
+    List<T> loadAll ();
+
+    T load ();
 }

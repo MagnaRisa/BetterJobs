@@ -14,7 +14,7 @@ import java.util.*;
  * This is the Player Wrapper for the CraftyProfessions Plugin in which stores all
  * of the information for a CraftyProfessions player.
  */
-public class CraftyPlayer implements IPlayer
+public class SpigotPlayer implements IPlayer
 {
     // This is the players primary key within the Database
     private UnsignedLong mPlayerID;
@@ -26,24 +26,22 @@ public class CraftyPlayer implements IPlayer
 
     // The Users list of professions.
     private List<Profession> mProfessions;
+    private Integer mPlayerLevel;
+    private String mDBUsername;
 
     /**
      * This is the Default Constructor for the CraftyPlayer object in which
      * a player will be initialized from the Crafty Professions Database.
      *
-     * @param player       - This is the player associated with the CraftyPlayer
-     * @param professions  - This is the Professions info stored for the player, this data
-     *                    will be updated from the game via commands and or leveling up the
-     *                    player, then the data will be stored into the database when the player
-     *                    logs out.
+     * @param
      */
-    public CraftyPlayer (UnsignedLong dbID, Player player, List<Profession> professions)
+    public SpigotPlayer (UnsignedLong dbID, String currentDBuname, Integer playerLevel)
     {
         mPlayerID = dbID;
-        mPlayer = player;
         mPlayerPool = 0.0f;
 
-        mProfessions = professions;
+		mPlayerLevel = playerLevel;
+		mDBUsername = currentDBuname;
 
         mPrintEarnedWages = false;
     }
@@ -57,6 +55,21 @@ public class CraftyPlayer implements IPlayer
         return mPlayer.getUniqueId ();
     }
 
+	/**
+	 * @return The username of the player
+	 */
+	public String getUsername ()
+    {
+    	return mPlayer.getName ();
+    }
+
+	/**
+	 * @return the overall level of the user.
+	 */
+	public Integer getLevel ()
+    {
+    	return mPlayerLevel;
+    }
     /**
      * This method will "Payout" the players current money ca, This method
      * should be called after x amount of ticks of the player receiving money and

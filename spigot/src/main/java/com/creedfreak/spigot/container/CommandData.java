@@ -35,7 +35,7 @@ public class CommandData
      * @return True  - If the CommandSender has access to this permission
      *         False - If the CommandSender does not have access to this permission
      */
-    public boolean hasPerms (CraftyPlayer sender)
+    public boolean hasPerms (SpigotPlayer sender)
     {
         return sender.checkPerms (mData.get("permission"));
     }
