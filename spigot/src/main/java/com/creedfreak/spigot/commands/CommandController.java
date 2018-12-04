@@ -7,7 +7,7 @@ import com.creedfreak.spigot.commands.ProfessionCommands.*;
 import com.creedfreak.common.container.PlayerManager;
 import com.creedfreak.common.database.databaseConn.Database;
 import com.creedfreak.common.exceptions.*;
-import com.creedfreak.spigot.container.CraftyPlayer;
+import com.creedfreak.spigot.container.SpigotPlayer;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
@@ -58,7 +58,7 @@ public class CommandController extends AbsCmdController implements CommandExecut
     public boolean onCommand (CommandSender sender, Command cmd, String label, String... args)
     {
         Player player = obtainBukkitPlayer (sender);
-        CraftyPlayer mPlayer;
+        SpigotPlayer mPlayer;
         ICommand command = null;
 
         if (player == null)
@@ -73,7 +73,7 @@ public class CommandController extends AbsCmdController implements CommandExecut
                 command = loadCommand (args[0]);
 
                 // TODO: I need to add in the appropriate checking and arg trimming devices before I can use the commands.
-                mPlayer = (CraftyPlayer) PlayerManager.Instance ().retrievePlayer (player.getUniqueId ());
+                mPlayer = (SpigotPlayer) PlayerManager.Instance ().retrievePlayer (player.getUniqueId ());
                 command.execute (mPlayer, args);
                 return true;
             }

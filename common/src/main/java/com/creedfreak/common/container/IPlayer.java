@@ -12,6 +12,20 @@ public interface IPlayer
      */
     public UUID getUUID ();
 
+	/**
+	 * Return the Username of the player.
+	 *
+	 * @return The players username
+	 */
+	public String getUsername ();
+
+	/**
+	 * Return the players overall CP Level
+	 *
+	 * @return The level of the player
+	 */
+	public Integer getLevel  ();
+
     /**
      * Sends a message to the target player.
      *

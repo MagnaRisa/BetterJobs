@@ -2,7 +2,7 @@ package com.creedfreak.spigot.commands.DatabaseCommands;
 
 import com.creedfreak.spigot.commands.DatabaseCommand;
 import com.creedfreak.spigot.container.CommandData;
-import com.creedfreak.spigot.container.CraftyPlayer;
+import com.creedfreak.spigot.container.SpigotPlayer;
 import com.creedfreak.common.database.databaseConn.Database;
 
 public class CommandReaderTest extends DatabaseCommand
@@ -18,7 +18,7 @@ public class CommandReaderTest extends DatabaseCommand
     }
 
     @Override
-    public boolean execute (CraftyPlayer sender, String... args)
+    public boolean execute (SpigotPlayer sender, String... args)
     {
 /*        mDatabase.dbConnect ();
 

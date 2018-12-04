@@ -2,6 +2,7 @@ package com.creedfreak.common.database.databaseConn;
 
 import com.creedfreak.common.AbsConfigController;
 import com.creedfreak.common.ICraftyProfessions;
+import com.creedfreak.common.container.AbsPlayerFactory;
 
 import java.io.File;
 import java.io.IOException;
