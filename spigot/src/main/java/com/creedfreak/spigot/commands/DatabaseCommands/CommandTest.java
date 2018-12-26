@@ -17,7 +17,7 @@ public class CommandTest extends DatabaseCommand
             "dbtest",
             "This command will test the connection to the database and  then query the database",
             "/prof dbtest",
-            "spigot_craftyprofessions.admin.debug"
+            "craftyprofessions.admin.debug"
         ));
     }
 

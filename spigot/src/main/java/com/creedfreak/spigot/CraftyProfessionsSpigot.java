@@ -5,12 +5,12 @@ import com.creedfreak.common.AbsConfigController;
 import com.creedfreak.common.ICraftyProfessions;
 import com.creedfreak.common.container.WageTableHandler;
 import com.creedfreak.common.utility.Logger;
+import com.creedfreak.spigot.Database.SpigotUsersDAO;
 import com.creedfreak.spigot.commands.CommandController;
 import com.creedfreak.spigot.config.ConfigController;
 import com.creedfreak.common.container.PlayerManager;
 import com.creedfreak.common.database.databaseConn.Database;
 import com.creedfreak.common.database.databaseConn.DatabaseFactory;
-import com.creedfreak.spigot.container.SpigotPlayerFactory;
 import com.creedfreak.spigot.listeners.CoreListener;
 import net.milkbowl.vault.chat.Chat;
 import net.milkbowl.vault.economy.Economy;
@@ -83,7 +83,7 @@ public class CraftyProfessionsSpigot extends JavaPlugin implements ICraftyProfes
         mConfigController.registerConfigFiles ();
 
         // Setup Database
-        cpSetupDatabase ();
+        setupDatabase ();
 
         // We need to register the listeners for the Plugin
         this.registerListeners ();
@@ -98,10 +98,10 @@ public class CraftyProfessionsSpigot extends JavaPlugin implements ICraftyProfes
         mTableHandler.InitializeWageTables (mConfigController.getDebug ());
 
         // This will initialize the PlayerManager Singleton
-        PlayerManager.Instance ().initializePlayerManager (this, mDatabase);
+        PlayerManager.Instance ().initializePlayerManager (new SpigotUsersDAO (mDatabase));
 
         // This will notify the end of initialization
-        getLogger ().info("Initializaion of CraftyProfessions Completed!");
+        mLogger.Debug ("Initialization of CraftyProfessions Completed!");
     }
 
     /**
@@ -125,7 +125,7 @@ public class CraftyProfessionsSpigot extends JavaPlugin implements ICraftyProfes
      * if there is an economy plugin that is registered and if Vault
      * is installed and enabled.
      */
-    private boolean setupEconomy ()
+    public boolean setupEconomy ()
     {
         if (null == getServer().getPluginManager ().getPlugin ("Vault"))
         {
@@ -204,7 +204,7 @@ public class CraftyProfessionsSpigot extends JavaPlugin implements ICraftyProfes
     /**
      * Returns the Database we are using
      */
-    public Database cpGetDatabase ()
+    public Database getDatabase ()
     {
         return mDatabase;
     }
@@ -271,17 +271,9 @@ public class CraftyProfessionsSpigot extends JavaPlugin implements ICraftyProfes
     }
 
     /**
-     * This method outlines the economy hook setup
-     */
-    public boolean cpSetupEconomy ()
-    {
-        return false;
-    }
-
-    /**
      * Get the Configuration Object of the Plugin
      */
-    public AbsConfigController cpGetConfigController ()
+    public AbsConfigController getConfigController ()
     {
         return null;
     }
@@ -289,14 +281,14 @@ public class CraftyProfessionsSpigot extends JavaPlugin implements ICraftyProfes
     /**
      * Get the Command Controller of the Plugin
      */
-    public AbsCmdController cpGetCmdController ()
+    public AbsCmdController getCmdController ()
     {
         return null;
     }
     /**
      * Register the plugins listeners.
      */
-    public void cpSetupListeners ()
+    public void setupListeners ()
     {
 
     }
@@ -304,12 +296,12 @@ public class CraftyProfessionsSpigot extends JavaPlugin implements ICraftyProfes
     /**
      * Sets up the Database using the Spigot Config File
      */
-    public void cpSetupDatabase ()
+    public void setupDatabase ()
     {
         getLogger ().info ("Setting up database connection and Checking for "
             + "created Database this might take awhile ...");
 
-        mDatabase = DatabaseFactory.buildDatabase (this, mConfigController, new SpigotPlayerFactory ());
+        mDatabase = DatabaseFactory.buildDatabase (this, mConfigController);
 
         if (!mDatabase.initializeDatabase ())
         {
@@ -321,7 +313,7 @@ public class CraftyProfessionsSpigot extends JavaPlugin implements ICraftyProfes
     /**
      * Retrieve a resource of the plugin.
      */
-    public InputStream cpGetResource (String resource)
+    public InputStream openResource (String resource)
     {
         return this.getResource (resource);
     }
@@ -329,7 +321,7 @@ public class CraftyProfessionsSpigot extends JavaPlugin implements ICraftyProfes
     /**
      * Retrieve the default directory of the plugin resource folder.
      */
-    public File cpGetResourceFile ()
+    public File getResourceFile ()
     {
         return this.getDataFolder ();
     }

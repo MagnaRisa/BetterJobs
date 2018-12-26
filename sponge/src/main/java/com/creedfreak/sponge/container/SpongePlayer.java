@@ -26,6 +26,11 @@ public class SpongePlayer implements IPlayer
 		return mPlayer.getUniqueId ();
 	}
 
+	public UnsignedLong getDBIdentifier ()
+	{
+		return mPlayerID;
+	}
+
 	public String getUsername ()
 	{
 		return mPlayer.getName ();

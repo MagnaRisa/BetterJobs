@@ -1,8 +1,8 @@
 package com.creedfreak.spigot.commands.ProfessionCommands;
 
+import com.creedfreak.common.container.IPlayer;
 import com.creedfreak.spigot.commands.ProfessionCommand;
 import com.creedfreak.spigot.container.CommandData;
-import com.creedfreak.spigot.container.SpigotPlayer;
 
 /**
  * The CommandInfo class used to display information to the
@@ -21,7 +21,7 @@ public class CommandInfo extends ProfessionCommand
             "info",
             "Displays the information of a specific Profession",
             "/prof info [ProfessionName]",
-            "spigot_craftyprofessions.use.info"));
+            "craftyprofessions.use.info"));
     }
 
     /**
@@ -35,7 +35,7 @@ public class CommandInfo extends ProfessionCommand
      *                   if some exception was thrown.
      *         False - If the command fails all checks
      */
-    public boolean execute (SpigotPlayer sender, String... args)
+    public boolean execute (IPlayer sender, String... args)
     {
 
         sender.sendMessage ("You have just executed /prof info");

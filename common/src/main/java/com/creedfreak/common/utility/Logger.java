@@ -66,7 +66,7 @@ public class Logger
 
 	private void DebugLog (Level level, String subSystemPrefix, String message)
 	{
-		Log (level, "[DEBUG]" + "[" + subSystemPrefix + "]" + message);
+		Log (level, "[DEBUG] " + "[" + subSystemPrefix + "]" + message);
 	}
 
 	public void Info (String message)
@@ -101,7 +101,7 @@ public class Logger
 
 	public void Debug (String message)
 	{
-		Log (Level.INFO, "[DEBUG]" + message);
+		Log (Level.INFO, "[DEBUG] " + message);
 	}
 
 	public void Debug (String subSystemPrefix, String message)

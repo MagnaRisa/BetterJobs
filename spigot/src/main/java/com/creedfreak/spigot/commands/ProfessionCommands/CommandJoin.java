@@ -1,5 +1,7 @@
 package com.creedfreak.spigot.commands.ProfessionCommands;
 
+import com.creedfreak.common.container.IPlayer;
+import com.creedfreak.common.container.PlayerManager;
 import com.creedfreak.spigot.commands.ProfessionCommand;
 import com.creedfreak.spigot.container.CommandData;
 import com.creedfreak.spigot.container.SpigotPlayer;
@@ -20,7 +22,7 @@ public class CommandJoin extends ProfessionCommand
             "join",
             "Joins the user to the specified Profession",
             "/prof join [ProfessionName]",
-            "spigot_craftyprofessions.use.join"));
+            "craftyprofessions.use.join"));
     }
 
     /**
@@ -34,7 +36,7 @@ public class CommandJoin extends ProfessionCommand
      *                   if some exception was thrown.
      *         False - If the command fails all checks
      */
-    public boolean execute (SpigotPlayer sender, String... args)
+    public boolean execute (IPlayer sender, String... args)
     {
         sender.sendMessage ("You have just executed /prof join");
 

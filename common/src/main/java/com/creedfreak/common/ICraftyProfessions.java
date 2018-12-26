@@ -28,28 +28,28 @@ public interface ICraftyProfessions
     /**
      * This method outlines the economy hook setup
      */
-    boolean cpSetupEconomy ();
+    boolean setupEconomy ();
 
     /**
      * Get the Configuration of the Plugin
      */
-    AbsConfigController cpGetConfigController ();
+    AbsConfigController getConfigController ();
 
-    AbsCmdController cpGetCmdController ();
+    AbsCmdController getCmdController ();
 
     /**
      * Register the plugins listeners.
      */
-    void cpSetupListeners ();
+    void setupListeners ();
 
     /**
      * Grab the database
      */
-    Database cpGetDatabase ();
+    Database getDatabase ();
 
-    void cpSetupDatabase ();
+    void setupDatabase ();
 
-    InputStream cpGetResource (String resource);
+    InputStream openResource (String resource);
 
-    File cpGetResourceFile ();
+    File getResourceFile ();
 }

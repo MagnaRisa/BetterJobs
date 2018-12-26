@@ -14,16 +14,15 @@ public abstract class Profession
     private IWageTable mWageTable;
     private float mWagePool;
 
-    protected Profession ()
+    protected Profession (TableType type)
     {
-        mWageTable = WageTableHandler.getInstance ().GetWageTable (TableType.Miner);
+        mWageTable = WageTableHandler.getInstance ().GetWageTable (type);
 
         if (null == mWageTable)
         {
-            throw new NullPointerException (this.getName () + " wage table is null cannot construct Profession.");
+            throw new NullPointerException ("The " + type.name () + " wage table is not enabled!");
         }
     }
-
 
     /**
      * This method is used to return the Name of the Profession

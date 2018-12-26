@@ -17,7 +17,7 @@ public class CommandArchiveAll extends DatabaseCommand
             "archiveall",
             "This command will archive all of the users within the database.",
             "/prof archiveall",
-            "spigot_craftyprofessions.admin.archiveall"
+            "craftyprofessions.admin.archiveall"
         ));
     }
 

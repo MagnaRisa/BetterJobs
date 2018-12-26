@@ -16,7 +16,7 @@ public class CommandLookup extends DatabaseCommand
             "lookup",
             "This command looks up a player's stats based on the given arguments. Leave the statistic blank to obtain all the player's stats.",
             "/prof lookup [PlayerName] [Statistic]",
-            "spigot_craftyprofessions.admin.lookup"
+            "craftyprofessions.admin.lookup"
         ));
     }
 

@@ -2,9 +2,10 @@ package com.creedfreak.spigot.listeners;
 
 import com.creedfreak.common.ICraftyProfessions;
 import com.creedfreak.common.container.IPlayer;
+import com.creedfreak.common.database.DAOs.AbsUsersDAO;
 import com.creedfreak.spigot.CraftyProfessionsSpigot;
 import com.creedfreak.common.container.PlayerManager;
-import com.creedfreak.common.database.databaseConn.Database;
+import com.creedfreak.spigot.Database.SpigotUsersDAO;
 import net.milkbowl.vault.economy.Economy;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
@@ -24,13 +25,14 @@ import org.bukkit.event.player.PlayerQuitEvent;
  */
 public class CoreListener implements Listener
 {
-    private CraftyProfessionsSpigot mProfessions;
-    private Database mdb;
+    private CraftyProfessionsSpigot mCraftyProf;
+    private AbsUsersDAO mUserDAO;
     private Economy mEconomy;
 
     public CoreListener (ICraftyProfessions professions)
     {
-        mProfessions = (CraftyProfessionsSpigot) professions;
+	    mCraftyProf = (CraftyProfessionsSpigot) professions;
+		mUserDAO = new SpigotUsersDAO (mCraftyProf.getDatabase ());
     }
 
 
@@ -39,34 +41,12 @@ public class CoreListener implements Listener
     {
         Player eventPlayer = event.getPlayer ();
 
-
         eventPlayer.sendMessage ("Player Logged in, Attempting to save to PlayerManager");
 
-        // PlayerManager.Instance ().savePlayer (new CraftyPlayer (eventPlayer, null));
-       /* Player eventPlayer = event.getPlayer ();
-
-        if (eventPlayer != null)
+        if (!PlayerManager.Instance ().loadPlayer (eventPlayer.getUniqueId ()))
         {
-            eventPlayer.sendMessage (eventPlayer.getDisplayName () + " Welcome!");
-
-            if (mdb.hasPlayer (event.getPlayer ().getUniqueId ()))
-            {
-                eventPlayer.sendMessage (eventPlayer.getDisplayName () + " Is already in the Database");
-            }
-            else
-            {
-                eventPlayer.sendMessage (eventPlayer.getDisplayName () + "Is Not in the Database");
-            }
+        	PlayerManager.Instance ().savePlayer (eventPlayer.getUniqueId (), eventPlayer.getName ());
         }
-
-        *//*
-         * What needs to happen here is once the player joins, we will see if their name
-         * is in the database, If it is, then we will retrieve that information and store it
-         * in a new CraftyPlayer object. If the player is not in the database, then we will
-         * wait until that player issues the /cp join [profession-name] which will then
-         * add that player to the cp database to avoid making the database cluttered with
-         * players that have no interest in sticking around.
-         */
     }
 
     @EventHandler
@@ -94,7 +74,7 @@ public class CoreListener implements Listener
         */
 
         // TODO: This needs testing before moving on
-        eventFocus = PlayerManager.Instance ().retrievePlayer (player.getUniqueId ());
+        eventFocus = PlayerManager.Instance ().getPlayer (player.getUniqueId ());
         eventFocus.doWork (event.getBlock ().getType ().name ());
 
         player.sendMessage ("Block Broken was " + event.getBlock ().getType ().name ());

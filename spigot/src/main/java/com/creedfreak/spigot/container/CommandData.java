@@ -1,5 +1,7 @@
 package com.creedfreak.spigot.container;
 
+import com.creedfreak.common.container.IPlayer;
+
 import java.util.HashMap;
 
 /**
@@ -35,7 +37,7 @@ public class CommandData
      * @return True  - If the CommandSender has access to this permission
      *         False - If the CommandSender does not have access to this permission
      */
-    public boolean hasPerms (SpigotPlayer sender)
+    public boolean hasPerms (IPlayer sender)
     {
         return sender.checkPerms (mData.get("permission"));
     }

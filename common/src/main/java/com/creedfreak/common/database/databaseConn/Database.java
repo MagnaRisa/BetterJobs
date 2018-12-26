@@ -2,7 +2,6 @@ package com.creedfreak.common.database.databaseConn;
 
 import com.creedfreak.common.AbsConfigController;
 import com.creedfreak.common.ICraftyProfessions;
-import com.creedfreak.common.container.AbsPlayerFactory;
 import com.creedfreak.common.utility.Logger;
 import com.creedfreak.common.utility.SQLReader;
 import com.creedfreak.common.utility.TimeUtil;
@@ -179,34 +178,42 @@ public abstract class Database
 	 *************************************************************************/
 	public boolean initializeDatabase ()
 	{
-		boolean success;
+		boolean createSuccess, insertSuccess, retVal = false;
 		long initialTime = System.nanoTime ();
 		DecimalFormat timeFormat = new DecimalFormat ("#0.00");
 
-		success = createTables ();
-
-		if (!checkDBExists () && success)
+		if (!checkDBExists ())
 		{
-			mLogger.Info (DATABASE_PREFIX,
-				"Total number of Create Table statements ran: " + mNumTables);
+			createSuccess = createTables ();
 
-			success = insertIntoTables ();
-
-			if (success)
+			if (createSuccess)
 			{
 				mLogger.Info (DATABASE_PREFIX,
-					"Database has been created and the required data has been inserted!");
+						"Total number of Create Table statements ran: " + mNumTables);
+
+				insertSuccess = insertIntoTables ();
+
+				if (insertSuccess)
+				{
+					mLogger.Info (DATABASE_PREFIX,
+							"Database has been created and the required data has been inserted!");
+				}
+
+				// This automatically means that createSuccess was true.
+				retVal = insertSuccess;
 			}
 
 			mTotalTimeElapsed = TimeUtil.toSeconds (System.nanoTime () - initialTime);
 			mLogger.Info (DATABASE_PREFIX, "Total time elapsed for database Construction: "
 				+ timeFormat.format (mTotalTimeElapsed) + "sec");
-		} else
+		}
+		else
 		{
 			mLogger.Info (DATABASE_PREFIX, "Database found! Setup not necessary");
+			retVal = true;
 		}
 
-		return success;
+		return retVal;
 	}
 
 	/**************************************************************************
@@ -228,7 +235,7 @@ public abstract class Database
 
 		try
 		{
-			reader.openReader (mPlugin.cpGetResource (this.getCreateTableStmts ()));
+			reader.openReader (mPlugin.openResource (this.getCreateTableStmts ()));
 
 			sqlStmt = reader.readStatement ();
 
@@ -278,7 +285,7 @@ public abstract class Database
 
 		try
 		{
-			reader.openReader (mPlugin.cpGetResource (SQL_INSERT_STATEMENTS));
+			reader.openReader (mPlugin.openResource (SQL_INSERT_STATEMENTS));
 
 			sqlStmt = reader.readStatement ();
 
@@ -322,25 +329,27 @@ public abstract class Database
 	 *************************************************************************/
 	private boolean checkDBExists ()
 	{
-		boolean bTablesExist;
+		boolean bTablesExist, test;
 		Connection conn = dbConnect ();
+		String sqlQuery = "SELECT ProfessionID FROM Professions";
 
 		try
 		{
-			// TODO This is broken as of the deletion of the Level table.
-			String sqlQuery = "SELECT `Level` FROM Levels";
 			PreparedStatement prepStmt = conn.prepareStatement (sqlQuery);
 			ResultSet rSet = prepStmt.executeQuery ();
 
+			test = rSet.isFirst ();
 			bTablesExist = rSet.next ();
 
 			dbCloseResources (prepStmt, rSet);
-		} catch (SQLException exception)
+		}
+		catch (SQLException exception)
 		{
 			mLogger.Error (DATABASE_PREFIX,
-				"Could not locate tables within checkDBExists! Defaulting return type to false");
+				"Could not locate tables within checkDBExists! Defaulting return type to false. State: " + exception.getSQLState ());
 			return false;
-		} finally
+		}
+		finally
 		{
 			dbClose ();
 		}

@@ -13,7 +13,7 @@ public class CommandReaderTest extends DatabaseCommand
             "dbreadertest",
             "This command will test the SQLReader for SQL Files.",
             "/prof dbreadertest",
-            "spigot_craftyprofessions.admin.debug"
+            "craftyprofessions.admin.debug"
         ));
     }
 

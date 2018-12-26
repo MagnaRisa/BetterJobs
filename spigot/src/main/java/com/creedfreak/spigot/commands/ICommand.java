@@ -1,6 +1,6 @@
 package com.creedfreak.spigot.commands;
 
-import com.creedfreak.spigot.container.SpigotPlayer;
+import com.creedfreak.common.container.IPlayer;
 
 /**
  * TODO: I need to do what the below comment states
@@ -14,7 +14,7 @@ public interface ICommand
     /**
      * This is the primary method for executing a command.
      */
-    boolean execute (SpigotPlayer sender, String... args);
+    boolean execute (IPlayer sender, String... args);
 
     /**
      * This method returns the Name of the command.
@@ -24,7 +24,7 @@ public interface ICommand
     /**
      * Checks a users permissions
      */
-    boolean checkPermission (SpigotPlayer player);
+    boolean checkPermission (IPlayer player);
 
     /**
      * Grabs the description of the command

@@ -27,7 +27,7 @@ dependencies {
     implementation project (':common')
 
     implementation (
-            [group: 'org.spigotmc', name: 'spigot-api', version: '1.13.1-R0.1-SNAPSHOT'],
+            [group: 'org.spigotmc', name: 'spigot-api', version: '1.13.2-R0.1-SNAPSHOT'],
             [group: 'net.milkbowl.vault', name: 'VaultAPI', version: '1.7']
     )
 }

@@ -9,8 +9,7 @@ import java.util.logging.Level;
 
 public class DatabaseFactory
 {
-    public static Database buildDatabase (ICraftyProfessions plugin,
-                                          AbsConfigController config, AbsPlayerFactory factory)
+    public static Database buildDatabase (ICraftyProfessions plugin, AbsConfigController config)
     {
         String dbType = config.getString ("DatabaseType");
         Database db = null;

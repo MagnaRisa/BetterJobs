@@ -1,5 +1,7 @@
 package com.creedfreak.common.container;
 
+import com.google.common.primitives.UnsignedLong;
+
 import java.math.BigDecimal;
 import java.util.UUID;
 
@@ -25,6 +27,11 @@ public interface IPlayer
 	 * @return The level of the player
 	 */
 	public Integer getLevel  ();
+
+	/**
+	 * @return The database identifier of the player.
+	 */
+	public UnsignedLong getDBIdentifier ();
 
     /**
      * Sends a message to the target player.

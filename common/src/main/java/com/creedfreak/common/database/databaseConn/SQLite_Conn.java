@@ -42,7 +42,7 @@ public class SQLite_Conn extends Database
      *************************************************************************/
     public Connection dbConnect ()
     {
-        File dataFolder = new File (mPlugin.cpGetResourceFile (), SQLITE_DB_NAME);
+        File dataFolder = new File (mPlugin.getResourceFile (), SQLITE_DB_NAME);
 
         if (!dataFolder.exists ())
         {

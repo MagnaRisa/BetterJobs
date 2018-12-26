@@ -7,15 +7,13 @@ import com.google.common.primitives.UnsignedLong;
 import com.creedfreak.common.container.IPlayer;
 import com.creedfreak.common.database.databaseConn.Database;
 
+import java.math.BigInteger;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.Collection;
-import java.util.List;
-import java.util.Map;
-import java.util.UUID;
+import java.util.*;
 
 public abstract class AbsUsersDAO
 {
@@ -33,6 +31,10 @@ public abstract class AbsUsersDAO
 			+ "SET Username = ?, UserLevel = ? "
 			+ "WHERE UserID = ?";
 
+	private static final String checkUserExist
+			= "SELECT UUID, UserID "
+			+ "FROM Users "
+			+ "WHERE UUID = ?";
 
 	/**
 	 * <p>This is the constructor for the Users database access object.</p>
@@ -47,11 +49,12 @@ public abstract class AbsUsersDAO
 	}
 
 	/**
-	 * <p>Saves a players information into the database.</p>
+	 * <p>Save a player into the database.</p>
 	 *
-	 * @param player The player to store within the database.
+	 * @param playerID The ID of the player.
+	 * @param username The username of the player.
 	 */
-	public void save (IPlayer player)
+	public void save (UUID playerID, String username)
 	{
 		Connection conn = mDatabase.dbConnect ();
 		PreparedStatement savePlayer = null;
@@ -60,8 +63,8 @@ public abstract class AbsUsersDAO
 		{
 			savePlayer = conn.prepareStatement (insertUser);
 
-			savePlayer.setBytes (1, UuidUtil.toBytes (player.getUUID ()));
-			savePlayer.setString (2, player.getUsername ());
+			savePlayer.setBytes (1, UuidUtil.toBytes (playerID));
+			savePlayer.setString (2, username);
 
 			if (savePlayer.execute ())
 			{
@@ -169,6 +172,11 @@ public abstract class AbsUsersDAO
 	}
 
 	/**
+	 * TODO: This could be condensed to use the <code>load<code/> function within the loop
+	 *  what we have to be careful of is closing the statements appropriately while not
+	 *  closing it every single loading of a player that is done. This is currently why
+	 *  I don't call <code>load</code> within <code>loadSubset<code/>
+	 *
 	 * Loads a list of users from the database and returns a list
 	 * of the IPlayers. If the collection passed into the method
 	 * is not a list of players then null is returned..
@@ -177,7 +185,69 @@ public abstract class AbsUsersDAO
 	 *                                  database as IPlayers.
 	 * @return A list of loaded players from the database.
 	 */
-	public abstract  List<IPlayer> loadSubset (Collection<UUID> values);
+	public  List<IPlayer> loadSubset (Collection<UUID> values)
+	{
+		Connection conn = mDatabase.dbConnect ();
+
+		List<IPlayer> retPlayers = new ArrayList<> ();
+		PreparedStatement getPlayer = null;
+		ResultSet resultSet = null;
+
+		UnsignedLong playerID;
+		UUID playerUUID;
+		String username;
+		Integer playerLevel;
+
+		try
+		{
+			conn.setAutoCommit (false);
+			getPlayer = conn.prepareStatement (queryLib.selectUserData);
+
+			for (UUID uuid : values)
+			{
+				getPlayer.setBytes (1, UuidUtil.toBytes (uuid));
+				resultSet = getPlayer.executeQuery ();
+
+				if (resultSet.isFirst ())
+				{
+					playerID = UnsignedLong.valueOf (BigInteger.valueOf (resultSet.getLong ("UserID")));
+					playerUUID = UuidUtil.fromBytes (resultSet.getBytes ("UUID"));
+					username = resultSet.getString ("Username");
+					playerLevel = resultSet.getInt ("UserLevel");
+
+					if (playerUUID != uuid)
+					{
+						throw new SQLException ("Incorrect Row Retrieved!");
+					}
+					retPlayers.add (playerFactory (playerID, username, playerLevel));
+				}
+			}
+			conn.commit ();
+		}
+		catch (SQLException except)
+		{
+			Logger.Instance ().Error ("AbsUsersDAO", "Something went wrong while processing loadAll. Reason: " + except.getMessage ());
+		}
+		catch (ClassCastException except)
+		{
+			Logger.Instance ().Error ("AbsUsersDAO", except.getMessage ());
+		}
+		finally
+		{
+			try
+			{
+				conn.setAutoCommit (true);
+			}
+			catch (SQLException except)
+			{
+				Logger.Instance ().Error ("AbsUsersDAO", "Count not set auto commit for Database: " + except.getSQLState ());
+			}
+
+			mDatabase.dbCloseResources (getPlayer, resultSet);
+			mDatabase.dbClose ();
+		}
+		return retPlayers;
+	}
 
 	/**
 	 * Loads a single user based on their UUID. Note that this
@@ -187,10 +257,53 @@ public abstract class AbsUsersDAO
 	 * @param userID The Users UUID
 	 * @return a player object.
 	 */
-	public abstract IPlayer load (UUID userID);
+	public IPlayer load (UUID userID)
+	{
+		IPlayer retPlayer = null;
+		PreparedStatement getPlayer = null;
+		ResultSet resultSet = null;
+
+		UnsignedLong playerID;
+		UUID playerUUID;
+		String username;
+		Integer playerLevel;
+
+		try
+		{
+			getPlayer = mDatabase.dbConnect ().prepareStatement (queryLib.selectUserData);
+
+			getPlayer.setBytes (1, UuidUtil.toBytes (userID));
+
+			resultSet = getPlayer.executeQuery ();
+
+			if (resultSet.isFirst ())
+			{
+				playerID = UnsignedLong.valueOf (BigInteger.valueOf (resultSet.getLong ("UserID")));
+				playerUUID = UuidUtil.fromBytes (resultSet.getBytes ("UUID"));
+				username = resultSet.getString ("Username");
+				playerLevel = resultSet.getInt ("UserLevel");
+
+				if (playerUUID != userID)
+				{
+					throw new SQLException ("Incorrect Row Retrieved!");
+				}
+				retPlayer = playerFactory (playerID, username, playerLevel);
+			}
+		}
+		catch (SQLException except)
+		{
+			Logger.Instance ().Error ("AbsUsersDAO", "Something wen't wrong while loading player! Reason: " + except.getMessage ());
+		}
+		finally
+		{
+			mDatabase.dbCloseResources (getPlayer, resultSet);
+			mDatabase.dbClose ();
+		}
+
+		return retPlayer;
+	}
 
 	/**
-	 *
 	 * @param userID
 	 * @return
 	 */
@@ -198,4 +311,41 @@ public abstract class AbsUsersDAO
 	{
 		return null;
 	}
+
+	/**
+	 * Checks to see if the user is within the database.
+	 *
+	 * @param userID - The Users unique id
+	 *
+	 * @return True - If the user is in the database
+	 *         False - If the user is not in the database
+	 */
+	public boolean checkExist (UUID userID)
+	{
+		boolean retVal = false;
+
+		PreparedStatement prepStmt = null;
+		ResultSet resultSet = null;
+
+		try
+		{
+			prepStmt = mDatabase.dbConnect ().prepareStatement (checkUserExist);
+			prepStmt.setBytes (1, UuidUtil.toBytes (userID));
+			resultSet = prepStmt.executeQuery ();
+
+			if (resultSet.next ())
+			{
+				retVal = true;
+			}
+		}
+		catch (SQLException except)
+		{
+			mDatabase.dbCloseResources (prepStmt, resultSet);
+			mDatabase.dbClose ();
+		}
+
+		return retVal;
+	}
+
+	public abstract IPlayer playerFactory (UnsignedLong playerID, String username, Integer playerLevel);
 }

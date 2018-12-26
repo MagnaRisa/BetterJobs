@@ -1,9 +1,6 @@
 package com.creedfreak.common.utility;
 
-import com.creedfreak.common.ICraftyProfessions;
-
 import java.io.*;
-import java.util.logging.Level;
 
 public class SQLReader
 {

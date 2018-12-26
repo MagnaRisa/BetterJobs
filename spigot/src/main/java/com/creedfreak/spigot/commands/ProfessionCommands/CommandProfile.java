@@ -15,7 +15,7 @@ public class CommandProfile extends ProfessionCommand
             "profile",
             "This command will give you a book that will display your profile in depth",
             "/prof profile",
-            "spigot_craftyprofessions.use.profile"));
+            "craftyprofessions.use.profile"));
     }
 
     @Override

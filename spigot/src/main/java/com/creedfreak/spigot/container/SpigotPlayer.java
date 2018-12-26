@@ -3,11 +3,8 @@ package com.creedfreak.spigot.container;
 import com.google.common.primitives.UnsignedLong;
 import com.creedfreak.common.container.IPlayer;
 import com.creedfreak.common.professions.Profession;
-import net.milkbowl.vault.economy.*;
 import org.bukkit.entity.Player;
 
-import java.math.BigDecimal;
-import java.math.RoundingMode;
 import java.util.*;
 
 /** [HUGE WIP]
@@ -28,12 +25,15 @@ public class SpigotPlayer implements IPlayer
     private List<Profession> mProfessions;
     private Integer mPlayerLevel;
     private String mDBUsername;
+    private String mCurrentUsername;
 
     /**
      * This is the Default Constructor for the CraftyPlayer object in which
      * a player will be initialized from the Crafty Professions Database.
      *
-     * @param
+     * @param dbID The players Database ID, this is unique to the Database.
+     * @param currentDBuname The current players name stored in the Database.
+     * @param playerLevel The players overall Level retrieved from the Database.
      */
     public SpigotPlayer (UnsignedLong dbID, String currentDBuname, Integer playerLevel)
     {
@@ -69,6 +69,14 @@ public class SpigotPlayer implements IPlayer
 	public Integer getLevel ()
     {
     	return mPlayerLevel;
+    }
+
+	/**
+	 * @return The database identifier of the player.
+	 */
+	public UnsignedLong getDBIdentifier ()
+    {
+    	return mPlayerID;
     }
     /**
      * This method will "Payout" the players current money ca, This method
@@ -110,6 +118,7 @@ public class SpigotPlayer implements IPlayer
      *
      * @param perm The permission to check against the player
      */
+
     public boolean checkPerms (final String perm)
     {
         return mPlayer.hasPermission (perm);

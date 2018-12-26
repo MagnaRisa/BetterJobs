@@ -1,5 +1,6 @@
 package com.creedfreak.spigot.commands;
 
+import com.creedfreak.common.container.IPlayer;
 import com.creedfreak.spigot.container.CommandData;
 import com.creedfreak.spigot.container.SpigotPlayer;
 
@@ -40,7 +41,7 @@ public abstract class ProfessionCommand implements ICommand
      *         False - If the sender does not have the perms
      */
     @Override
-    public boolean checkPermission (SpigotPlayer sender)
+    public boolean checkPermission (IPlayer sender)
     {
         return mCommandData.hasPerms (sender);
     }

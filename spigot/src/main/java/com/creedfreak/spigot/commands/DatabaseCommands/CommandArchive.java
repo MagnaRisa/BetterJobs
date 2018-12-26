@@ -17,7 +17,7 @@ public class CommandArchive extends DatabaseCommand
             "archive",
             "This command will send the specified player to be backed up within the Archive.",
             "/prof archive [PlayerName]",
-            "spigot_craftyprofessions.admin.archive"
+            "craftyprofessions.admin.archive"
         ));
     }
 

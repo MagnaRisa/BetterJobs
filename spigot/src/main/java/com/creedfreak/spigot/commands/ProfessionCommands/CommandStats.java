@@ -21,7 +21,7 @@ public class CommandStats extends ProfessionCommand
             "stats",
             "This command will display a simple version of the players stats",
             "/prof stats",
-            "spigot_craftyprofessions.use.stats"
+            "craftyprofessions.use.stats"
         ));
     }
 

@@ -17,7 +17,7 @@ public class CommandResetProfile extends DatabaseCommand
             "resetplayer",
             "This command will wipe a players full professions stats or you can choose which stat you would like to erase",
             "/prof resetplayer [Statistic]",
-            "spigot_craftyprofessions.admin.resetplayer"
+            "craftyprofessions.admin.resetplayer"
         ));
     }
 
