@@ -7,13 +7,13 @@ public class ProfessionBuilder
 		Profession construct = null;
 		String check = profession.toLowerCase ();
 
-		switch (check)
-		{
-			case "miner":
-				construct = new ProfMiner ();
-			default:
-
-		}
+//		switch (check)
+//		{
+//			case "miner":
+//				construct = new ProfMiner ();
+//			default:
+//
+//		}
 
 		return construct;
 	}

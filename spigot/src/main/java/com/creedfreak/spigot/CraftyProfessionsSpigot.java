@@ -11,6 +11,7 @@ import com.creedfreak.spigot.config.ConfigController;
 import com.creedfreak.common.container.PlayerManager;
 import com.creedfreak.common.database.databaseConn.Database;
 import com.creedfreak.common.database.databaseConn.DatabaseFactory;
+import com.creedfreak.spigot.container.SpigotPlayerFactory;
 import com.creedfreak.spigot.listeners.CoreListener;
 import net.milkbowl.vault.chat.Chat;
 import net.milkbowl.vault.economy.Economy;
@@ -301,7 +302,7 @@ public class CraftyProfessionsSpigot extends JavaPlugin implements ICraftyProfes
         getLogger ().info ("Setting up database connection and Checking for "
             + "created Database this might take awhile ...");
 
-        mDatabase = DatabaseFactory.buildDatabase (this, mConfigController);
+        mDatabase = DatabaseFactory.buildDatabase (this, mConfigController, new SpigotPlayerFactory ());
 
         if (!mDatabase.initializeDatabase ())
         {

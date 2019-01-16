@@ -78,6 +78,7 @@ public class SpigotPlayer implements IPlayer
     {
     	return mPlayerID;
     }
+
     /**
      * This method will "Payout" the players current money ca, This method
      * should be called after x amount of ticks of the player receiving money and

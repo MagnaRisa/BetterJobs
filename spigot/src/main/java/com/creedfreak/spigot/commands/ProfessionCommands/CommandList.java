@@ -3,7 +3,6 @@ package com.creedfreak.spigot.commands.ProfessionCommands;
 import com.creedfreak.common.container.IPlayer;
 import com.creedfreak.spigot.commands.ProfessionCommand;
 import com.creedfreak.spigot.container.CommandData;
-
 /**
  * This command will list all of the available jobs that a player can join.
  */

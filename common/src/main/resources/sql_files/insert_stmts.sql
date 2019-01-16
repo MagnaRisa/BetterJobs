@@ -134,3 +134,7 @@ INSERT INTO Augments (AugmentName, AugShorthand, MinLevel, Description) VALUES (
 INSERT INTO BonusTypes (BonusType) VALUES ("Experience");
 INSERT INTO BonusTypes (BonusType) VALUES ("Income");
 INSERT INTO BonusTypes (BonusType) VALUES ("[Token]");
+
+
+
+

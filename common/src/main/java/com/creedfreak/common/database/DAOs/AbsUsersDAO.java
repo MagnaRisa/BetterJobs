@@ -62,7 +62,6 @@ public abstract class AbsUsersDAO
 		try
 		{
 			savePlayer = conn.prepareStatement (insertUser);
-
 			savePlayer.setBytes (1, UuidUtil.toBytes (playerID));
 			savePlayer.setString (2, username);
 
@@ -303,10 +302,6 @@ public abstract class AbsUsersDAO
 		return retPlayer;
 	}
 
-	/**
-	 * @param userID
-	 * @return
-	 */
 	public IPlayer restoreUser (UUID userID)
 	{
 		return null;

@@ -7,7 +7,6 @@ import com.creedfreak.common.database.databaseConn.Database;
 import com.creedfreak.spigot.container.SpigotPlayer;
 import com.google.common.primitives.UnsignedLong;
 import sun.reflect.generics.reflectiveObjects.NotImplementedException;
-
 import java.util.*;
 
 public class SpigotUsersDAO extends AbsUsersDAO
