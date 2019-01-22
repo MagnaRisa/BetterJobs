@@ -61,7 +61,7 @@ public class CommandController extends AbsCmdController implements CommandExecut
     	boolean retVal;
         Player player = obtainBukkitPlayer (sender);
         IPlayer mPlayer;
-        ICommand command = null;
+        ICommand command;
 
         if (player == null)
         {
@@ -82,6 +82,9 @@ public class CommandController extends AbsCmdController implements CommandExecut
 	        }
 	        catch (TooFewArgumentException | CommandNotFoundException ex)
 	        {
+	        	// Load the Help command and display all usable commands for a regular user.
+//	        	mPlayer = PlayerManager.Instance ().getPlayer (player.getUniqueId ());
+//	        	command = loadCommand ();
 		        player.sendMessage (ex.getMessage ());
 	        }
 	        finally
