@@ -1,6 +1,7 @@
 package com.creedfreak.common.container;
 
 import com.creedfreak.common.database.DAOs.AbsUsersDAO;
+import com.creedfreak.common.database.DAOs.ProfessionsDAO;
 import com.creedfreak.common.utility.Logger;
 
 import java.util.UUID;
@@ -18,6 +19,7 @@ public final class PlayerManager
     private static final String PM_PREFIX = "PlayerManager";
 
     private AbsUsersDAO mUsersDAO;
+    private ProfessionsDAO mProfDAO;
     private Logger mLogger;
 
     private static PlayerManager mPlayerManager = null;
@@ -75,6 +77,7 @@ public final class PlayerManager
      */
     public void removePlayer (UUID dbID)
     {
+    	mUsersDAO.update (mPlayerList.get (dbID));
         mPlayerList.remove (dbID);
     }
 
@@ -109,11 +112,12 @@ public final class PlayerManager
     {
     	boolean succeed = false;
 
-    	// TODO: The profession information of the player also needs to get loaded.
     	if (mUsersDAO.checkExist (playerUUID))
 	    {
 		    IPlayer player;
 			player = mUsersDAO.load (playerUUID);
+			mUsersDAO.fetchUserProfessions (player);
+
 			mPlayerList.put (player.getUUID (), player);
 			succeed = true;
 	    }

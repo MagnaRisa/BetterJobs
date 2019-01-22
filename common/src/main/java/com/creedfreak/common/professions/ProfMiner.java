@@ -1,12 +1,13 @@
 package com.creedfreak.common.professions;
 
-import com.creedfreak.common.container.WageTableHandler;
+import sun.reflect.generics.reflectiveObjects.NotImplementedException;
 
 import java.util.List;
 
 public class ProfMiner extends Profession
 {
     public static final String PROF_NAME = "Miner";
+    private final TableType mType = TableType.Miner;
 
     // This is the Users current Miner Status i.e. Miner_Payout, Ore_Affinity, etc...
     private String mMinerStatus;
@@ -16,7 +17,12 @@ public class ProfMiner extends Profession
     // after this list is initialized.
     private List<IAugment> mAugments;
 
-    // These are the bonus values modified by the Augments of the professions.
+    int mProfLevel;
+    int mPrestigeLevel;
+    double mCurrentExp;
+    double mTotalExp;
+
+    // TODO: Calculate these when the augments are fetched.
     private float mExpierenceBonus;
     private float mIncomeBonus;
     private float mTokenBonus;
@@ -24,19 +30,49 @@ public class ProfMiner extends Profession
     // TODO: References Issue #27
     //private float mWagePool;
 
-    public ProfMiner (String status, float exp, float income, float token) throws NullPointerException
+    /**
+     * Constructs the default ProfessionMiner. This is used primarily when
+     * the user selects a job for the first time and they have no stats
+     * in the profession yet.
+     */
+    public ProfMiner ()
     {
-        // Initialize the Wage Table; Should never change.
-        super();
+        super (TableType.Miner);
 
-        // What wage table will the player use?
-        // This value is stored in the database until retrieved.
+        mMinerStatus = "default";
+        mProfLevel = 0;
+        mPrestigeLevel = 0;
+        mCurrentExp = 0D;
+        mTotalExp = 0D;
+
+        mExpierenceBonus = 0f;
+        mIncomeBonus = 0f;
+        mTokenBonus = 0f;
+
+        mAugments = null;
+    }
+
+    /**
+     * Constructs the database related profession with a specific user. This is
+     * used if the player is already in the database with stats in the profession.
+     *
+     * @param status - The current status of the profession
+     * @param level - The current level of the user in this profession
+     * @param prestigeLevel - The prestige level of the user in this profession
+     * @param currentExp - The current exp of the current level the user has in this profession
+     * @param totalExp -  The total amount of exp total the user has gained in this profession
+     * @throws NullPointerException
+     */
+    public ProfMiner (String status, int level, int prestigeLevel, double currentExp, double totalExp) throws NullPointerException
+    {
+        super(TableType.Miner);
+
         mMinerStatus = status;
 
-        // Construct the object with the users specific bonuses.
-        mExpierenceBonus = exp;
-        mIncomeBonus = income;
-        mTokenBonus = token;
+        mProfLevel = level;
+        mPrestigeLevel = prestigeLevel;
+        mCurrentExp = currentExp;
+        mTotalExp = totalExp;
     }
 
     public String getName ()
@@ -61,4 +97,13 @@ public class ProfMiner extends Profession
         return mMinerStatus;
     }
 
+    public TableType type ()
+    {
+        return mType;
+    }
+
+    public void loadAugments ()
+    {
+        throw new NotImplementedException ();
+    }
 }

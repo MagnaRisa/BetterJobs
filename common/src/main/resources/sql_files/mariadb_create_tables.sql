@@ -38,8 +38,6 @@ CREATE TABLE IF NOT EXISTS Professions
 	ProfessionName VARCHAR (25) NOT NULL,
 	Description TEXT DEFAULT NULL,
 	WageTableRef VARCHAR (30) NOT NULL,
-	TotalAugSlots INT UNSIGNED DEFAULT 0,
-	FilledAugSlots INT UNSIGNED DEFAULT 0,
 	
 	CONSTRAINT Professions_ProfessionID_PK PRIMARY KEY (ProfessionID),
 	CONSTRAINT Professions_WageTableRef_U UNIQUE (WageTableRef)

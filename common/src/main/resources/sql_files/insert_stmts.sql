@@ -7,27 +7,27 @@
 -- -------------------------------------
 
 -- ID: 1
-INSERT INTO Professions (ProfessionName, WageTableRef, TotalAugSlots, Description) VALUES ("The Miner", "miner_wage.json", 3,
+INSERT INTO Professions (ProfessionName, WageTableRef, Description) VALUES ("The Miner", "miner_wage.json",
 "Diggy Diggy Hole, Diggy Diggy Hole, I hate myself for remembering this song! *Dated Sourdough*");
 
 -- ID: 2
-INSERT INTO Professions (ProfessionName, WageTableRef, TotalAugSlots, Description) VALUES ("The Angler", "angler_wage.json", 3,
+INSERT INTO Professions (ProfessionName, WageTableRef, Description) VALUES ("The Angler", "angler_wage.json",
 "This Profession is all focused around fishing and catching the various treasures of the sea.");
 
 -- ID: 3
-INSERT INTO Professions (ProfessionName, WageTableRef, TotalAugSlots, Description) VALUES ("The Lumberjack", "lumberjack_wage.json", 3,
+INSERT INTO Professions (ProfessionName, WageTableRef, Description) VALUES ("The Lumberjack", "lumberjack_wage.json",
 "This Job will get you money based on chopping down trees for that oh’ so precious Lumber.");
 
 -- ID: 4
-INSERT INTO Professions (ProfessionName, WageTableRef, TotalAugSlots, Description) VALUES ("The Knight", "knight_wage.json", 3,
+INSERT INTO Professions (ProfessionName, WageTableRef, Description) VALUES ("The Knight", "knight_wage.json",
 "Become a Knight and take on all of the things that go bump in the night and get paid while doing it!");
 
 -- ID: 5
-INSERT INTO Professions (ProfessionName, WageTableRef, TotalAugSlots, Description) VALUES ("The Architect", "architect_wage.json", 3,
+INSERT INTO Professions (ProfessionName, WageTableRef, Description) VALUES ("The Architect", "architect_wage.json",
 "Your your innate building skillz to create masterpieces and get paid while creating those structurally sound builds.");
 
 -- ID: 6
-INSERT INTO Professions (ProfessionName, WageTableRef, TotalAugSlots, Description) VALUES ("The Farmer", "farmer_wage.json", 3,
+INSERT INTO Professions (ProfessionName, WageTableRef, Description) VALUES ("The Farmer", "farmer_wage.json",
 "This profession will allow you to to obtain money from doing any type of farming within the game. Specializations of the Farmer Profession are The Rancher, and Crop Cultivation");
 
 -- ---------------------------------------
@@ -35,23 +35,23 @@ INSERT INTO Professions (ProfessionName, WageTableRef, TotalAugSlots, Descriptio
 -- ---------------------------------------
 
 -- ID: 1
-INSERT INTO SubProfessions (SubProfessionName, WageTableRef, TotalAugSlots, Description) VALUES ("The Arrow Smith", "arrow_smith_wage.json", 4,
+INSERT INTO SubProfessions (SubProfessionName, WageTableRef, Description) VALUES ("The Arrow Smith", "arrow_smith_wage.json",
 "Arrows, what a pain to craft…. Why would I want to craft all of those kewl new arrows? Now with the backing of payment for crafting such objects, maybe you’ll find a use for them.");
 
 -- ID: 2
-INSERT INTO SubProfessions (SubProfessionName, WageTableRef, TotalAugSlots, Description) VALUES ("The Enchanter", "enchanter_wage.json", 4,
+INSERT INTO SubProfessions (SubProfessionName, WageTableRef, Description) VALUES ("The Enchanter", "enchanter_wage.json",
 "Have you ever lost all of your gear in the void and regretted the beautiful grind to get it back? Well fear no more *cough cough Malathier cough* because now there is an incentive to the grind by getting paid per enchantment.");
 
 -- ID: 3
-INSERT INTO SubProfessions (SubProfessionName, WageTableRef, TotalAugSlots, Description) VALUES ("The Alchemist", "alchemist_wage.json", 4,
+INSERT INTO SubProfessions (SubProfessionName, WageTableRef, Description) VALUES ("The Alchemist", "alchemist_wage.json",
 "Is that a wart I see on your nose? Oh that is just your face, become the wicked witch and brew up dem potions to have more money to spend on your dark arts.");
 
 -- ID: 4
-INSERT INTO SubProfessions (SubProfessionName, WageTableRef, TotalAugSlots, Description) VALUES ("The Merchant", "merchant_wage.json", 4,
+INSERT INTO SubProfessions (SubProfessionName, WageTableRef, Description) VALUES ("The Merchant", "merchant_wage.json",
 "Become the pompous arrogant Merchant when you trade with those weird unisex people from the far distant Nose-Opolis.");
 
 -- ID: 5
-INSERT INTO SubProfessions (SubProfessionName, WageTableRef, TotalAugSlots, Description) VALUES ("The Chef", "chef_wage.json", 4,
+INSERT INTO SubProfessions (SubProfessionName, WageTableRef, Description) VALUES ("The Chef", "chef_wage.json",
 "When you gotta eat, you gotta eat. Fear no more about buying your food from the store! In stead get paid when you cook your food.");
 
 -- ----------------------------------------
@@ -134,7 +134,3 @@ INSERT INTO Augments (AugmentName, AugShorthand, MinLevel, Description) VALUES (
 INSERT INTO BonusTypes (BonusType) VALUES ("Experience");
 INSERT INTO BonusTypes (BonusType) VALUES ("Income");
 INSERT INTO BonusTypes (BonusType) VALUES ("[Token]");
-
-
-
-

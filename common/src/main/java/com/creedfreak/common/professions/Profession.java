@@ -33,7 +33,7 @@ public abstract class Profession
     abstract public String getName ();
 
     /**
-     * This method will essentialy do "work" of the profession. If an event is
+     * This method will essentially do "work" of the profession. If an event is
      * passed to this method the hope is that the corresponding block is hashed
      * and the monetary value of that block or item is returned to the player.
      *
@@ -42,7 +42,7 @@ public abstract class Profession
      *
      * @param element - The block, item, or action that the event generates.
      *
-     * @return - true or false, if the value retrived from the HashMap was a null
+     * @return - true or false, if the value retrieved from the HashMap was a null
      *              value or not. If null is encountered then
      */
     public boolean work (String element)
@@ -86,12 +86,15 @@ public abstract class Profession
      * Miner Wage payout table to the corresponding
      * upgraded version. Miner_Payout -> Stone_Affinity
      */
-    abstract void upgradeStatus (String newStatus);
+    public abstract void upgradeStatus (String newStatus);
 
-    abstract String getStatus ();
+    public abstract String getStatus ();
 
-    // Some way to pay a player or hold the money in a central location
-    // Some way to generate the revenue
-    // Some way to add and or remove XP gained for Professions
-    // Some sort of Modifier method to track and update Modifiers
+    public abstract TableType type ();
+
+    public abstract void loadAugments ();
+
+    // public abstract void addAugment ();
+
+    // public abstract void removeAugment ();
 }

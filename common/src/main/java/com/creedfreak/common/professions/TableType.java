@@ -22,8 +22,8 @@ public enum TableType
     Lumberjack("lumberjack_wage.json", "Lumberjack_Payout"),
     Merchant("merchant_wage.json", "Merchant_Payout");
 
-    private String mFileName;
-    private String mDefaultTier;
+    private final String mFileName;
+    private final String mDefaultTier;
     private HashMap<String, String> mTierMap = new HashMap<> ();
 
     /**

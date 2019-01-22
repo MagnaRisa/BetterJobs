@@ -93,7 +93,8 @@ public abstract class Database
 			{
 				mConnection.close ();
 			}
-		} catch (SQLException exception)
+		}
+		catch (SQLException exception)
 		{
 			mLogger.Warn (DATABASE_PREFIX, "Could not close Database Connection: " + exception.getMessage ());
 		}
@@ -156,7 +157,8 @@ public abstract class Database
 			{
 				stmt.close ();
 			}
-		} catch (SQLException exception)
+		}
+		catch (SQLException exception)
 		{
 			mLogger.Error (DATABASE_PREFIX, "Failed to close SQL Prep Statement " + exception.getMessage ());
 		}
@@ -188,15 +190,13 @@ public abstract class Database
 
 			if (createSuccess)
 			{
-				mLogger.Info (DATABASE_PREFIX,
-						"Total number of Create Table statements ran: " + mNumTables);
+				mLogger.Info (DATABASE_PREFIX, "Total number of Create Table statements ran: " + mNumTables);
 
 				insertSuccess = insertIntoTables ();
 
 				if (insertSuccess)
 				{
-					mLogger.Info (DATABASE_PREFIX,
-							"Database has been created and the required data has been inserted!");
+					mLogger.Info (DATABASE_PREFIX, "Database has been created and the required data has been inserted!");
 				}
 
 				// This automatically means that createSuccess was true.
@@ -204,8 +204,7 @@ public abstract class Database
 			}
 
 			mTotalTimeElapsed = TimeUtil.toSeconds (System.nanoTime () - initialTime);
-			mLogger.Info (DATABASE_PREFIX, "Total time elapsed for database Construction: "
-				+ timeFormat.format (mTotalTimeElapsed) + "sec");
+			mLogger.Info (DATABASE_PREFIX, "Total time elapsed for database Construction: " + timeFormat.format (mTotalTimeElapsed) + "sec");
 		}
 		else
 		{
@@ -248,15 +247,18 @@ public abstract class Database
 				}
 				sqlStmt = reader.readStatement ();
 			}
-		} catch (IOException | SQLException exception)
+		}
+		catch (IOException | SQLException exception)
 		{
 			mLogger.Error (DATABASE_PREFIX, "Could not Create Database Tables: " + exception);
 			return false;
-		} catch (Exception exception)
+		}
+		catch (Exception exception)
 		{
 			mLogger.Error (DATABASE_PREFIX, "Unhandled Exception: " + exception);
 			return false;
-		} finally
+		}
+		finally
 		{
 			dbClose ();
 			reader.closeReader ();
@@ -298,18 +300,18 @@ public abstract class Database
 				executeStatement (sqlStmt, connection);
 				sqlStmt = reader.readStatement ();
 			}
-		} catch (IOException | SQLException exception)
+		}
+		catch (IOException | SQLException exception)
 		{
-			mLogger.Error (DATABASE_PREFIX,
-				"Could Not Insert Initialization Data Into Database: " + exception);
+			mLogger.Error (DATABASE_PREFIX, "Could Not Insert Initialization Data Into Database: " + exception);
 			return false;
-		} finally
+		}
+		finally
 		{
 			dbClose ();
 			reader.closeReader ();
-			mLogger.Info (DATABASE_PREFIX,
-				"Total number of Insertion statements ran: " + mNumInsertsRan);
-		}
+			mLogger.Info (DATABASE_PREFIX, "Total number of Insertion statements ran: " + mNumInsertsRan);
+	}
 		return true;
 	}
 
@@ -345,8 +347,7 @@ public abstract class Database
 		}
 		catch (SQLException exception)
 		{
-			mLogger.Error (DATABASE_PREFIX,
-				"Could not locate tables within checkDBExists! Defaulting return type to false. State: " + exception.getSQLState ());
+			mLogger.Error (DATABASE_PREFIX, "Could not locate tables within checkDBExists! Defaulting return type to false. State: " + exception.getSQLState ());
 			return false;
 		}
 		finally
@@ -373,8 +374,7 @@ public abstract class Database
 	 *
 	 * Return: None
 	 *************************************************************************/
-	private void executeStatement (String sqlStatement, Connection conn)
-		throws SQLException
+	private void executeStatement (String sqlStatement, Connection conn) throws SQLException
 	{
 		PreparedStatement statement = conn.prepareStatement (sqlStatement);
 		statement.execute ();

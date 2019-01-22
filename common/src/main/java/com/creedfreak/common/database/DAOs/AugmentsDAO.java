@@ -1,5 +1,6 @@
 package com.creedfreak.common.database.DAOs;
 
+import com.creedfreak.common.professions.Profession;
 import com.google.common.primitives.UnsignedLong;
 import com.creedfreak.common.database.databaseConn.Database;
 import com.creedfreak.common.professions.IAugment;
@@ -39,6 +40,11 @@ public class AugmentsDAO implements IDaoBase<IAugment>
     public  List<IAugment> loadAll ()
     {
         return null;
+    }
+
+    public void fetchProfAugments (Profession prof, UnsignedLong userID)
+    {
+
     }
 
     public IAugment load ()

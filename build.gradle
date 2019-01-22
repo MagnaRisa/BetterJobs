@@ -20,11 +20,11 @@ plugins {
  */
 ext {
     // Version 0.8 from the WageTable Update for the dev build
-    spigot_version = '0.12'
+    spigot_version = '0.8'
     // Version 0.1 for including the sponge api and creating the initial first class.
     sponge_version = '0.1'
     // Version 0.4 from the WageTable Update for the dev build
-    common_version = '0.4'
+    common_version = '0.8'
     cp_build = 'dev'
     jar_root_prefix = 'craftyprof'
 }

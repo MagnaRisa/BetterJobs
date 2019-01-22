@@ -1,6 +1,7 @@
 package com.creedfreak.common.database.DAOs;
 
 import com.creedfreak.common.database.queries.queryLib;
+import com.creedfreak.common.professions.Profession;
 import com.creedfreak.common.utility.Logger;
 import com.creedfreak.common.utility.UuidUtil;
 import com.google.common.primitives.UnsignedLong;
@@ -98,6 +99,8 @@ public abstract class AbsUsersDAO
 	/**
 	 * Updates the IPlayers information in the database.
 	 *
+	 * TODO: This should include the players Professions and Augments on those professions.
+	 *
 	 * @param player The player to update into the database
 	 */
 	public void update (IPlayer player)
@@ -184,7 +187,7 @@ public abstract class AbsUsersDAO
 	 *                                  database as IPlayers.
 	 * @return A list of loaded players from the database.
 	 */
-	public  List<IPlayer> loadSubset (Collection<UUID> values)
+	public List<IPlayer> loadSubset (Collection<UUID> values)
 	{
 		Connection conn = mDatabase.dbConnect ();
 
@@ -239,7 +242,7 @@ public abstract class AbsUsersDAO
 			}
 			catch (SQLException except)
 			{
-				Logger.Instance ().Error ("AbsUsersDAO", "Count not set auto commit for Database: " + except.getSQLState ());
+				Logger.Instance ().Error ("AbsUsersDAO", "Could not set auto commit for Database: " + except.getSQLState ());
 			}
 
 			mDatabase.dbCloseResources (getPlayer, resultSet);
@@ -308,6 +311,7 @@ public abstract class AbsUsersDAO
 	}
 
 	/**
+	 * TODO: Not Fully Implemented Yet.
 	 * Checks to see if the user is within the database.
 	 *
 	 * @param userID - The Users unique id
@@ -340,6 +344,21 @@ public abstract class AbsUsersDAO
 		}
 
 		return retVal;
+	}
+
+	public void fetchUserProfessions (IPlayer player)
+	{
+		List<Profession> professions;
+
+		professions = mProfessionsDAO.loadSubset (player.getDBIdentifier (), player.getUsername ());
+
+//		for (Profession prof : professions)
+//		{
+//			// Grab the augments for each profession
+//			mAugmentDAO.fetchProfAugments (prof, player.getDBIdentifier ());
+//		}
+
+		player.registerProfession (professions);
 	}
 
 	public abstract IPlayer playerFactory (UnsignedLong playerID, String username, Integer playerLevel);

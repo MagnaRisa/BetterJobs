@@ -2,6 +2,7 @@ package com.creedfreak.spigot.commands.ProfessionCommands;
 
 import com.creedfreak.common.container.IPlayer;
 import com.creedfreak.common.container.PlayerManager;
+import com.creedfreak.common.professions.ProfessionBuilder;
 import com.creedfreak.spigot.commands.ProfessionCommand;
 import com.creedfreak.spigot.container.CommandData;
 import com.creedfreak.spigot.container.SpigotPlayer;
@@ -39,15 +40,17 @@ public class CommandJoin extends ProfessionCommand
     public boolean execute (IPlayer sender, String... args)
     {
         sender.sendMessage ("You have just executed /prof join");
+        if (checkPermission (sender))
+        {
+            if (sender.registerProfession (ProfessionBuilder.buildDefault (args[0])))
+            {
+                sender.sendMessage ("You are already registered for this profession.");
+            }
+        }
 
         return true;
     }
 
-    /**
-     * This method returns the name of the command
-     *
-     * @return The name of the command after the prefix /prof
-     */
     public String cmdName ()
     {
         return mCommandData.getCommandArg ();

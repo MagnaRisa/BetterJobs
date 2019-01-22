@@ -1,10 +1,5 @@
 package com.creedfreak.common.database.queries;
 
-import com.google.common.primitives.UnsignedLong;
-import com.creedfreak.common.database.databaseConn.Database;
-
-import java.sql.ResultSet;
-
 /**
  * This class houses the static queries that will need to be called to
  * retrieve data from the database. These static strings will be used
@@ -22,7 +17,7 @@ public final class queryLib
             + "WHERE UUID = ?";
 
     // If they have any Careers or SideJobs we need to grab them.
-    private static final String selectUserCareers
+    public static final String selectUserCareers
             = "SELECT * "
             + "FROM Users, Careers, Professions "
             + "WHERE Users.UserID = ? "

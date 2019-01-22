@@ -1,11 +1,14 @@
 package com.creedfreak.spigot.container;
 
+import com.creedfreak.common.professions.TableType;
+import com.creedfreak.common.utility.Logger;
 import com.google.common.primitives.UnsignedLong;
 import com.creedfreak.common.container.IPlayer;
 import com.creedfreak.common.professions.Profession;
 import org.bukkit.entity.Player;
 
 import java.util.*;
+import java.util.concurrent.ConcurrentHashMap;
 
 /** [HUGE WIP]
  * This is the Player Wrapper for the CraftyProfessions Plugin in which stores all
@@ -22,7 +25,7 @@ public class SpigotPlayer implements IPlayer
     private boolean mPrintEarnedWages;
 
     // The Users list of professions.
-    private List<Profession> mProfessions;
+    private ConcurrentHashMap<TableType, Profession> mProfessions;
     private Integer mPlayerLevel;
     private String mDBUsername;
     private String mCurrentUsername;
@@ -44,6 +47,11 @@ public class SpigotPlayer implements IPlayer
 		mDBUsername = currentDBuname;
 
         mPrintEarnedWages = false;
+
+        if (!mDBUsername.equals (mPlayer.getName ()))
+        {
+        	mCurrentUsername = mPlayer.getName ();
+        }
     }
     /**
      * This method will return the UUID of the CPPlayer
@@ -80,6 +88,47 @@ public class SpigotPlayer implements IPlayer
     }
 
     /**
+     * Registering a profession will allow the user to start getting income from
+     * the profession that is registered.
+     *
+     * @param prof - The profession to register with the players list of professions.
+     */
+    @Override
+    public boolean registerProfession (Profession prof)
+    {
+        boolean registered = mProfessions.containsKey (prof.type ());
+        if (!registered)
+        {
+            mProfessions.put (prof.type (), prof);
+        }
+        return registered;
+    }
+
+    public void registerProfession (List<Profession> professions)
+    {
+    	boolean registered;
+		for (Profession prof : professions)
+		{
+			registered = registerProfession (prof);
+
+			if (!registered)
+			{
+				Logger.Instance ().Warn ("SpigotPlayer", "Profession: " + prof.getName () + " was not registered for user " + mCurrentUsername);
+			}
+		}
+    }
+
+    public boolean unregisterProfession (TableType type)
+    {
+        boolean registered = mProfessions.containsKey (type);
+        if (registered)
+        {
+            mProfessions.remove (type);
+        }
+        return registered;
+    }
+
+    /**
      * This method will "Payout" the players current money ca, This method
      * should be called after x amount of ticks of the player receiving money and
      * right before the player logs off if the Player Pool is more than 0.
@@ -88,7 +137,7 @@ public class SpigotPlayer implements IPlayer
     {
     	float retVal = 0.0f;
 
-        for (Profession prof : mProfessions)
+        for (Profession prof : mProfessions.values ())
         {
             if (mPrintEarnedWages)
             {
@@ -142,7 +191,7 @@ public class SpigotPlayer implements IPlayer
             {
                 // Iterate over the list and send the Profession name to the User.
 	            mPlayer.sendMessage ("Your Current Professions Are:");
-                for (Profession prof : mProfessions)
+                for (Profession prof : mProfessions.values ())
                 {
                 	mPlayer.sendMessage (prof.getName ());
                 }
@@ -151,11 +200,6 @@ public class SpigotPlayer implements IPlayer
     }
 
 	/**
-     * Question: Can we have multiple blocks associated with multiple wage tables?
-     * Infer: This could work if we use a map to store the various types of events,
-     * Infer: place and break. Once the event occurs we grab the correct map and
-     * Infer: hash the event element into that map.
-     *
 	 * Sets the print earned wages field to either true or false. This field indicates if
 	 * the players wages should be printed out to them or not.
 	 *

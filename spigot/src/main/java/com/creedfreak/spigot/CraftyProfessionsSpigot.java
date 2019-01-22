@@ -302,7 +302,7 @@ public class CraftyProfessionsSpigot extends JavaPlugin implements ICraftyProfes
         getLogger ().info ("Setting up database connection and Checking for "
             + "created Database this might take awhile ...");
 
-        mDatabase = DatabaseFactory.buildDatabase (this, mConfigController, new SpigotPlayerFactory ());
+        mDatabase = DatabaseFactory.buildDatabase (this, mConfigController);
 
         if (!mDatabase.initializeDatabase ())
         {

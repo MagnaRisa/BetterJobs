@@ -1,8 +1,11 @@
 package com.creedfreak.common.container;
 
+import com.creedfreak.common.professions.Profession;
+import com.creedfreak.common.professions.TableType;
 import com.google.common.primitives.UnsignedLong;
 
 import java.math.BigDecimal;
+import java.util.List;
 import java.util.UUID;
 
 public interface IPlayer
@@ -12,33 +15,33 @@ public interface IPlayer
      *
      * @return The players unique identifier
      */
-    public UUID getUUID ();
+    UUID getUUID ();
 
 	/**
 	 * Return the Username of the player.
 	 *
 	 * @return The players username
 	 */
-	public String getUsername ();
+	String getUsername ();
 
 	/**
 	 * Return the players overall CP Level
 	 *
 	 * @return The level of the player
 	 */
-	public Integer getLevel  ();
+	Integer getLevel  ();
 
 	/**
 	 * @return The database identifier of the player.
 	 */
-	public UnsignedLong getDBIdentifier ();
+	UnsignedLong getDBIdentifier ();
 
     /**
      * Sends a message to the target player.
      *
      * @param message The message to send to the target player.
      */
-    public void sendMessage (String message);
+    void sendMessage (String message);
 
     /**
      * Checks the permission of the current player.
@@ -48,24 +51,30 @@ public interface IPlayer
      * @return True - If the player has the permission.
      *         False - If the player does not have that permission.
      */
-    public boolean checkPerms (final String perm);
+    boolean checkPerms (final String perm);
 
     /**
      * Payout the players value pool to their economy account
      * If there is no economy then only add points to the players account.
      */
-    public float payoutPlayerPool ();
+    float payoutPlayerPool ();
 
     /**
      * Displays the current professions the User currently have.
      */
-    public void listProfessions ();
+    void listProfessions ();
 
-    /**
+	boolean registerProfession (Profession prof);
+
+	void registerProfession (List<Profession> professions);
+
+	boolean unregisterProfession (TableType prof);
+
+	/**
      * TODO: It may be the case where we will have to map into a large table of blocks and then check if they have the correct job.
      * This method is used to generate revenue based on what the user has broken.
      *
      * @param elementName - The name of the block that was broken.
      */
-    public void doWork (String elementName);
+    void doWork (String elementName);
 }

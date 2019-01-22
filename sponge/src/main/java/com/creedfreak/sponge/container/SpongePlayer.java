@@ -1,9 +1,12 @@
 package com.creedfreak.sponge.container;
 
 import com.creedfreak.common.container.IPlayer;
+import com.creedfreak.common.professions.Profession;
+import com.creedfreak.common.professions.TableType;
 import com.google.common.primitives.UnsignedLong;
 import org.spongepowered.api.entity.living.player.Player;
 
+import java.util.List;
 import java.util.UUID;
 
 public class SpongePlayer implements IPlayer
@@ -26,14 +29,11 @@ public class SpongePlayer implements IPlayer
 		return mPlayer.getUniqueId ();
 	}
 
-<<<<<<< HEAD
 	public UnsignedLong getDBIdentifier ()
 	{
 		return mPlayerID;
 	}
 
-=======
->>>>>>> 908cc8698a07640d82aa4b3010d3cc435454c222
 	public String getUsername ()
 	{
 		return mPlayer.getName ();
@@ -57,6 +57,24 @@ public class SpongePlayer implements IPlayer
 	public float payoutPlayerPool ()
 	{
 		return 0.0f;
+	}
+
+	@Override
+	public boolean registerProfession (Profession prof)
+	{
+		return false;
+	}
+
+	@Override
+	public void registerProfession (List<Profession> professions)
+	{
+
+	}
+
+	@Override
+	public boolean unregisterProfession (TableType prof)
+	{
+		return false;
 	}
 
 	public void listProfessions ()

@@ -41,8 +41,6 @@ public class CoreListener implements Listener
     {
         Player eventPlayer = event.getPlayer ();
 
-        eventPlayer.sendMessage ("Player Logged in, Attempting to save to PlayerManager");
-
         if (!PlayerManager.Instance ().loadPlayer (eventPlayer.getUniqueId ()))
         {
         	PlayerManager.Instance ().savePlayer (eventPlayer.getUniqueId (), eventPlayer.getName ());
@@ -75,7 +73,7 @@ public class CoreListener implements Listener
 
         // TODO: This needs testing before moving on
         eventFocus = PlayerManager.Instance ().getPlayer (player.getUniqueId ());
-        eventFocus.doWork (event.getBlock ().getType ().name ());
+        // eventFocus.doWork (event.getBlock ().getType ().name ());
 
         player.sendMessage ("Block Broken was " + event.getBlock ().getType ().name ());
 
