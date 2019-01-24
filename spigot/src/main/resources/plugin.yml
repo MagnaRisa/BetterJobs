@@ -42,4 +42,4 @@ permissions:
 
   craftyprofessions.db.*:
     default: op
-    description: Give the player all of the Database permissions
+    description: Give the player all of the database permissions

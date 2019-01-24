@@ -5,13 +5,12 @@ import com.creedfreak.common.AbsConfigController;
 import com.creedfreak.common.ICraftyProfessions;
 import com.creedfreak.common.container.WageTableHandler;
 import com.creedfreak.common.utility.Logger;
-import com.creedfreak.spigot.Database.SpigotUsersDAO;
+import com.creedfreak.spigot.database.SpigotUsersDAO;
 import com.creedfreak.spigot.commands.CommandController;
 import com.creedfreak.spigot.config.ConfigController;
 import com.creedfreak.common.container.PlayerManager;
 import com.creedfreak.common.database.databaseConn.Database;
 import com.creedfreak.common.database.databaseConn.DatabaseFactory;
-import com.creedfreak.spigot.container.SpigotPlayerFactory;
 import com.creedfreak.spigot.listeners.CoreListener;
 import net.milkbowl.vault.chat.Chat;
 import net.milkbowl.vault.economy.Economy;
@@ -46,7 +45,7 @@ public class CraftyProfessionsSpigot extends JavaPlugin implements ICraftyProfes
     // Command Controller
     private CommandController mCommandController;
 
-    // Database Information
+    // database Information
     private Database mDatabase;
 
     // WageTables
@@ -83,7 +82,7 @@ public class CraftyProfessionsSpigot extends JavaPlugin implements ICraftyProfes
         mConfigController.createDefaultConfig ();
         mConfigController.registerConfigFiles ();
 
-        // Setup Database
+        // Setup database
         setupDatabase ();
 
         // We need to register the listeners for the Plugin
@@ -203,7 +202,7 @@ public class CraftyProfessionsSpigot extends JavaPlugin implements ICraftyProfes
     }
 
     /**
-     * Returns the Database we are using
+     * Returns the database we are using
      */
     public Database getDatabase ()
     {
@@ -295,18 +294,18 @@ public class CraftyProfessionsSpigot extends JavaPlugin implements ICraftyProfes
     }
 
     /**
-     * Sets up the Database using the Spigot Config File
+     * Sets up the database using the Spigot Config File
      */
     public void setupDatabase ()
     {
         getLogger ().info ("Setting up database connection and Checking for "
-            + "created Database this might take awhile ...");
+            + "created database this might take awhile ...");
 
         mDatabase = DatabaseFactory.buildDatabase (this, mConfigController);
 
         if (!mDatabase.initializeDatabase ())
         {
-        	Logger.Instance ().Error ("onEnable", "Database didn't Initialize, Disabling Plugin!");
+        	Logger.Instance ().Error ("onEnable", "database didn't Initialize, Disabling Plugin!");
             getServer ().getPluginManager ().disablePlugin (this);
         }
     }

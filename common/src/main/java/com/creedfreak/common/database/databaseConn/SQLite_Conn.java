@@ -2,12 +2,10 @@ package com.creedfreak.common.database.databaseConn;
 
 import com.creedfreak.common.AbsConfigController;
 import com.creedfreak.common.ICraftyProfessions;
-import com.creedfreak.common.container.AbsPlayerFactory;
 
 import java.io.File;
 import java.io.IOException;
 import java.sql.*;
-import java.util.logging.Level;
 
 public class SQLite_Conn extends Database
 {
@@ -51,7 +49,7 @@ public class SQLite_Conn extends Database
                 if (dataFolder.createNewFile ())
                 {
                     mLogger.Info (Database.DATABASE_PREFIX,
-                        "Database file not created, Creating it now...");
+                        "database file not created, Creating it now...");
                 }
             }
             catch (IOException e)

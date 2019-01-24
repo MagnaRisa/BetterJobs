@@ -83,7 +83,7 @@ public abstract class AbsUsersDAO
 	}
 
 	/**
-	 * <p>Deletes a player from the Database. This includes all of the relationships that the player
+	 * <p>Deletes a player from the database. This includes all of the relationships that the player
 	 * could potentially be a part of. Note: That the player can only get deleted if the proper password
 	 * has been input into the command.</p>
 	 *
@@ -221,7 +221,7 @@ public abstract class AbsUsersDAO
 					{
 						throw new SQLException ("Incorrect Row Retrieved!");
 					}
-					retPlayers.add (playerFactory (playerID, username, playerLevel));
+					retPlayers.add (playerFactory (playerID, username, playerLevel, playerUUID));
 				}
 			}
 			conn.commit ();
@@ -242,7 +242,7 @@ public abstract class AbsUsersDAO
 			}
 			catch (SQLException except)
 			{
-				Logger.Instance ().Error ("AbsUsersDAO", "Could not set auto commit for Database: " + except.getSQLState ());
+				Logger.Instance ().Error ("AbsUsersDAO", "Could not set auto commit for database: " + except.getSQLState ());
 			}
 
 			mDatabase.dbCloseResources (getPlayer, resultSet);
@@ -273,23 +273,21 @@ public abstract class AbsUsersDAO
 		try
 		{
 			getPlayer = mDatabase.dbConnect ().prepareStatement (queryLib.selectUserData);
-
 			getPlayer.setBytes (1, UuidUtil.toBytes (userID));
-
 			resultSet = getPlayer.executeQuery ();
 
-			if (resultSet.isFirst ())
+			if (resultSet.next ())
 			{
 				playerID = UnsignedLong.valueOf (BigInteger.valueOf (resultSet.getLong ("UserID")));
 				playerUUID = UuidUtil.fromBytes (resultSet.getBytes ("UUID"));
 				username = resultSet.getString ("Username");
 				playerLevel = resultSet.getInt ("UserLevel");
 
-				if (playerUUID != userID)
+				if (!(userID.equals (playerUUID)))
 				{
 					throw new SQLException ("Incorrect Row Retrieved!");
 				}
-				retPlayer = playerFactory (playerID, username, playerLevel);
+				retPlayer = playerFactory (playerID, username, playerLevel, playerUUID);
 			}
 		}
 		catch (SQLException except)
@@ -301,7 +299,6 @@ public abstract class AbsUsersDAO
 			mDatabase.dbCloseResources (getPlayer, resultSet);
 			mDatabase.dbClose ();
 		}
-
 		return retPlayer;
 	}
 
@@ -346,6 +343,11 @@ public abstract class AbsUsersDAO
 		return retVal;
 	}
 
+	/**
+	 * Fetches specific user professions from the database.
+	 *
+	 * @param player - The player in which to load the professions for.
+	 */
 	public void fetchUserProfessions (IPlayer player)
 	{
 		List<Profession> professions;
@@ -361,5 +363,5 @@ public abstract class AbsUsersDAO
 		player.registerProfession (professions);
 	}
 
-	public abstract IPlayer playerFactory (UnsignedLong playerID, String username, Integer playerLevel);
+	public abstract IPlayer playerFactory (UnsignedLong playerID, String username, Integer playerLevel, UUID playerUUID);
 }

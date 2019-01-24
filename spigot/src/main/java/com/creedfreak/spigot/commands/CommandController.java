@@ -111,7 +111,7 @@ public class CommandController extends AbsCmdController implements CommandExecut
         registerCommand (new CommandProfile ());
         registerCommand (new CommandStats ());
 
-        /*Database Command Registration*/
+        /*database Command Registration*/
         registerCommand (new CommandArchive (db));
         registerCommand (new CommandArchiveAll (db));
         registerCommand (new CommandLookup (db));

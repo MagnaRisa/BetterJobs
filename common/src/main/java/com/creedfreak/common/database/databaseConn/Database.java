@@ -13,7 +13,7 @@ import java.text.DecimalFormat;
 public abstract class Database
 {
 
-	public static final String DATABASE_PREFIX = "Database";
+	public static final String DATABASE_PREFIX = "database";
 	private static final String SQL_INSERT_STATEMENTS = "sql_files/insert_stmts.sql";
 	private static final String SQL_CREATE_STMT = "CREATE TABLE IF NOT EXISTS";
 	private static final String SQL_INSERT_STMT = "INSERT INTO";
@@ -28,9 +28,9 @@ public abstract class Database
 	private Double mTotalTimeElapsed;
 
 	/**************************************************************************
-	 * Constructor: Database
+	 * Constructor: database
 	 *
-	 * Description: The primary constructor for a Database connection
+	 * Description: The primary constructor for a database connection
 	 *
 	 * Parameters:
 	 * @param plugin - The plugin the database interfaces with.
@@ -52,7 +52,7 @@ public abstract class Database
 	/**************************************************************************
 	 * Method:      dbConnect
 	 *
-	 * Description: The common method that all extensions of this Database
+	 * Description: The common method that all extensions of this database
 	 *              abstract object will need to implement.
 	 *
 	 * Parameters:  None
@@ -96,7 +96,7 @@ public abstract class Database
 		}
 		catch (SQLException exception)
 		{
-			mLogger.Warn (DATABASE_PREFIX, "Could not close Database Connection: " + exception.getMessage ());
+			mLogger.Warn (DATABASE_PREFIX, "Could not close database Connection: " + exception.getMessage ());
 		}
 	}
 
@@ -167,7 +167,7 @@ public abstract class Database
 	/**************************************************************************
 	 * Method:      initializeDatabase
 	 *
-	 * Description: This method will setup the entire Database if it has
+	 * Description: This method will setup the entire database if it has
 	 *              already not been setup. If any errors occur while
 	 *              executing this method we will return false to notify
 	 *              the main plugin class that we need to disable the plugin.
@@ -175,8 +175,8 @@ public abstract class Database
 	 * Parameters:  None
 	 *
 	 * Return:
-	 * @return True  - If the Database gets initialized successfully.
-	 *         False - If the Database initialization fails at some point.
+	 * @return True  - If the database gets initialized successfully.
+	 *         False - If the database initialization fails at some point.
 	 *************************************************************************/
 	public boolean initializeDatabase ()
 	{
@@ -196,7 +196,7 @@ public abstract class Database
 
 				if (insertSuccess)
 				{
-					mLogger.Info (DATABASE_PREFIX, "Database has been created and the required data has been inserted!");
+					mLogger.Info (DATABASE_PREFIX, "database has been created and the required data has been inserted!");
 				}
 
 				// This automatically means that createSuccess was true.
@@ -208,7 +208,7 @@ public abstract class Database
 		}
 		else
 		{
-			mLogger.Info (DATABASE_PREFIX, "Database found! Setup not necessary");
+			mLogger.Info (DATABASE_PREFIX, "database found! Setup not necessary");
 			retVal = true;
 		}
 
@@ -220,7 +220,7 @@ public abstract class Database
 	 *
 	 * Description: This method will read the CreateTables.sql file one
 	 *              SQL statement at a time and then execute that statement
-	 *              until the Crafty Professions Database is setup.
+	 *              until the Crafty Professions database is setup.
 	 *
 	 * Parameters:  None
 	 *
@@ -250,7 +250,7 @@ public abstract class Database
 		}
 		catch (IOException | SQLException exception)
 		{
-			mLogger.Error (DATABASE_PREFIX, "Could not Create Database Tables: " + exception);
+			mLogger.Error (DATABASE_PREFIX, "Could not Create database Tables: " + exception);
 			return false;
 		}
 		catch (Exception exception)
@@ -303,7 +303,7 @@ public abstract class Database
 		}
 		catch (IOException | SQLException exception)
 		{
-			mLogger.Error (DATABASE_PREFIX, "Could Not Insert Initialization Data Into Database: " + exception);
+			mLogger.Error (DATABASE_PREFIX, "Could Not Insert Initialization Data Into database: " + exception);
 			return false;
 		}
 		finally
@@ -321,7 +321,7 @@ public abstract class Database
 	 *
 	 * Description: This method will check to see if the Crafty professions
 	 *              tables are already setup. If they are then we will not
-	 *              rerun the Database setup Queries.
+	 *              rerun the database setup Queries.
 	 *
 	 * Parameters:  None
 	 *
@@ -340,7 +340,6 @@ public abstract class Database
 			PreparedStatement prepStmt = conn.prepareStatement (sqlQuery);
 			ResultSet rSet = prepStmt.executeQuery ();
 
-			test = rSet.isFirst ();
 			bTablesExist = rSet.next ();
 
 			dbCloseResources (prepStmt, rSet);

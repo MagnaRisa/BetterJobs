@@ -2,13 +2,11 @@ package com.creedfreak.common.database.databaseConn;
 
 import com.creedfreak.common.AbsConfigController;
 import com.creedfreak.common.ICraftyProfessions;
-import com.creedfreak.common.container.AbsPlayerFactory;
 import com.creedfreak.common.utility.Pair;
 
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.logging.Level;
 
 public class MySQL_Conn extends Database
 {
@@ -26,7 +24,7 @@ public class MySQL_Conn extends Database
      *
      * Parameters:
      * @param plugin - The plugin in order to grab the Logger
-     * @param hostName - The hostname of the Database you would like to
+     * @param hostName - The hostname of the database you would like to
      *                      connect to
      * @param db - The database name to use from the host
      * @param user - The user in which to login with in order to read/write
@@ -52,7 +50,7 @@ public class MySQL_Conn extends Database
      *              Object. This method uses the information from the
      *              constructed object to make the connection to the database.
      *
-     * @return The connection to the Database
+     * @return The connection to the database
      *************************************************************************/
     public Connection dbConnect ()
     {
@@ -66,7 +64,7 @@ public class MySQL_Conn extends Database
         }
         catch (SQLException exception)
         {
-            mLogger.Error (Database.DATABASE_PREFIX,"Database Connection Error: " + exception);
+            mLogger.Error (Database.DATABASE_PREFIX,"database Connection Error: " + exception);
         }
 
         return mConnection;
@@ -79,7 +77,7 @@ public class MySQL_Conn extends Database
      * This method uses the information from the constructed object to make the
      * connection to the database.
      *
-     * @return The connection to the Database
+     * @return The connection to the database
      *************************************************************************/
     public List<Pair<Integer, String>> testDBconnection ()
     {
@@ -100,7 +98,7 @@ public class MySQL_Conn extends Database
         }
         catch (SQLException exception)
         {
-            mLogger.Error (Database.DATABASE_PREFIX,"Database Query Error: " + exception);
+            mLogger.Error (Database.DATABASE_PREFIX,"database Query Error: " + exception);
         }
 
         return array;

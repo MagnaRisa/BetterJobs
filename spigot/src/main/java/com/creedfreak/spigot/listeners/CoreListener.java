@@ -5,7 +5,7 @@ import com.creedfreak.common.container.IPlayer;
 import com.creedfreak.common.database.DAOs.AbsUsersDAO;
 import com.creedfreak.spigot.CraftyProfessionsSpigot;
 import com.creedfreak.common.container.PlayerManager;
-import com.creedfreak.spigot.Database.SpigotUsersDAO;
+import com.creedfreak.spigot.database.SpigotUsersDAO;
 import net.milkbowl.vault.economy.Economy;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;

@@ -1,5 +1,5 @@
 ################################################################################
-# +-+-+-+-+-+-+-+-+-+-+-+-+-+ Database Information +-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+# +-+-+-+-+-+-+-+-+-+-+-+-+-+ database Information +-+-+-+-+-+-+-+-+-+-+-+-+-+-+
 ################################################################################
 # The database information specifies where
 # The information of the Plugin should be stored
@@ -16,7 +16,7 @@ MySQL:
   # Example: localhost:3306 or 127.0.0.1:3306
   host: localhost:3306
 
-  # The name of the Database to use
+  # The name of the database to use
   db_name: cp_testing
 
   # The username of your database

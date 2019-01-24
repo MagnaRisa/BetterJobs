@@ -17,11 +17,12 @@ public class SpongePlayer implements IPlayer
 	private String  mDBUsername;
 	private Integer mPlayerLevel;
 
-	public SpongePlayer (UnsignedLong dbID, String currentDBuname, Integer playerLevel)
+	public SpongePlayer (UnsignedLong dbID, String currentDBuname, Integer playerLevel, Player player)
 	{
 		mPlayerID = dbID;
 		mDBUsername = currentDBuname;
 		mPlayerLevel = playerLevel;
+		mPlayer = player;
 	}
 
 	public UUID getUUID ()

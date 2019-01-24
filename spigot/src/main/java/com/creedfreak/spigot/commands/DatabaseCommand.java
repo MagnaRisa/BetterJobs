@@ -5,7 +5,7 @@ import com.creedfreak.spigot.container.CommandData;
 import com.creedfreak.common.database.databaseConn.Database;
 
 /**
- * The abstract command that controls the Database operations
+ * The abstract command that controls the database operations
  */
 public abstract class DatabaseCommand implements ICommand
 {

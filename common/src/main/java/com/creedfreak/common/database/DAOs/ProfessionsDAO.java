@@ -90,7 +90,7 @@ public class ProfessionsDAO implements IDaoBase<Profession>
             " SQL State: " + except.getSQLState ());
 
             Logger.Instance ().Error ("ProfessionMiner could not be loaded for player named " + username + ". Is the "
-                + "Database connected properly?");
+                + "database connected properly?");
         }
         finally
         {
@@ -100,7 +100,7 @@ public class ProfessionsDAO implements IDaoBase<Profession>
             }
             catch (SQLException except)
             {
-                Logger.Instance ().Error ("AbsUsersDAO", "Could not set auto commit for Database: " + except.getSQLState ());
+                Logger.Instance ().Error ("AbsUsersDAO", "Could not set auto commit for database: " + except.getSQLState ());
             }
 
             mDatabase.dbCloseResources (prepStatement, resultSet);

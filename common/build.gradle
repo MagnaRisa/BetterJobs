@@ -3,7 +3,7 @@
  * The common project outlines all of the common features of both the
  * Spigot version of the plugin and the Sponge version. This will allow
  * for both the spigot and sponge versions to utilize the same API for
- * common resources such as the Database, Exceptions, Containers, the
+ * common resources such as the database, Exceptions, Containers, the
  * abstract professions and classes. This project CAN be built into a Jar
  * and utilized as a dependency, but for the projects I am compiling the
  * source code into the Spigot and Sponge Jars to reduce work of having

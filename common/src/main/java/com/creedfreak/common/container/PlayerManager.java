@@ -48,11 +48,11 @@ public final class PlayerManager
 
     /**
      * This method is intended to initialize the Singleton after it's instantiation in order to
-     * have the necessary data available to the PlayerManager being the Database in which
+     * have the necessary data available to the PlayerManager being the database in which
      * to access the Player Information and the Instance to the plugin so we cant have access
      * to things like the Logger of the plugin and other useful resources.
      *
-     * @param usersDAO The interface between the players and the Database.
+     * @param usersDAO The interface between the players and the database.
      */
     public void initializePlayerManager (AbsUsersDAO usersDAO)
     {
@@ -92,7 +92,7 @@ public final class PlayerManager
     }
 
 	/**
-	 * Saves the player to the Database if it is not already there.
+	 * Saves the player to the database if it is not already there.
 	 *
 	 * @param uniqueID - The player to save to the database.
 	 * @param username - The username of the player.
@@ -103,7 +103,7 @@ public final class PlayerManager
     }
 
     /**
-     * This method will load a player from the Database into the PlayerManager's internal
+     * This method will load a player from the database into the PlayerManager's internal
      * ConcurrentHashMap.
      *
      * @param playerUUID - The Player in which to load from the database
@@ -132,7 +132,7 @@ public final class PlayerManager
      *
      * @param playerID - The player to retrieve from the Hash Map
      *
-     * @return The player specified by their Database ID
+     * @return The player specified by their database ID
      */
     public IPlayer getPlayer (UUID playerID)
     {

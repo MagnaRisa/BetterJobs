@@ -5,6 +5,7 @@ import com.creedfreak.common.utility.Logger;
 import com.google.common.primitives.UnsignedLong;
 import com.creedfreak.common.container.IPlayer;
 import com.creedfreak.common.professions.Profession;
+import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 
 import java.util.*;
@@ -16,7 +17,7 @@ import java.util.concurrent.ConcurrentHashMap;
  */
 public class SpigotPlayer implements IPlayer
 {
-    // This is the players primary key within the Database
+    // This is the players primary key within the database
     private UnsignedLong mPlayerID;
     private Player mPlayer;
 
@@ -32,26 +33,27 @@ public class SpigotPlayer implements IPlayer
 
     /**
      * This is the Default Constructor for the CraftyPlayer object in which
-     * a player will be initialized from the Crafty Professions Database.
+     * a player will be initialized from the Crafty Professions database.
      *
-     * @param dbID The players Database ID, this is unique to the Database.
-     * @param currentDBuname The current players name stored in the Database.
-     * @param playerLevel The players overall Level retrieved from the Database.
+     * @param dbID The players database ID, this is unique to the database.
+     * @param currentDBuname The current players name stored in the database.
+     * @param playerLevel The players overall Level retrieved from the database.
      */
-    public SpigotPlayer (UnsignedLong dbID, String currentDBuname, Integer playerLevel)
+    public SpigotPlayer (UnsignedLong dbID, String currentDBuname, Integer playerLevel, Player player)
     {
         mPlayerID = dbID;
         mPlayerPool = 0.0f;
 
 		mPlayerLevel = playerLevel;
 		mDBUsername = currentDBuname;
-
-        mPrintEarnedWages = false;
+	    mPlayer = player;
 
         if (!mDBUsername.equals (mPlayer.getName ()))
         {
         	mCurrentUsername = mPlayer.getName ();
         }
+
+	    mPrintEarnedWages = false;
     }
     /**
      * This method will return the UUID of the CPPlayer
