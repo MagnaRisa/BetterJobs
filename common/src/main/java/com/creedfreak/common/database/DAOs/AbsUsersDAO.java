@@ -7,6 +7,7 @@ import com.creedfreak.common.utility.UuidUtil;
 import com.google.common.primitives.UnsignedLong;
 import com.creedfreak.common.container.IPlayer;
 import com.creedfreak.common.database.databaseConn.Database;
+import net.jcip.annotations.NotThreadSafe;
 
 import java.math.BigInteger;
 import java.sql.Connection;
@@ -16,12 +17,20 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.*;
 
+/**
+ * This class will be thread confined to the TaskExecutor.
+ * This class should not be acting across threads, if this
+ * is done then this class is not Thread Safe. Only by
+ * confining this object to a single thread will ensure
+ * that there are no race conditions.
+ */
+@NotThreadSafe
 public abstract class AbsUsersDAO
 {
 
-	protected Database mDatabase;
-	protected AugmentsDAO mAugmentDAO;
-	protected ProfessionsDAO mProfessionsDAO;
+	private Database mDatabase;
+	private AugmentsDAO mAugmentDAO;
+	private ProfessionsDAO mProfessionsDAO;
 
 	private static final String insertUser
 			= "INSERT INTO Users (UUID, Username, DateOfCreation) "
@@ -111,6 +120,7 @@ public abstract class AbsUsersDAO
 
 		try
 		{
+			// First we update the player information.
 			updatePlayer = conn.prepareStatement (updateUser);
 
 			updatePlayer.setString (1, player.getUsername ());
@@ -120,6 +130,9 @@ public abstract class AbsUsersDAO
 			{
 				Logger.Instance ().Debug ("UsersDAO", "Updated Player Successfully!");
 			}
+			
+			// Then we update the players list of professions.
+			mProfessionsDAO.updateAll (player.getProfessionCollection ());
 		}
 		catch (SQLException except)
 		{
@@ -352,7 +365,7 @@ public abstract class AbsUsersDAO
 	{
 		List<Profession> professions;
 
-		professions = mProfessionsDAO.loadSubset (player.getDBIdentifier (), player.getUsername ());
+		professions = mProfessionsDAO.loadSubset (player.getInternalID (), player.getUsername ());
 
 //		for (Profession prof : professions)
 //		{
@@ -362,6 +375,15 @@ public abstract class AbsUsersDAO
 
 		player.registerProfession (professions);
 	}
+	
+	/**
+	 * Saves a single users profession into the database. This is an
+	 * INSERT into the database not an UPDATE.
+	 */
+//	public void saveUserProfession (IPlayer player, Profession prof)
+//	{
+//		mProfessionsDAO.save (prof);
+//	}
 
 	public abstract IPlayer playerFactory (UnsignedLong playerID, String username, Integer playerLevel, UUID playerUUID);
 }

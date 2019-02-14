@@ -1,7 +1,5 @@
 package com.creedfreak.common.professions;
 
-import sun.reflect.generics.reflectiveObjects.NotImplementedException;
-
 import java.util.List;
 
 public class ProfMiner extends Profession
@@ -61,7 +59,6 @@ public class ProfMiner extends Profession
      * @param prestigeLevel - The prestige level of the user in this profession
      * @param currentExp - The current exp of the current level the user has in this profession
      * @param totalExp -  The total amount of exp total the user has gained in this profession
-     * @throws NullPointerException
      */
     public ProfMiner (String status, int level, int prestigeLevel, double currentExp, double totalExp) throws NullPointerException
     {
@@ -73,6 +70,30 @@ public class ProfMiner extends Profession
         mPrestigeLevel = prestigeLevel;
         mCurrentExp = currentExp;
         mTotalExp = totalExp;
+    }
+    
+    /**
+     * The private copy constructor used to deepCopy a Profession.
+     */
+    private ProfMiner (ProfMiner miner)
+    {
+        super (miner);
+        
+        mMinerStatus = miner.mMinerStatus;
+        mProfLevel = miner.mProfLevel;
+        mPrestigeLevel = miner.mPrestigeLevel;
+        mCurrentExp = miner.mCurrentExp;
+        mTotalExp = miner.mTotalExp;
+        mExpierenceBonus = miner.mExpierenceBonus;
+        mIncomeBonus = miner.mIncomeBonus;
+        mTokenBonus = miner.mTokenBonus;
+        
+        mAugments = miner.mAugments;
+    }
+    
+    public Profession shallowCopy ()
+    {
+        return new ProfMiner (this);
     }
 
     public String getName ()
@@ -100,10 +121,5 @@ public class ProfMiner extends Profession
     public TableType type ()
     {
         return mType;
-    }
-
-    public void loadAugments ()
-    {
-        throw new NotImplementedException ();
     }
 }

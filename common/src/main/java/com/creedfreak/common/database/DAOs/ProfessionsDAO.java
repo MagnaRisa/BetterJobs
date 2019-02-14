@@ -1,7 +1,9 @@
 package com.creedfreak.common.database.DAOs;
 
+import com.creedfreak.common.container.IPlayer;
 import com.creedfreak.common.database.queries.queryLib;
 import com.creedfreak.common.professions.ProfessionBuilder;
+import com.creedfreak.common.professions.TableType;
 import com.creedfreak.common.utility.Logger;
 import com.google.common.primitives.UnsignedLong;
 import com.creedfreak.common.database.databaseConn.Database;
@@ -15,18 +17,57 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
-public class ProfessionsDAO implements IDaoBase<Profession>
+public class ProfessionsDAO
 {
     private Database mDatabase;
+    
+    private static final String insertCareer
+        = "INSERT INTO Careers (UserID, ProfessionID) "
+        + "VALUES (?, ?)";
+    
+    private static final String updateCareer
+        = "UPDATE Careers"
+        + "SET Level = ?, CurrentExp = ?, TotalExp = ?, PrestigeLevel = ?, ProfStatus = ? "
+        + "WHERE UserID = ?"
+        + "AND ProfessionID = ?";
 
     public ProfessionsDAO (Database database)
     {
         mDatabase = database;
     }
-
-    public void save (Profession row)
+    
+    /**
+     * Save a specific users profession to the database
+     * @param player
+     */
+    public void save (IPlayer player, TableType type)
     {
-
+        Connection conn = mDatabase.dbConnect ();
+        PreparedStatement prepStmt = null;
+        
+        Profession prof = player.getProfession (type);
+        
+        try
+        {
+            prepStmt = conn.prepareStatement (insertCareer);
+            
+            prepStmt.setLong (1, player.getInternalID ().longValue ());
+            // prepStmt.setLong (2, prof.);
+        }
+        catch (SQLException except)
+        {
+        
+        }
+        finally
+        {
+            mDatabase.dbCloseResources (prepStmt);
+            mDatabase.dbClose ();
+        }
+    }
+    
+    public void saveSubset (IPlayer player)
+    {
+    
     }
 
     public void delete (UnsignedLong id)
@@ -41,7 +82,15 @@ public class ProfessionsDAO implements IDaoBase<Profession>
 
     public void updateAll (Collection<Profession> profs)
     {
-
+//        Connection conn = mDatabase.dbConnect ();
+//        PreparedStatement prepStmt;
+//
+//        try
+//        {
+//            prepStmt = conn.prepareStatement ()
+//
+//            // use prepStmt.batch to execute several queries making them more efficient.
+//        }
     }
 
     public Profession load ()

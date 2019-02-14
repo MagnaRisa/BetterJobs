@@ -1,11 +1,11 @@
 package com.creedfreak.spigot.commands.ProfessionCommands;
 
 import com.creedfreak.common.container.IPlayer;
-import com.creedfreak.common.container.PlayerManager;
+import com.creedfreak.common.exceptions.CommandException;
+import com.creedfreak.common.professions.Profession;
 import com.creedfreak.common.professions.ProfessionBuilder;
-import com.creedfreak.spigot.commands.ProfessionCommand;
-import com.creedfreak.spigot.container.CommandData;
-import com.creedfreak.spigot.container.SpigotPlayer;
+import com.creedfreak.common.commands.ProfessionCommand;
+import com.creedfreak.common.commands.CommandData;
 
 /**
  * This is the Join command for a Profession. If a player issues this command
@@ -13,6 +13,7 @@ import com.creedfreak.spigot.container.SpigotPlayer;
  */
 public class CommandJoin extends ProfessionCommand
 {
+    private final int MAX_ARGS = 2;
     /**
      * The Default Constructor is used to setup the information
      * surrounding the Profession Join Command
@@ -37,22 +38,37 @@ public class CommandJoin extends ProfessionCommand
      *                   if some exception was thrown.
      *         False - If the command fails all checks
      */
-    public boolean execute (IPlayer sender, String... args)
+    public boolean execute (IPlayer sender, String... args) throws CommandException
     {
-        sender.sendMessage ("You have just executed /prof join");
-        if (checkPermission (sender))
+        boolean registered;
+        Profession newProf;
+        String professionName = args[1];
+
+        newProf = ProfessionBuilder.buildDefault (professionName);
+
+        if (!(argLength (MAX_ARGS, args.length)))
         {
-            if (sender.registerProfession (ProfessionBuilder.buildDefault (args[0])))
-            {
-                sender.sendMessage ("You are already registered for this profession.");
-            }
+            throw new CommandException ("Too many arguments in command " + mCommandData.getCmdName (), args);
         }
 
-        return true;
+        checkPermission (sender);
+
+        if (null == newProf)
+        {
+            throw new CommandException ("Incorrect Profession Name. Run /prof list to see a list of available profession names.", args);
+        }
+
+        // Do Work
+        registered = sender.registerProfession (newProf);
+        if (registered)
+        {
+            sender.sendMessage ("You are already registered for this profession.");
+        }
+        return registered;
     }
 
     public String cmdName ()
     {
-        return mCommandData.getCommandArg ();
+        return mCommandData.getCmdName ();
     }
 }

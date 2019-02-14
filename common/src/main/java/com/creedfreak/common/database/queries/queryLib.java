@@ -9,7 +9,6 @@ package com.creedfreak.common.database.queries;
  */
 public final class queryLib
 {
-    // onUserLogin
     // Grab the User and their internal DB ID.
     public static final String selectUserData
             = "SELECT * "
@@ -19,6 +18,13 @@ public final class queryLib
     // If they have any Careers or SideJobs we need to grab them.
     public static final String selectUserCareers
             = "SELECT * "
+            + "FROM Users, Careers, Professions "
+            + "WHERE Users.UserID = ? "
+            + "AND Users.UserID = Careers.UserID "
+            + "AND Professions.ProfessionID = Careers.ProfessionID";
+
+    public static final String selectUserCareerNames
+            = "SELECT ProfessionName "
             + "FROM Users, Careers, Professions "
             + "WHERE Users.UserID = ? "
             + "AND Users.UserID = Careers.UserID "

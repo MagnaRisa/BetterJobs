@@ -1,17 +1,17 @@
 package com.creedfreak.spigot.container;
 
+import com.creedfreak.common.container.PlayerManager;
 import com.creedfreak.common.professions.TableType;
 import com.creedfreak.common.utility.Logger;
 import com.google.common.primitives.UnsignedLong;
 import com.creedfreak.common.container.IPlayer;
 import com.creedfreak.common.professions.Profession;
-import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 
-/** [HUGE WIP]
+/**
  * This is the Player Wrapper for the CraftyProfessions Plugin in which stores all
  * of the information for a CraftyProfessions player.
  */
@@ -42,8 +42,9 @@ public class SpigotPlayer implements IPlayer
     public SpigotPlayer (UnsignedLong dbID, String currentDBuname, Integer playerLevel, Player player)
     {
         mPlayerID = dbID;
-        mPlayerPool = 0.0f;
+        mProfessions = new ConcurrentHashMap<> ();
 
+        mPlayerPool = 0.0f;
 		mPlayerLevel = playerLevel;
 		mDBUsername = currentDBuname;
 	    mPlayer = player;
@@ -84,7 +85,7 @@ public class SpigotPlayer implements IPlayer
 	/**
 	 * @return The database identifier of the player.
 	 */
-	public UnsignedLong getDBIdentifier ()
+	public UnsignedLong getInternalID ()
     {
     	return mPlayerID;
     }
@@ -98,10 +99,20 @@ public class SpigotPlayer implements IPlayer
     @Override
     public boolean registerProfession (Profession prof)
     {
-        boolean registered = mProfessions.containsKey (prof.type ());
+        boolean registered;
+        registered = mProfessions.containsKey (prof.type ());
         if (!registered)
         {
             mProfessions.put (prof.type (), prof);
+            
+            /*thread-task[Database Thread][Future]: Enqueue this database task since it's not time sensitive*/
+	        // Insert the players profession into the database
+	        
+	        // Could use a modified flag, that sets the user into a "modified" state which then gets updated.
+	        // mbModified = true;
+	        
+	        // Could just update the database here in this method until I can send requests to a thread.
+	        PlayerManager.Instance ().updatePlayer (mPlayerID);
         }
         return registered;
     }
@@ -131,7 +142,7 @@ public class SpigotPlayer implements IPlayer
     }
 
     /**
-     * This method will "Payout" the players current money ca, This method
+     * This method will "Payout" the players current accumulated money. This method
      * should be called after x amount of ticks of the player receiving money and
      * right before the player logs off if the Player Pool is more than 0.
      */
@@ -200,6 +211,17 @@ public class SpigotPlayer implements IPlayer
             }
         }
     }
+    
+    public Collection<Profession> getProfessionCollection ()
+	{
+		ConcurrentHashMap<TableType, Profession> copy = new ConcurrentHashMap<> (mProfessions);
+		return copy.values ();
+	}
+	
+	public Profession getProfession (TableType type)
+	{
+		return mProfessions.get (type).shallowCopy ();
+	}
 
 	/**
 	 * Sets the print earned wages field to either true or false. This field indicates if

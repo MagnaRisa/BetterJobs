@@ -1,8 +1,8 @@
 package com.creedfreak.spigot.commands.ProfessionCommands;
 
 import com.creedfreak.common.container.IPlayer;
-import com.creedfreak.spigot.commands.ProfessionCommand;
-import com.creedfreak.spigot.container.CommandData;
+import com.creedfreak.common.commands.ProfessionCommand;
+import com.creedfreak.common.commands.CommandData;
 
 /**
  * This command when executed will display the users stats

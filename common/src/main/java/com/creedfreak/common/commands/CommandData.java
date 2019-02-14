@@ -1,4 +1,4 @@
-package com.creedfreak.spigot.container;
+package com.creedfreak.common.commands;
 
 import com.creedfreak.common.container.IPlayer;
 
@@ -14,7 +14,7 @@ import java.util.HashMap;
  */
 public class CommandData
 {
-    private HashMap<String, String> mData = new HashMap<> ();
+    private final HashMap<String, String> mData = new HashMap<> ();
 
     /**
      * This method is the default constructor for the CommandData class for
@@ -45,20 +45,14 @@ public class CommandData
     /**
      * This method returns the command postfix of the attached
      *  after the command /prof is issued.
-     *
-     * @return The command name to return which is associated
-     *             with the command this data is apart of
      */
-    public String getCommandArg ()
+    public String getCmdName ()
     {
         return mData.get("name");
     }
 
     /**
-     * This method returns the description of the command this
-     * CommandData is apart of.
-     *
-     * @return The description of the command.
+     * This method returns the description of the command.
      */
     public String getDescription ()
     {
@@ -67,8 +61,6 @@ public class CommandData
 
     /**
      * Returns the usage of the command
-     *
-     * @return The usage of the command.
      */
     public String getUsage ()
     {

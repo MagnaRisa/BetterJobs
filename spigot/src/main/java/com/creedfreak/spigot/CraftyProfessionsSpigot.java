@@ -1,6 +1,6 @@
 package com.creedfreak.spigot;
 
-import com.creedfreak.common.AbsCmdController;
+import com.creedfreak.common.commands.AbsCmdController;
 import com.creedfreak.common.AbsConfigController;
 import com.creedfreak.common.ICraftyProfessions;
 import com.creedfreak.common.container.WageTableHandler;
@@ -75,32 +75,26 @@ public class CraftyProfessionsSpigot extends JavaPlugin implements ICraftyProfes
 
         mLogger = Logger.Instance ();
         mLogger.initLogger (getLogger ());
-
-        // Setup the Main Configuration class and likewise
-        // any other needed config files, notably the WageTables.
+        
         mConfigController = new ConfigController (this);
         mConfigController.createDefaultConfig ();
         mConfigController.registerConfigFiles ();
-
-        // Setup database
+        
         setupDatabase ();
-
-        // We need to register the listeners for the Plugin
         this.registerListeners ();
-
+        
         setupPermissions ();
         setupChat();
 
         mCoreListener.setEconomyHook (mEconomy);
-
-        // Initialize the Wage Tables.
+        
         mTableHandler = WageTableHandler.getInstance ();
         mTableHandler.InitializeWageTables (mConfigController.getDebug ());
-
-        // This will initialize the PlayerManager Singleton
-        PlayerManager.Instance ().initializePlayerManager (new SpigotUsersDAO (mDatabase));
-
-        // This will notify the end of initialization
+    
+        /* This does more than just initialize the PlayerManager. Please read the docs on PlayerManager
+        * to see all that is going on under the hood. */
+        PlayerManager.Instance ().preparePlayerManager (new SpigotUsersDAO (mDatabase));
+        
         mLogger.Debug ("Initialization of CraftyProfessions Completed!");
     }
 

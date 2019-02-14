@@ -1,8 +1,8 @@
-package com.creedfreak.spigot.commands;
+package com.creedfreak.common.commands;
 
 import com.creedfreak.common.container.IPlayer;
-import com.creedfreak.spigot.container.CommandData;
 import com.creedfreak.common.database.databaseConn.Database;
+import com.creedfreak.common.exceptions.CommandException;
 
 /**
  * The abstract command that controls the database operations
@@ -20,15 +20,18 @@ public abstract class DatabaseCommand implements ICommand
 
     public String cmdName ()
     {
-        return mCommandData.getCommandArg ();
+        return mCommandData.getCmdName ();
     }
 
     /**
      * Checks a users permissions
      */
-    public boolean checkPermission (IPlayer player)
+    public void checkPermission (IPlayer sender) throws CommandException
     {
-        return mCommandData.hasPerms (player);
+        if (!(mCommandData.hasPerms (sender)))
+        {
+            throw new CommandException ("Insufficient Permissions!");
+        }
     }
 
     /**
@@ -45,5 +48,10 @@ public abstract class DatabaseCommand implements ICommand
     public String getUsage ()
     {
         return mCommandData.getUsage ();
+    }
+
+    public boolean argLength (int maxArgs, int argLength)
+    {
+        return (maxArgs == argLength);
     }
 }

@@ -8,7 +8,7 @@ import com.creedfreak.common.professions.IAugment;
 import java.util.Collection;
 import java.util.List;
 
-public class AugmentsDAO implements IDaoBase<IAugment>
+public class AugmentsDAO
 {
     private Database mDatabase;
 

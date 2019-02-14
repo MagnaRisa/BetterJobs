@@ -23,6 +23,21 @@ public abstract class Profession
             throw new NullPointerException ("The " + type.name () + " wage table is not enabled!");
         }
     }
+    
+    /**
+     * The base profession copy constructor.
+     */
+    protected Profession (Profession prof)
+    {
+        this.mWageTable = prof.mWageTable;
+        this.mWagePool = prof.mWagePool;
+    }
+    
+    /**
+     * Perform a shallowCopy of a profession.
+     * This will allow the use the same WageTable object.
+     */
+    public abstract Profession shallowCopy ();
 
     /**
      * This method is used to return the Name of the Profession
@@ -30,7 +45,7 @@ public abstract class Profession
      *
      * @return The Name of the Profession
      */
-    abstract public String getName ();
+    public abstract String getName ();
 
     /**
      * This method will essentially do "work" of the profession. If an event is
@@ -91,10 +106,4 @@ public abstract class Profession
     public abstract String getStatus ();
 
     public abstract TableType type ();
-
-    public abstract void loadAugments ();
-
-    // public abstract void addAugment ();
-
-    // public abstract void removeAugment ();
 }

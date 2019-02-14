@@ -6,6 +6,7 @@ import com.creedfreak.common.professions.TableType;
 import com.google.common.primitives.UnsignedLong;
 import org.spongepowered.api.entity.living.player.Player;
 
+import java.util.Collection;
 import java.util.List;
 import java.util.UUID;
 
@@ -30,7 +31,7 @@ public class SpongePlayer implements IPlayer
 		return mPlayer.getUniqueId ();
 	}
 
-	public UnsignedLong getDBIdentifier ()
+	public UnsignedLong getInternalID ()
 	{
 		return mPlayerID;
 	}
@@ -82,7 +83,19 @@ public class SpongePlayer implements IPlayer
 	{
 
 	}
-
+	
+	@Override
+	public Collection<Profession> getProfessionCollection ()
+	{
+		return null;
+	}
+	
+	@Override
+	public Profession getProfession (TableType type)
+	{
+		return null;
+	}
+	
 	public void doWork (String elementName)
 	{
 

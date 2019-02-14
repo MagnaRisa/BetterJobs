@@ -1,12 +1,10 @@
 package com.creedfreak.common;
 
+import com.creedfreak.common.commands.AbsCmdController;
 import com.creedfreak.common.database.databaseConn.Database;
-import com.creedfreak.common.exceptions.NoLoggerFoundException;
 
 import java.io.File;
 import java.io.InputStream;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 /**
  * This class is the main Abstraction layer for ICraftyProfessions

@@ -1,6 +1,7 @@
-package com.creedfreak.spigot.commands;
+package com.creedfreak.common.commands;
 
 import com.creedfreak.common.container.IPlayer;
+import com.creedfreak.common.exceptions.CommandException;
 
 /**
  * TODO: I need to do what the below comment states
@@ -14,7 +15,7 @@ public interface ICommand
     /**
      * This is the primary method for executing a command.
      */
-    boolean execute (IPlayer sender, String... args);
+    boolean execute (IPlayer sender, String... args) throws CommandException;
 
     /**
      * This method returns the Name of the command.
@@ -24,7 +25,7 @@ public interface ICommand
     /**
      * Checks a users permissions
      */
-    boolean checkPermission (IPlayer player);
+    void checkPermission (IPlayer player) throws CommandException;
 
     /**
      * Grabs the description of the command
@@ -35,4 +36,10 @@ public interface ICommand
      * Grabs the usage of the command
      */
     String getUsage ();
+
+    /**
+     * Tests the argument length for a given command. If there are too many
+     * arguments then we return false.
+     */
+    boolean argLength (int maxArgs, int argLength);
 }

@@ -5,6 +5,7 @@ import com.creedfreak.common.professions.TableType;
 import com.google.common.primitives.UnsignedLong;
 
 import java.math.BigDecimal;
+import java.util.Collection;
 import java.util.List;
 import java.util.UUID;
 
@@ -34,7 +35,7 @@ public interface IPlayer
 	/**
 	 * @return The database identifier of the player.
 	 */
-	UnsignedLong getDBIdentifier ();
+	UnsignedLong getInternalID ();
 
     /**
      * Sends a message to the target player.
@@ -59,16 +60,29 @@ public interface IPlayer
      */
     float payoutPlayerPool ();
 
-    /**
-     * Displays the current professions the User currently have.
-     */
-    void listProfessions ();
-
 	boolean registerProfession (Profession prof);
 
 	void registerProfession (List<Profession> professions);
 
 	boolean unregisterProfession (TableType prof);
+	
+	/**
+	 * Displays the current professions the User currently have.
+	 */
+	void listProfessions ();
+	
+	/**
+	 * This method will perform a deep copy on the users Professions.
+	 * Once this is done, the values of the copied map are returned.
+	 */
+	Collection<Profession> getProfessionCollection ();
+	
+	/**
+	 * Perform a deep copy on the users professions and then return
+	 * a single profession from the copied map that matches the
+	 * type parameter passed into the method.
+	 */
+	Profession getProfession (TableType type);
 
 	/**
      * TODO: It may be the case where we will have to map into a large table of blocks and then check if they have the correct job.
