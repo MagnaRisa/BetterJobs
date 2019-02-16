@@ -18,7 +18,7 @@ import java.sql.SQLException;
 import java.util.*;
 
 /**
- * This class will be thread confined to the TaskExecutor.
+ * This class will be thread confined to the DatabaseWorkerQueue.
  * This class should not be acting across threads, if this
  * is done then this class is not Thread Safe. Only by
  * confining this object to a single thread will ensure

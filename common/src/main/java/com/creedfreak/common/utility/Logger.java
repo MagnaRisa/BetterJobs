@@ -101,27 +101,17 @@ public class Logger
 
 	public void Debug (String message)
 	{
-		Log (Level.INFO, "[DEBUG] " + message);
+		if (mDebug)
+		{
+			Log (Level.INFO, "[DEBUG] " + message);
+		}
 	}
 
 	public void Debug (String subSystemPrefix, String message)
 	{
-		this.DebugLog (Level.INFO, subSystemPrefix, message);
-	}
-
-	/**
-	 * The DebugCond method will output a debug message if the configuration for
-	 * debugging is turned on. You can turn on or disable this feature with the
-	 * debugActive method. If debugging is turned off then nothing will be output
-	 * to the console.
-	 *
-	 * @param message - The debug message to log to the console.
-	 */
-	public void DebugCond (String message)
-	{
 		if (mDebug)
 		{
-			this.Log (Level.INFO, "[DEBUG]" + message);
+			this.DebugLog (Level.INFO, subSystemPrefix, message);
 		}
 	}
 
