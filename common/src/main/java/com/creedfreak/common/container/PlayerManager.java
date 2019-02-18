@@ -1,5 +1,6 @@
 package com.creedfreak.common.container;
 
+import com.creedfreak.common.concurrent.DatabaseWorkerQueue;
 import com.creedfreak.common.database.DAOs.AbsUsersDAO;
 import com.creedfreak.common.utility.Logger;
 import com.google.common.primitives.UnsignedLong;
@@ -26,12 +27,13 @@ public final class PlayerManager
 	@GuardedBy("this")
     private static final String PM_PREFIX = "PlayerManager";
 	private static final PlayerManager mPlayerManager = new PlayerManager ();
-	
+
     private AbsUsersDAO mUsersDAO;
     private Logger mLogger;
     
     // TODO: Create new thread pool here to handle database
-    
+
+	private DatabaseWorkerQueue mWorkerQueue;
     private ConcurrentHashMap<UnsignedLong, IPlayer> mPlayerList;
     private ConcurrentHashMap<UUID, UnsignedLong> mInternalIDCache;
 
@@ -54,14 +56,14 @@ public final class PlayerManager
      *
      * @param usersDAO The interface between the players and the database.
      */
-    public synchronized void preparePlayerManager (AbsUsersDAO usersDAO)
+    public synchronized void preparePlayerManager (AbsUsersDAO usersDAO, int initialThreadCount)
     {
         mUsersDAO = usersDAO;
         mPlayerList = new ConcurrentHashMap<> ();
         mInternalIDCache = new ConcurrentHashMap<> ();
 	    mLogger = Logger.Instance ();
 	    
-	    // TODO: Implement Thread Pool and launch db threads
+	    mWorkerQueue = new DatabaseWorkerQueue (mUsersDAO, initialThreadCount);
 	    
         mLogger.Debug (PM_PREFIX, "Initialization of the PlayerManager is completed!");
     }

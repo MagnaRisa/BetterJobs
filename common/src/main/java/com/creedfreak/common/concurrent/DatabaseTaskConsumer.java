@@ -1,5 +1,6 @@
 package com.creedfreak.common.concurrent;
 
+import com.creedfreak.common.database.DAOs.AbsUsersDAO;
 import com.creedfreak.common.database.DatabaseTask;
 import com.creedfreak.common.utility.Logger;
 
@@ -8,10 +9,12 @@ import java.util.concurrent.BlockingQueue;
 public class DatabaseTaskConsumer implements Runnable
 {
 	private BlockingQueue<DatabaseTask> mWorkQueue;
+	private AbsUsersDAO mUsersDAO;
 	
-	public DatabaseTaskConsumer (BlockingQueue<DatabaseTask> blockingQueue)
+	public DatabaseTaskConsumer (BlockingQueue<DatabaseTask> blockingQueue, AbsUsersDAO usersDAO)
 	{
 		mWorkQueue = blockingQueue;
+		mUsersDAO = usersDAO;
 	}
 	
 	@Override
@@ -25,17 +28,21 @@ public class DatabaseTaskConsumer implements Runnable
 			{
 				// The thread will block here until tasks have entered the queue.
 				task = mWorkQueue.take ();
-				
-				/*
-		
-					Process the task here
-				
-				 */
-				
 				if (DatabaseTask.DatabaseTaskType.Poison == task.Type())
 				{
 					running = false;
 					Logger.Instance ().Debug ("DB Thread", "Found poison pill, shutting down gracefully!");
+				}
+				else
+				{
+					if (task.Type ().getReturnable ())
+					{
+						// This means we need to return something
+					}
+					else
+					{
+
+					}
 				}
 			}
 		}

@@ -22,28 +22,47 @@ import java.util.concurrent.*;
 @ThreadSafe
 public class DatabaseWorkerQueue
 {
-	@GuardedBy ("this")
-	
-	// Consumer Thread Pool
-	private ExecutorService mConsumers;
-	private BlockingQueue<DatabaseTask> mWorkQueue;
-	
+	private final String SYSTEM_PREFIX = "DBTaskProcessor";
+	private final int MIN_THREADS = 1;
+	private final int MAX_THREADS = Runtime.getRuntime ().availableProcessors ();
+	private final int QUEUE_THRESHOLD = 250;
+
+	private final int mMaxUsableThreads;
+
+	private volatile boolean mbIsAlive;
+
+	private BlockingQueue<DatabaseTask> mWorkQueue = new LinkedBlockingQueue<> ();
+	private BlockingDeque<Thread> mConsumers = new LinkedBlockingDeque<> ();
+
 	private AbsUsersDAO mUsersDAO;
 	
 	/**
 	 * Default constructor for the DatabaseWorkerQueue class.
 	 *
-	 * @param UsersDAO The users database access object.
+	 * @param usersDAO The users database access object.
 	 * @param numThreads The number of threads to be created in the thread pool.
 	 */
-	public DatabaseWorkerQueue (AbsUsersDAO UsersDAO, int numThreads)
+	public DatabaseWorkerQueue (AbsUsersDAO usersDAO, int numThreads)
 	{
-		mWorkQueue = new LinkedBlockingQueue<> ();
-		mConsumers = Executors.newFixedThreadPool (numThreads, Executors.defaultThreadFactory ());
-		mUsersDAO = UsersDAO;
-		
-		// launch the initial database thread
-		mConsumers.execute (new DatabaseTaskConsumer (mWorkQueue));
+		mbIsAlive = true;
+		mUsersDAO = usersDAO;
+
+		// Bounds check the number of threads passed in.
+		// TODO: This may change in the future.
+		if (numThreads > MAX_THREADS)
+		{
+			mMaxUsableThreads = MAX_THREADS;
+		}
+		else if (numThreads < MIN_THREADS)
+		{
+			mMaxUsableThreads = MIN_THREADS;
+		}
+		else
+		{
+			mMaxUsableThreads = numThreads;
+		}
+
+		mConsumers.push (new Thread (new DatabaseTaskConsumer (mWorkQueue, mUsersDAO)));
 	}
 	
 	/**
@@ -67,11 +86,18 @@ public class DatabaseWorkerQueue
 		boolean added;
 		try
 		{
+			synchronized (this)
+			{
+				if (mWorkQueue.size () > QUEUE_THRESHOLD)
+				{
+					mConsumers.push (new Thread (new DatabaseTaskConsumer (mWorkQueue, mUsersDAO)));
+				}
+			}
 			added = mWorkQueue.add (task);
 		}
 		catch (IllegalStateException except)
 		{
-			Logger.Instance ().Error ("DBTaskProcessor", "Something went wrong while adding a "
+			Logger.Instance ().Error (SYSTEM_PREFIX, "Something went wrong while adding a "
 				+ "DB Task to the Queue! This should never happen! Please open an issue on our Github page with"
 				+ "the stacktrace attached.");
 			except.printStackTrace ();
@@ -81,39 +107,46 @@ public class DatabaseWorkerQueue
 	}
 	
 	/**
-	 * safeShutdown employs the Poison Pill technique which lets the threads gracefully shutdown
+	 * The safe shutdown employs the Poison Pill technique which lets the threads gracefully shutdown
 	 * after all of the tasks in the queue have been consumed.
+	 *
+	 * Usage: safeShutdown should only be used when cleaning up or shutting down the plugin.
+	 *
 	 */
 	public void safeShutdown ()
 	{
-		// foreach thread add a poison pill to the queue.
-		// TODO: Finish Implementing
-		mWorkQueue.add (new DatabaseTask (DatabaseTask.DatabaseTaskType.Poison, ""));
-	}
-	
-	public void shutdown ()
-	{
-		if (!mConsumers.isTerminated ())
+		try
 		{
-			mConsumers.shutdown ();
+			for (Thread thread : mConsumers)
+			{
+				if (!thread.isInterrupted ())
+				{
+					mWorkQueue.add (new DatabaseTask (DatabaseTask.DatabaseTaskType.Poison, ""));
+					thread.join ();
+				}
+			}
+		}
+		catch (InterruptedException except)
+		{
+			Logger.Instance ().Error (Thread.currentThread ().getName(), "Current thread threw Interrupt " +
+					"Exception while waiting for Database Threads to terminate! Attempting a forced shutdown!");
+
+			forceShutdown ();
 		}
 	}
-	
-//	/**
-//	 * [ExecutingQueue] - Static Nested Class
-//	 *
-//	 * This class is created whenever a DatabaseWorkerQueue thread is created and ran. This
-//	 * will allow each thread to
-//	 */
-//	public static class ExecutingQueue
-//	{
-//		@GuardedBy("this")
-//		PriorityBlockingQueue<DatabaseTaskConsumer> mProcessingQueue;
-//
-//		synchronized void QueueTask (DatabaseTaskConsumer task)
-//		{
-//			mProcessingQueue.put (task);
-//		}
-//
-//	}
+
+	/**
+	 * A forced shutdown should only occur as a last resort.
+	 * This will manually interrupt each thread and force their interrupt policy.
+	 */
+	private void forceShutdown ()
+	{
+		for (Thread thread : mConsumers)
+		{
+			if (!thread.isInterrupted ())
+			{
+				thread.interrupt ();
+			}
+		}
+	}
 }
