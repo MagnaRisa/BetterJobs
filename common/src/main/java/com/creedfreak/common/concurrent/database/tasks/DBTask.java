@@ -5,34 +5,29 @@ import com.creedfreak.common.utility.Logger;
 
 import java.util.concurrent.ExecutorService;
 
-public abstract class DBTask implements Runnable
-{
+public abstract class DBTask implements Runnable {
+
 	private final DatabaseTaskType mType;
 	protected Database mDataPool = null;
 	private ExecutorService mConsumers;
 
-	public DBTask (DatabaseTaskType type)
-	{
+	public DBTask (DatabaseTaskType type) {
 		mType = type;
 	}
 
-	public DBTask (DatabaseTaskType type, DBTask postCondition)
-	{
+	public DBTask (DatabaseTaskType type, DBTask postCondition) {
 		mType = type;
 	}
 
-	public DatabaseTaskType getType ()
-	{
+	public DatabaseTaskType getType () {
 		return mType;
 	}
 
-	public void attachDataPool (Database dataPool)
-	{
+	public void attachDataPool (Database dataPool) {
 		mDataPool = dataPool;
 	}
 
-	public void attachService (ExecutorService service)
-	{
+	public void attachService (ExecutorService service) {
 		mConsumers = service;
 	}
 
@@ -45,20 +40,17 @@ public abstract class DBTask implements Runnable
 	 * @param task - The task to attach this objects devices to.
 	 * @return The modified task.
 	 */
-	protected DBTask attachDevicesToTask (DBTask task)
-	{
+	protected DBTask attachDevicesToTask (DBTask task) {
 		task.attachDataPool (mDataPool);
 		task.attachService (mConsumers);
 		return task;
 	}
 
-	protected void queuePostConditionTask (Runnable task)
-	{
+	protected void queuePostConditionTask (Runnable task) {
 		mConsumers.submit (task);
 	}
 
-	public enum DatabaseTaskType
-	{
+	public enum DatabaseTaskType {
 		Save (false),
 		Update (false),
 		Delete (false),
@@ -69,20 +61,22 @@ public abstract class DBTask implements Runnable
 
 		private boolean bReturnable;
 
-		DatabaseTaskType (boolean returnable)
-		{
+		DatabaseTaskType (boolean returnable) {
 			bReturnable = returnable;
 		}
 
-		public boolean getReturnable () { return bReturnable; }
+		public boolean getReturnable () {
+			return bReturnable;
+		}
 	}
 
-	public final class PoisonPill extends DBTask
-	{
-		PoisonPill () { super (DatabaseTaskType.Poison); }
+	public final class PoisonPill extends DBTask {
 
-		public void run ()
-		{
+		PoisonPill () {
+			super (DatabaseTaskType.Poison);
+		}
+
+		public void run () {
 			Logger.Instance ().Debug ("DB Thread", "Found poison pill, shutting down gracefully!");
 		}
 	}

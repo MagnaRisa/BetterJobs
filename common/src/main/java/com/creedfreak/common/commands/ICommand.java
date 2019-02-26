@@ -5,41 +5,41 @@ import com.creedfreak.common.exceptions.CommandException;
 
 /**
  * TODO: I need to do what the below comment states
- *
+ * <p>
  * I need to either add in the PlayerManager Reference to handle players
  * or use the Player Manager to retrieve the CraftyPlayer to pass into the
  * command rather than the Whole Manager.
  */
-public interface ICommand
-{
-    /**
-     * This is the primary method for executing a command.
-     */
-    boolean execute (IPlayer sender, String... args) throws CommandException;
+public interface ICommand {
 
-    /**
-     * This method returns the Name of the command.
-     */
-    String cmdName ();
+	/**
+	 * This is the primary method for executing a command.
+	 */
+	boolean execute (IPlayer sender, String... args) throws CommandException;
 
-    /**
-     * Checks a users permissions
-     */
-    void checkPermission (IPlayer player) throws CommandException;
+	/**
+	 * This method returns the Name of the command.
+	 */
+	String cmdName ();
 
-    /**
-     * Grabs the description of the command
-     */
-    String getDescription ();
+	/**
+	 * Checks a users permissions
+	 */
+	void checkPermission (IPlayer player) throws CommandException;
 
-    /**
-     * Grabs the usage of the command
-     */
-    String getUsage ();
+	/**
+	 * Grabs the description of the command
+	 */
+	String getDescription ();
 
-    /**
-     * Tests the argument length for a given command. If there are too many
-     * arguments then we return false.
-     */
-    boolean argLength (int maxArgs, int argLength);
+	/**
+	 * Grabs the usage of the command
+	 */
+	String getUsage ();
+
+	/**
+	 * Tests the argument length for a given command. If there are too many
+	 * arguments then we return false.
+	 */
+	boolean argLength (int maxArgs, int argLength);
 }

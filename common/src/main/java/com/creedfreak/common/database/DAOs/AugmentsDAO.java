@@ -1,54 +1,46 @@
 package com.creedfreak.common.database.DAOs;
 
-import com.creedfreak.common.professions.Profession;
-import com.google.common.primitives.UnsignedLong;
 import com.creedfreak.common.database.databaseConn.Database;
 import com.creedfreak.common.professions.Augment;
+import com.creedfreak.common.professions.Profession;
+import com.google.common.primitives.UnsignedLong;
 
 import java.util.Collection;
 import java.util.List;
 
-public class AugmentsDAO
-{
-    private Database mDatabase;
+public class AugmentsDAO {
 
-    public AugmentsDAO (Database database)
-    {
-        mDatabase = database;
-    }
+	private Database mDatabase;
 
-    public void save (Augment row)
-    {
-        // Save the augment here.
-    }
+	public AugmentsDAO (Database database) {
+		mDatabase = database;
+	}
 
-    public void delete (UnsignedLong id)
-    {
-        // Delete the augment based on it's Id
-    }
+	public void save (Augment row) {
+		// Save the augment here.
+	}
 
-    public void update (Augment row)
-    {
-        // Update a single row in the augments table.
-    }
+	public void delete (UnsignedLong id) {
+		// Delete the augment based on it's Id
+	}
 
-    public void updateAll (Collection<Augment> augments)
-    {
-    	// Update a list of IAugments
-    }
+	public void update (Augment row) {
+		// Update a single row in the augments table.
+	}
 
-    public  List<Augment> loadAll ()
-    {
-        return null;
-    }
+	public void updateAll (Collection<Augment> augments) {
+		// Update a list of IAugments
+	}
 
-    public void fetchProfAugments (Profession prof, UnsignedLong userID)
-    {
+	public List<Augment> loadAll () {
+		return null;
+	}
 
-    }
+	public void fetchProfAugments (Profession prof, UnsignedLong userID) {
 
-    public Augment load ()
-    {
-    	return null;
-    }
+	}
+
+	public Augment load () {
+		return null;
+	}
 }

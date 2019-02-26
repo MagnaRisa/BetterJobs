@@ -9,45 +9,38 @@ import com.creedfreak.common.exceptions.CommandException;
  * command within here without recreating them in every command
  * class.
  */
-public abstract class ProfessionCommand implements ICommand
-{
-    protected CommandData mCommandData;
+public abstract class ProfessionCommand implements ICommand {
 
-    protected ProfessionCommand (CommandData data)
-    {
-        mCommandData = data;
-    }
+	protected CommandData mCommandData;
 
-    @Override
-    public String cmdName ()
-    {
-        return mCommandData.getCmdName ();
-    }
+	protected ProfessionCommand (CommandData data) {
+		mCommandData = data;
+	}
 
-    @Override
-    public void checkPermission (IPlayer sender) throws CommandException
-    {
-        if (!(mCommandData.hasPerms (sender)))
-        {
-            throw new CommandException ("Insufficient Permissions!");
-        }
-    }
+	@Override
+	public String cmdName () {
+		return mCommandData.getCmdName ();
+	}
 
-    @Override
-    public String getDescription ()
-    {
-        return mCommandData.getDescription ();
-    }
+	@Override
+	public void checkPermission (IPlayer sender) throws CommandException {
+		if (!(mCommandData.hasPerms (sender))) {
+			throw new CommandException ("Insufficient Permissions!");
+		}
+	}
 
-    @Override
-    public String getUsage ()
-    {
-        return mCommandData.getUsage ();
-    }
+	@Override
+	public String getDescription () {
+		return mCommandData.getDescription ();
+	}
 
-    @Override
-    public boolean argLength (int maxArgs, int argLength)
-    {
-        return (maxArgs == argLength);
-    }
+	@Override
+	public String getUsage () {
+		return mCommandData.getUsage ();
+	}
+
+	@Override
+	public boolean argLength (int maxArgs, int argLength) {
+		return (maxArgs == argLength);
+	}
 }

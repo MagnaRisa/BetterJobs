@@ -1,13 +1,8 @@
 package com.creedfreak.common.professions;
 
-import com.creedfreak.common.AbsConfigController;
-import com.creedfreak.common.utility.CurrencyUtil;
+import java.math.BigDecimal;
 
 // Convert this to Json
-
-import java.math.BigDecimal;
-import java.util.Map;
-import java.util.concurrent.ConcurrentHashMap;
 
 
 /**
@@ -17,32 +12,29 @@ import java.util.concurrent.ConcurrentHashMap;
  * based on that blocks name.
  */
 @Deprecated
-public class MinerWage extends BlockTable
-{
-    public static final String MINER_PAYOUT = "Miner_Payout";
-    private static final String STONE_AFFINITY = "Stone_Affinity";
-    private static final String ORE_AFFINITY = "Ore_Affinity";
-    private static final String MINER_WAGE_TABLE = "MinerWage";
+public class MinerWage extends BlockTable {
 
-    public MinerWage ()
-    {
-        super (TableType.Miner);
-    }
+	public static final String MINER_PAYOUT = "Miner_Payout";
+	private static final String STONE_AFFINITY = "Stone_Affinity";
+	private static final String ORE_AFFINITY = "Ore_Affinity";
+	private static final String MINER_WAGE_TABLE = "MinerWage";
 
-     /**
-      * TODO: This needs Syncronization before it can function appropriately
-     * The goal of this method is to be able to modify a value within the
-     * Wage Table from a command or by other means.
-     *
-     * @param value The new value to modify the WageTable with
-     * @param path The path to the key whose value you want to change
-     *
-     * @return True  - If the value change was successful
-     *         False - If the value change was unsuccessful
-     */
+	public MinerWage () {
+		super (TableType.Miner);
+	}
 
-    public boolean modifyValue (BigDecimal value, String... path)
-    {
+	/**
+	 * TODO: This needs Syncronization before it can function appropriately
+	 * The goal of this method is to be able to modify a value within the
+	 * Wage Table from a command or by other means.
+	 *
+	 * @param value The new value to modify the WageTable with
+	 * @param path  The path to the key whose value you want to change
+	 * @return True  - If the value change was successful
+	 * False - If the value change was unsuccessful
+	 */
+
+	public boolean modifyValue (BigDecimal value, String... path) {
 //        Map<String, BigDecimal> map = mBlockMap.get (path[0]);
 //        if (map == null)
 //        {
@@ -56,6 +48,6 @@ public class MinerWage extends BlockTable
 //        }
 //
 //        mBlockMap.get(path[0]).put (path[1], value);
-        return true;
-    }
+		return true;
+	}
 }

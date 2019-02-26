@@ -2,11 +2,10 @@ package com.creedfreak;
 
 import org.junit.jupiter.api.Test;
 
-class ExampleTest
-{
+class ExampleTest {
+
 	@Test
-	void justATest ()
-	{
+	void justATest () {
 		System.out.println ("Executing Tests...");
 	}
 }

@@ -8,44 +8,37 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.UUID;
 
-public class TaskCheckUserExist extends DBTask
-{
+public class TaskCheckUserExist extends DBTask {
+
 	private final UUID mUserID;
 
-	public TaskCheckUserExist (UUID playerID)
-	{
+	public TaskCheckUserExist (UUID playerID) {
 		super (DatabaseTaskType.Check);
 		mUserID = playerID;
 	}
 
 	// DEBUG: Test this class to make sure it works.
-	public void run ()
-	{
+	public void run () {
 		DBTask postConditionTask;
 		PreparedStatement prepStmt = null;
 		ResultSet resultSet = null;
 
-		try
-		{
+		try {
 			prepStmt = mDataPool.dbConnect ().prepareStatement (queryLib.checkUserExist);
 			prepStmt.setBytes (1, UuidUtil.toBytes (mUserID));
 			resultSet = prepStmt.executeQuery ();
 
-			if (resultSet.next ())
-			{
+			if (resultSet.next ()) {
 				// TODO: What happens if this fails? How to we queue it up again?
 				postConditionTask = new TaskLoadPlayer (mUserID, resultSet.getLong ("UserID"));
-			}
-			else
-			{
+			} else {
 				// TODO: Where is the player initially loaded into the PlayerManager?
 				postConditionTask = new TaskSavePlayer (mUserID, resultSet.getString ("Username"));
 			}
 
 			this.queuePostConditionTask (postConditionTask);
 		}
-		catch (SQLException except)
-		{
+		catch (SQLException except) {
 			mDataPool.dbCloseResources (prepStmt, resultSet);
 			mDataPool.dbClose ();
 		}

@@ -13,13 +13,12 @@ import java.util.HashMap;
  * The json wrapper class, wraps a Gson object to retrieve and parse
  * json files for configuration.
  */
-public class JsonWrapper
-{
+public class JsonWrapper {
+
 	private Gson mGson;
 	private ClassLoader mClassLoader;
 
-	public JsonWrapper ()
-	{
+	public JsonWrapper () {
 		mGson = new GsonBuilder ().setPrettyPrinting ().create ();
 		mClassLoader = this.getClass ().getClassLoader ();
 	}
@@ -29,22 +28,19 @@ public class JsonWrapper
 	 * corresponds to the HashMap (Key, Value) pair. Likewise depending on the passed in type token, the HashMap
 	 * may have more nested HashMaps or other type of objects.
 	 *
-	 * @param token - The Type to pass to the Json Reader in order to parse the Json objects correctly.
+	 * @param token    - The Type to pass to the Json Reader in order to parse the Json objects correctly.
 	 * @param resource - The path to the resource we want to parse.
-	 *
-	 * @throws IOException - If the file cannot be found or read from then throw an IO exception
-	 *
 	 * @return - A HashMap which contains the json information from the resource parameter.
+	 * @throws IOException - If the file cannot be found or read from then throw an IO exception
 	 */
-	public HashMap readJson (Type token, String resource) throws IOException
-	{
+	public HashMap readJson (Type token, String resource) throws IOException {
 		JsonReader reader;
 		BufferedReader bufferedReader = new BufferedReader (new InputStreamReader (mClassLoader.getResourceAsStream (resource)));
 		HashMap parsedTable = null;
 
 		reader = mGson.newJsonReader (bufferedReader);
 		parsedTable = mGson.fromJson (reader, token);
-		reader.close();
+		reader.close ();
 
 		return parsedTable;
 	}
@@ -53,14 +49,12 @@ public class JsonWrapper
 	 * writeJson is used to write any HashMap out to a Json file. Each (Key, Value) pair in the HashMap gets
 	 * written out to the file as a Json (Key, Value) pair.
 	 *
-	 * @param map - The HashMap to write out to file.
-	 * @param token - The Type of the HashMap in which to write to the file.
+	 * @param map      - The HashMap to write out to file.
+	 * @param token    - The Type of the HashMap in which to write to the file.
 	 * @param resource - The path to the file to write out to.
-	 *
 	 * @throws IOException -
 	 */
-	public void writeJson (HashMap map, Type token, String resource) throws IOException
-	{
+	public void writeJson (HashMap map, Type token, String resource) throws IOException {
 		JsonWriter writer;
 		BufferedWriter bufferedWriter;
 

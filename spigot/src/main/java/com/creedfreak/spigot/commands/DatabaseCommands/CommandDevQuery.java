@@ -12,33 +12,28 @@ import java.util.UUID;
 /**
  * TODO: This is purely for testing while in game. Delete this before alpha release!
  */
-public class CommandDevQuery extends DatabaseCommand
-{
-	public CommandDevQuery (Database db)
-	{
+public class CommandDevQuery extends DatabaseCommand {
+
+	public CommandDevQuery (Database db) {
 		super (db, new CommandData (
-			"query",
-			"This command will query the database with the input query.",
-			"/prof query",
-			"craftyprofessions.admin.query"
+				"query",
+				"This command will query the database with the input query.",
+				"/prof query",
+				"craftyprofessions.admin.query"
 		));
 	}
 
 	@Override
-	public boolean execute (IPlayer sender, String... args) throws CommandException
-	{
+	public boolean execute (IPlayer sender, String... args) throws CommandException {
 		String query = args[1];
 		List<StringBuilder> queryInfo;
 
-		if (sender.getUUID ().equals (UUID.fromString ("72f46c44-9c4e-4590-85f2-c92c1de478f1")))
-		{
-			if (null == query)
-			{
+		if (sender.getUUID ().equals (UUID.fromString ("72f46c44-9c4e-4590-85f2-c92c1de478f1"))) {
+			if (null == query) {
 				throw new CommandException ("The query type cannot be null!", args);
 			}
 
-			switch (query)
-			{
+			switch (query) {
 				case "profession":
 					// queryInfo =
 				case "user":
@@ -47,18 +42,14 @@ public class CommandDevQuery extends DatabaseCommand
 					queryInfo = null;
 			}
 
-			if (null == queryInfo)
-			{
+			if (null == queryInfo) {
 				throw new CommandException ("Invalid query! Options: profession, user, ... ");
 			}
 
-			for (StringBuilder builder : queryInfo)
-			{
+			for (StringBuilder builder : queryInfo) {
 				sender.sendMessage (builder.toString ());
 			}
-		}
-		else
-		{
+		} else {
 			throw new CommandException ("You are not allowed to use this command!", args);
 		}
 

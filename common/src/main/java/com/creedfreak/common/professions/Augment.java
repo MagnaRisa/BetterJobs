@@ -2,8 +2,7 @@ package com.creedfreak.common.professions;
 
 import java.util.HashMap;
 
-public enum Augment
-{
+public enum Augment {
 	MinExpBonus (1),
 	StdExpBonus (2),
 	ImpExpBonus (3),
@@ -21,19 +20,16 @@ public enum Augment
 	private Integer mAugmentID;
 
 	static {
-		for (Augment aug : Augment.values ())
-		{
+		for (Augment aug : Augment.values ()) {
 			mLookup.put (aug.mAugmentID, aug);
 		}
 	}
 
-	Augment (Integer augID)
-	{
+	Augment (Integer augID) {
 		mAugmentID = augID;
 	}
 
-	public static Augment lookupAugment (Integer augmentID)
-	{
+	public static Augment lookupAugment (Integer augmentID) {
 		return mLookup.get (augmentID);
 	}
 

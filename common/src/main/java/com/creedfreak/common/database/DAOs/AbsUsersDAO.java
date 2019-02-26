@@ -1,20 +1,22 @@
 package com.creedfreak.common.database.DAOs;
 
+import com.creedfreak.common.container.IPlayer;
+import com.creedfreak.common.database.databaseConn.Database;
 import com.creedfreak.common.professions.Profession;
 import com.creedfreak.common.utility.Logger;
 import com.creedfreak.common.utility.UuidUtil;
 import com.google.common.primitives.UnsignedLong;
-import com.creedfreak.common.container.IPlayer;
-import com.creedfreak.common.database.databaseConn.Database;
 import net.jcip.annotations.NotThreadSafe;
 
 import java.math.BigInteger;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
-
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
+import java.util.UUID;
 
 /**
  * This class will be thread confined to the DatabaseWorkerQueue.
@@ -24,8 +26,7 @@ import java.util.*;
  * that there are no race conditions.
  */
 @NotThreadSafe
-public abstract class AbsUsersDAO
-{
+public abstract class AbsUsersDAO {
 
 	private Database mDatabase;
 	private AugmentsDAO mAugmentDAO;
@@ -50,8 +51,7 @@ public abstract class AbsUsersDAO
 	 *
 	 * @param database The database in which to access.
 	 */
-	public AbsUsersDAO (Database database)
-	{
+	public AbsUsersDAO (Database database) {
 		mDatabase = database;
 		mAugmentDAO = new AugmentsDAO (database);
 		mProfessionsDAO = new ProfessionsDAO (database);
@@ -63,28 +63,23 @@ public abstract class AbsUsersDAO
 	 * @param playerID The ID of the player.
 	 * @param username The username of the player.
 	 */
-	public void save (UUID playerID, String username)
-	{
+	public void save (UUID playerID, String username) {
 		Connection conn = mDatabase.dbConnect ();
 		PreparedStatement savePlayer = null;
 
-		try
-		{
+		try {
 			savePlayer = conn.prepareStatement (insertUser);
 			savePlayer.setBytes (1, UuidUtil.toBytes (playerID));
 			savePlayer.setString (2, username);
 
-			if (savePlayer.execute ())
-			{
+			if (savePlayer.execute ()) {
 				Logger.Instance ().Debug ("UsersDAO", "Inserted Player Successfully!");
 			}
 		}
-		catch (SQLException except)
-		{
+		catch (SQLException except) {
 			Logger.Instance ().Error ("UsersDAO", "Cannot insert user! Reason: " + except.getMessage ());
 		}
-		finally
-		{
+		finally {
 			mDatabase.dbCloseResources (savePlayer);
 			mDatabase.dbClose ();
 		}
@@ -97,8 +92,7 @@ public abstract class AbsUsersDAO
 	 *
 	 * @param id The primary identifier within the database for the current player.
 	 */
-	public void delete (UnsignedLong id)
-	{
+	public void delete (UnsignedLong id) {
 		// Before we delete the user, add their current data to the archive so it is retrievable.
 
 		// Delete the row whose rid == id
@@ -106,39 +100,34 @@ public abstract class AbsUsersDAO
 
 	/**
 	 * Updates the IPlayers information in the database.
-	 *
+	 * <p>
 	 * TODO: This should include the players Professions and Augments on those professions.
 	 *
 	 * @param player The player to update into the database
 	 */
-	public void update (IPlayer player)
-	{
+	public void update (IPlayer player) {
 		// Update a single player.
 		Connection conn = mDatabase.dbConnect ();
 		PreparedStatement updatePlayer = null;
 
-		try
-		{
+		try {
 			// First we update the player information.
 			updatePlayer = conn.prepareStatement (updateUser);
 
 			updatePlayer.setString (1, player.getUsername ());
 			updatePlayer.setInt (2, player.getLevel ());
 
-			if (updatePlayer.execute ())
-			{
+			if (updatePlayer.execute ()) {
 				Logger.Instance ().Debug ("UsersDAO", "Updated Player Successfully!");
 			}
-			
+
 			// Then we update the players list of professions.
 			mProfessionsDAO.updateAll (player.getProfessionCollection ());
 		}
-		catch (SQLException except)
-		{
+		catch (SQLException except) {
 			Logger.Instance ().Error ("UsersDAO", "Cannot insert user! Reason: " + except.getMessage ());
 		}
-		finally
-		{
+		finally {
 			mDatabase.dbCloseResources (updatePlayer);
 			mDatabase.dbClose ();
 		}
@@ -149,18 +138,15 @@ public abstract class AbsUsersDAO
 	 *
 	 * @param players A collection of players to update.
 	 */
-	public void updateAll (Collection<IPlayer> players)
-	{
+	public void updateAll (Collection<IPlayer> players) {
 		Connection conn = mDatabase.dbConnect ();
 		PreparedStatement updatePlayer = null;
 		int count = 0;
 
-		try
-		{
+		try {
 			updatePlayer = conn.prepareStatement (updateUser);
 
-			for (IPlayer player : players)
-			{
+			for (IPlayer player : players) {
 				updatePlayer.setString (1, player.getUsername ());
 				updatePlayer.setInt (2, player.getLevel ());
 
@@ -168,15 +154,12 @@ public abstract class AbsUsersDAO
 				count++;
 			}
 		}
-		catch (SQLException except)
-		{
+		catch (SQLException except) {
 			Logger.Instance ().Error ("UsersDAO", "While processing updateAll method something went wrong!");
 			Logger.Instance ().Error ("UsersDAO", except.getMessage ());
 		}
-		finally
-		{
-			if (count == players.size ())
-			{
+		finally {
+			if (count == players.size ()) {
 				Logger.Instance ().Debug ("UsersDAO", "All players were updated successfully!");
 			}
 
@@ -187,20 +170,19 @@ public abstract class AbsUsersDAO
 
 	/**
 	 * TODO: This could be condensed to use the <code>load<code/> function within the loop
-	 *  what we have to be careful of is closing the statements appropriately while not
-	 *  closing it every single loading of a player that is done. This is currently why
-	 *  I don't call <code>load</code> within <code>loadSubset<code/>
-	 *
+	 * what we have to be careful of is closing the statements appropriately while not
+	 * closing it every single loading of a player that is done. This is currently why
+	 * I don't call <code>load</code> within <code>loadSubset<code/>
+	 * <p>
 	 * Loads a list of users from the database and returns a list
 	 * of the IPlayers. If the collection passed into the method
 	 * is not a list of players then null is returned..
 	 *
 	 * @param values The map of players to be loaded from the
-	 *                                  database as IPlayers.
+	 *               database as IPlayers.
 	 * @return A list of loaded players from the database.
 	 */
-	public List<IPlayer> loadSubset (Collection<UUID> values)
-	{
+	public List<IPlayer> loadSubset (Collection<UUID> values) {
 		Connection conn = mDatabase.dbConnect ();
 
 		List<IPlayer> retPlayers = new ArrayList<> ();
@@ -212,25 +194,21 @@ public abstract class AbsUsersDAO
 		String username;
 		Integer playerLevel;
 
-		try
-		{
+		try {
 			conn.setAutoCommit (false);
 			// getPlayer = conn.prepareStatement (queryLib.selectUserData);
 
-			for (UUID uuid : values)
-			{
+			for (UUID uuid : values) {
 				getPlayer.setBytes (1, UuidUtil.toBytes (uuid));
 				resultSet = getPlayer.executeQuery ();
 
-				if (resultSet.isFirst ())
-				{
+				if (resultSet.isFirst ()) {
 					playerID = UnsignedLong.valueOf (BigInteger.valueOf (resultSet.getLong ("UserID")));
 					playerUUID = UuidUtil.fromBytes (resultSet.getBytes ("UUID"));
 					username = resultSet.getString ("Username");
 					playerLevel = resultSet.getInt ("UserLevel");
 
-					if (playerUUID != uuid)
-					{
+					if (playerUUID != uuid) {
 						throw new SQLException ("Incorrect Row Retrieved!");
 					}
 					retPlayers.add (playerFactory (playerID, username, playerLevel, playerUUID));
@@ -238,22 +216,17 @@ public abstract class AbsUsersDAO
 			}
 			conn.commit ();
 		}
-		catch (SQLException except)
-		{
+		catch (SQLException except) {
 			Logger.Instance ().Error ("AbsUsersDAO", "Something went wrong while processing loadAll. Reason: " + except.getMessage ());
 		}
-		catch (ClassCastException except)
-		{
+		catch (ClassCastException except) {
 			Logger.Instance ().Error ("AbsUsersDAO", except.getMessage ());
 		}
-		finally
-		{
-			try
-			{
+		finally {
+			try {
 				conn.setAutoCommit (true);
 			}
-			catch (SQLException except)
-			{
+			catch (SQLException except) {
 				Logger.Instance ().Error ("AbsUsersDAO", "Could not set auto commit for database: " + except.getSQLState ());
 			}
 
@@ -271,8 +244,7 @@ public abstract class AbsUsersDAO
 	 * @param userID The Users UUID
 	 * @return a player object.
 	 */
-	public IPlayer load (UUID userID)
-	{
+	public IPlayer load (UUID userID) {
 		IPlayer retPlayer = null;
 		PreparedStatement getPlayer = null;
 		ResultSet resultSet = null;
@@ -282,40 +254,34 @@ public abstract class AbsUsersDAO
 		String username;
 		Integer playerLevel;
 
-		try
-		{
+		try {
 			// getPlayer = mDatabase.dbConnect ().prepareStatement (queryLib.selectUserData);
 			getPlayer.setBytes (1, UuidUtil.toBytes (userID));
 			resultSet = getPlayer.executeQuery ();
 
-			if (resultSet.next ())
-			{
+			if (resultSet.next ()) {
 				playerID = UnsignedLong.valueOf (BigInteger.valueOf (resultSet.getLong ("UserID")));
 				playerUUID = UuidUtil.fromBytes (resultSet.getBytes ("UUID"));
 				username = resultSet.getString ("Username");
 				playerLevel = resultSet.getInt ("UserLevel");
 
-				if (!(userID.equals (playerUUID)))
-				{
+				if (!(userID.equals (playerUUID))) {
 					throw new SQLException ("Incorrect Row Retrieved!");
 				}
 				retPlayer = playerFactory (playerID, username, playerLevel, playerUUID);
 			}
 		}
-		catch (SQLException except)
-		{
+		catch (SQLException except) {
 			Logger.Instance ().Error ("AbsUsersDAO", "Something wen't wrong while loading player! Reason: " + except.getMessage ());
 		}
-		finally
-		{
+		finally {
 			mDatabase.dbCloseResources (getPlayer, resultSet);
 			mDatabase.dbClose ();
 		}
 		return retPlayer;
 	}
 
-	public IPlayer restoreUser (UUID userID)
-	{
+	public IPlayer restoreUser (UUID userID) {
 		return null;
 	}
 
@@ -324,30 +290,25 @@ public abstract class AbsUsersDAO
 	 * Checks to see if the user is within the database.
 	 *
 	 * @param userID - The Users unique id
-	 *
 	 * @return True - If the user is in the database
-	 *         False - If the user is not in the database
+	 * False - If the user is not in the database
 	 */
-	public boolean checkExist (UUID userID)
-	{
+	public boolean checkExist (UUID userID) {
 		boolean retVal = false;
 
 		PreparedStatement prepStmt = null;
 		ResultSet resultSet = null;
 
-		try
-		{
+		try {
 			prepStmt = mDatabase.dbConnect ().prepareStatement (checkUserExist);
 			prepStmt.setBytes (1, UuidUtil.toBytes (userID));
 			resultSet = prepStmt.executeQuery ();
 
-			if (resultSet.next ())
-			{
+			if (resultSet.next ()) {
 				retVal = true;
 			}
 		}
-		catch (SQLException except)
-		{
+		catch (SQLException except) {
 			mDatabase.dbCloseResources (prepStmt, resultSet);
 			mDatabase.dbClose ();
 		}
@@ -360,8 +321,7 @@ public abstract class AbsUsersDAO
 	 *
 	 * @param player - The player in which to load the professions for.
 	 */
-	public void fetchUserProfessions (IPlayer player)
-	{
+	public void fetchUserProfessions (IPlayer player) {
 		List<Profession> professions;
 
 		// professions = mProfessionsDAO.loadSubset (player.getInternalID (), player.getUsername ());
@@ -374,7 +334,7 @@ public abstract class AbsUsersDAO
 
 		// player.registerProfession (professions);
 	}
-	
+
 	/**
 	 * Saves a single users profession into the database. This is an
 	 * INSERT into the database not an UPDATE.
@@ -383,6 +343,5 @@ public abstract class AbsUsersDAO
 //	{
 //		mProfessionsDAO.save (prof);
 //	}
-
 	public abstract IPlayer playerFactory (UnsignedLong playerID, String username, Integer playerLevel, UUID playerUUID);
 }

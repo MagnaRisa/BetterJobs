@@ -15,10 +15,10 @@ commands:
   prof:
     description: The entry point into the commands for CraftyProfessions
     usage: |
-        Error False was returned from command!
+      Error False was returned from command!
 
 
-### Random Commands for fun ###
+  ### Random Commands for fun ###
   shower:
     description: The Shower Squad, That is all...
     usage: /<command>

@@ -22,13 +22,13 @@ evaluationDependsOn(':common')
 
 /**
  * DEPENDENCIES: The modules that the spigot build requires
- * 
+ *
  * Note: Fixed the Milkbowl repository issue by implementing 
  *          the Github repo for the abstraction library. This
  *          fix is referenced in issue #69 on the Vault Github page.
  */
 dependencies {
-    implementation project (':common')
+    implementation project(':common')
 
     implementation group: 'org.spigotmc', name: 'spigot-api', version: '1.13.2-R0.1-SNAPSHOT'
     implementation group: 'com.github.Milkbowl', name: 'VaultAPI', version: '68f14eca20'
@@ -36,16 +36,16 @@ dependencies {
 
 /**
  * REPOSITORIES: Dependency Repositories
- * 
+ *
  * Note: Fixed the Milkbowl repository issue by using the repository jitpack.io
  */
 repositories {
     mavenCentral()
     mavenLocal()
-    maven { url 'https://hub.spigotmc.org/nexus/content/repositories/snapshots/'} 
+    maven { url 'https://hub.spigotmc.org/nexus/content/repositories/snapshots/' }
     maven { url 'https://jitpack.io' }
     maven { url 'https://hub.spigotmc.org/nexus/content/groups/public/' }
-    maven { url 'https://oss.sonatype.org/content/repositories/snapshots'}
+    maven { url 'https://oss.sonatype.org/content/repositories/snapshots' }
 }
 
 /**
@@ -103,7 +103,7 @@ task spigotJar(type: Jar) {
     }
 
     archiveName = archive
-    dependsOn = spigotProjects.collect { it + ':compileJava'}
+    dependsOn = spigotProjects.collect { it + ':compileJava' }
 
     from files(spigotProjects.collect { project(it).sourceSets.main.output })
 
@@ -114,7 +114,7 @@ task spigotJar(type: Jar) {
 /**
  * TASK: Cleans the root output spigotJar file and
  */
-task spigotClean (type: Delete) {
+task spigotClean(type: Delete) {
     doFirst {
         println 'Cleaning spigot directories and jar files...'
     }
@@ -131,7 +131,7 @@ task spigotClean (type: Delete) {
 /**
  * TASK: Copy the compiled spigot jar into an output directory easier to access.
  */
-task spigotCopy (type: Copy) {
+task spigotCopy(type: Copy) {
     doFirst {
         println 'Copying jar file from build directory into root output directory...'
     }
@@ -146,7 +146,7 @@ task spigotCopy (type: Copy) {
 /**
  * TASK: Runs all the tasks building spigot requires.
  */
-task makeSpigot (dependsOn: ['spigotClean', 'spigotJar', 'spigotCopy']) {
+task makeSpigot(dependsOn: ['spigotClean', 'spigotJar', 'spigotCopy']) {
     spigotJar.mustRunAfter spigotClean
     spigotCopy.mustRunAfter spigotJar
 

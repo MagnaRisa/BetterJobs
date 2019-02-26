@@ -10,24 +10,20 @@ import org.bukkit.entity.Player;
 import java.util.List;
 import java.util.UUID;
 
-public class SpigotPlayerFactory implements IPlayerFactory
-{
+public class SpigotPlayerFactory implements IPlayerFactory {
+
 	private static final String PREFIX = "SpigotPlayerFactory";
 	private static final String MESSAGE = "Cannot find player in Bukkit registry. Is the player offline?";
 
 	// DEBUG: Debug and see if the `player` variable will always return null.
 	//  Remember this runs on a separate thread!
-	public IPlayer buildPlayer (Long playerID, Integer playerLevel, UUID playerUUID, String username)
-	{
+	public IPlayer buildPlayer (Long playerID, Integer playerLevel, UUID playerUUID, String username) {
 		Player entity = Bukkit.getPlayer (playerUUID);
 		IPlayer player;
 
-		if (entity != null)
-		{
+		if (entity != null) {
 			player = new SpigotPlayer (playerID, username, playerLevel, entity);
-		}
-		else
-		{
+		} else {
 			Logger.Instance ().Error (PREFIX, MESSAGE);
 			player = null;
 		}
@@ -36,22 +32,17 @@ public class SpigotPlayerFactory implements IPlayerFactory
 
 	public IPlayer buildPlayerWithProfessions (Long playerID, Integer playerLevel,
 	                                           UUID playerUUID, String username,
-	                                           List<Profession> professions)
-	{
+	                                           List<Profession> professions) {
 		IPlayer player = this.buildPlayer (playerID, playerLevel, playerUUID, username);
 
-		if (player != null)
-		{
-			for (Profession prof : professions)
-			{
+		if (player != null) {
+			for (Profession prof : professions) {
 				player.registerProfession (prof);
 			}
-		}
-		else
-		{
+		} else {
 			Logger.Instance ().Error (PREFIX, MESSAGE);
 		}
-		
+
 		return player;
 	}
 }

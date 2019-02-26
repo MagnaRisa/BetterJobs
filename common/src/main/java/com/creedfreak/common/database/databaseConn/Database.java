@@ -7,11 +7,13 @@ import com.creedfreak.common.utility.SQLReader;
 import com.creedfreak.common.utility.TimeUtil;
 
 import java.io.IOException;
-import java.sql.*;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.text.DecimalFormat;
 
-public abstract class Database
-{
+public abstract class Database {
 
 	public static final String DATABASE_PREFIX = "database";
 	private static final String SQL_INSERT_STATEMENTS = "sql_files/insert_stmts.sql";
@@ -37,8 +39,7 @@ public abstract class Database
 	 *
 	 * Return:      None
 	 *************************************************************************/
-	public Database (ICraftyProfessions plugin, AbsConfigController config)
-	{
+	public Database (ICraftyProfessions plugin, AbsConfigController config) {
 		mLogger = Logger.Instance ();
 
 		mPlugin = plugin;
@@ -85,17 +86,13 @@ public abstract class Database
 	 *
 	 * Return:      None
 	 *************************************************************************/
-	public void dbClose ()
-	{
-		try
-		{
-			if (mConnection != null)
-			{
+	public void dbClose () {
+		try {
+			if (mConnection != null) {
 				mConnection.close ();
 			}
 		}
-		catch (SQLException exception)
-		{
+		catch (SQLException exception) {
 			mLogger.Warn (DATABASE_PREFIX, "Could not close database Connection: " + exception.getMessage ());
 		}
 	}
@@ -112,29 +109,22 @@ public abstract class Database
 	 *
 	 * Return: None
 	 *************************************************************************/
-	public void dbCloseResources (PreparedStatement stmt, ResultSet set)
-	{
-		try
-		{
-			if (set != null)
-			{
+	public void dbCloseResources (PreparedStatement stmt, ResultSet set) {
+		try {
+			if (set != null) {
 				set.close ();
 			}
 		}
-		catch (SQLException exception)
-		{
+		catch (SQLException exception) {
 			mLogger.Error (DATABASE_PREFIX, "Failed to close SQL ResultSet " + exception.getMessage ());
 		}
 
-		try
-		{
-			if (stmt != null)
-			{
+		try {
+			if (stmt != null) {
 				stmt.close ();
 			}
 		}
-		catch (SQLException exception)
-		{
+		catch (SQLException exception) {
 			mLogger.Error (DATABASE_PREFIX, "Failed to close SQL Prep Statment " + exception.getMessage ());
 		}
 	}
@@ -149,17 +139,13 @@ public abstract class Database
 	 *
 	 * Return: None
 	 *************************************************************************/
-	public void dbCloseResources (PreparedStatement stmt)
-	{
-		try
-		{
-			if (stmt != null)
-			{
+	public void dbCloseResources (PreparedStatement stmt) {
+		try {
+			if (stmt != null) {
 				stmt.close ();
 			}
 		}
-		catch (SQLException exception)
-		{
+		catch (SQLException exception) {
 			mLogger.Error (DATABASE_PREFIX, "Failed to close SQL Prep Statement " + exception.getMessage ());
 		}
 	}
@@ -178,24 +164,20 @@ public abstract class Database
 	 * @return True  - If the database gets initialized successfully.
 	 *         False - If the database initialization fails at some point.
 	 *************************************************************************/
-	public boolean initializeDatabase ()
-	{
+	public boolean initializeDatabase () {
 		boolean createSuccess, insertSuccess, retVal = false;
 		long initialTime = System.nanoTime ();
 		DecimalFormat timeFormat = new DecimalFormat ("#0.00");
 
-		if (!checkDBExists ())
-		{
+		if (!checkDBExists ()) {
 			createSuccess = createTables ();
 
-			if (createSuccess)
-			{
+			if (createSuccess) {
 				mLogger.Info (DATABASE_PREFIX, "Total number of Create Table statements ran: " + mNumTables);
 
 				insertSuccess = insertIntoTables ();
 
-				if (insertSuccess)
-				{
+				if (insertSuccess) {
 					mLogger.Info (DATABASE_PREFIX, "database has been created and the required data has been inserted!");
 				}
 
@@ -205,9 +187,7 @@ public abstract class Database
 
 			mTotalTimeElapsed = TimeUtil.toSeconds (System.nanoTime () - initialTime);
 			mLogger.Info (DATABASE_PREFIX, "Total time elapsed for database Construction: " + timeFormat.format (mTotalTimeElapsed) + "sec");
-		}
-		else
-		{
+		} else {
 			mLogger.Info (DATABASE_PREFIX, "database found! Setup not necessary");
 			retVal = true;
 		}
@@ -226,40 +206,33 @@ public abstract class Database
 	 *
 	 * Return:      None
 	 *************************************************************************/
-	protected boolean createTables ()
-	{
+	protected boolean createTables () {
 		Connection connection = dbConnect ();
 		SQLReader reader = new SQLReader ();
 		String sqlStmt;
 
-		try
-		{
+		try {
 			reader.openReader (mPlugin.openResource (this.getCreateTableStmts ()));
 
 			sqlStmt = reader.readStatement ();
 
-			while (!sqlStmt.equals (SQLReader.EOF))
-			{
+			while (!sqlStmt.equals (SQLReader.EOF)) {
 				executeStatement (sqlStmt, connection);
-				if (sqlStmt.contains (SQL_CREATE_STMT))
-				{
+				if (sqlStmt.contains (SQL_CREATE_STMT)) {
 					mNumTables++;
 				}
 				sqlStmt = reader.readStatement ();
 			}
 		}
-		catch (IOException | SQLException exception)
-		{
+		catch (IOException | SQLException exception) {
 			mLogger.Error (DATABASE_PREFIX, "Could not Create database Tables: " + exception);
 			return false;
 		}
-		catch (Exception exception)
-		{
+		catch (Exception exception) {
 			mLogger.Error (DATABASE_PREFIX, "Unhandled Exception: " + exception);
 			return false;
 		}
-		finally
-		{
+		finally {
 			dbClose ();
 			reader.closeReader ();
 		}
@@ -279,39 +252,33 @@ public abstract class Database
 	 * @return True  - If the table insertions succeed
 	 *         False - If the table insertions fail
 	 *************************************************************************/
-	private boolean insertIntoTables ()
-	{
+	private boolean insertIntoTables () {
 		Connection connection = dbConnect ();
 		SQLReader reader = new SQLReader ();
 		String sqlStmt;
 
-		try
-		{
+		try {
 			reader.openReader (mPlugin.openResource (SQL_INSERT_STATEMENTS));
 
 			sqlStmt = reader.readStatement ();
 
-			while (!sqlStmt.equals (SQLReader.EOF))
-			{
-				if (sqlStmt.contains (SQL_INSERT_STMT))
-				{
+			while (!sqlStmt.equals (SQLReader.EOF)) {
+				if (sqlStmt.contains (SQL_INSERT_STMT)) {
 					mNumInsertsRan++;
 				}
 				executeStatement (sqlStmt, connection);
 				sqlStmt = reader.readStatement ();
 			}
 		}
-		catch (IOException | SQLException exception)
-		{
+		catch (IOException | SQLException exception) {
 			mLogger.Error (DATABASE_PREFIX, "Could Not Insert Initialization Data Into database: " + exception);
 			return false;
 		}
-		finally
-		{
+		finally {
 			dbClose ();
 			reader.closeReader ();
 			mLogger.Info (DATABASE_PREFIX, "Total number of Insertion statements ran: " + mNumInsertsRan);
-	}
+		}
 		return true;
 	}
 
@@ -329,14 +296,12 @@ public abstract class Database
 	 * @return True -  If the tables were created.
 	 *         False - If the tables were already initialized.
 	 *************************************************************************/
-	private boolean checkDBExists ()
-	{
+	private boolean checkDBExists () {
 		boolean bTablesExist, test;
 		Connection conn = dbConnect ();
 		String sqlQuery = "SELECT ProfessionID FROM Professions";
 
-		try
-		{
+		try {
 			PreparedStatement prepStmt = conn.prepareStatement (sqlQuery);
 			ResultSet rSet = prepStmt.executeQuery ();
 
@@ -344,13 +309,11 @@ public abstract class Database
 
 			dbCloseResources (prepStmt, rSet);
 		}
-		catch (SQLException exception)
-		{
+		catch (SQLException exception) {
 			mLogger.Error (DATABASE_PREFIX, "Could not locate tables within checkDBExists! Defaulting return type to false. State: " + exception.getSQLState ());
 			return false;
 		}
-		finally
-		{
+		finally {
 			dbClose ();
 		}
 		return bTablesExist;
@@ -373,8 +336,7 @@ public abstract class Database
 	 *
 	 * Return: None
 	 *************************************************************************/
-	private void executeStatement (String sqlStatement, Connection conn) throws SQLException
-	{
+	private void executeStatement (String sqlStatement, Connection conn) throws SQLException {
 		PreparedStatement statement = conn.prepareStatement (sqlStatement);
 		statement.execute ();
 	}

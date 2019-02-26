@@ -19,15 +19,15 @@ def archive = rootProject.jar_root_prefix + '-sponge-' + rootProject.cp_build + 
 evaluationDependsOn(':common')
 
 repositories {
-    mavenCentral ()
+    mavenCentral()
 }
 
 /**
  * DEPENDENCIES: The modules that the sponge build requires
  */
 dependencies {
-    implementation project (':common')
-    implementation (group: 'org.spongepowered', name: 'spongeapi', version: '8.0.0-SNAPSHOT')
+    implementation project(':common')
+    implementation(group: 'org.spongepowered', name: 'spongeapi', version: '8.0.0-SNAPSHOT')
 }
 
 /**
@@ -63,7 +63,7 @@ task spongeJar(type: Jar) {
     }
 
     archiveName = archive
-    dependsOn = spongeProjects.collect { it + ':compileJava'}
+    dependsOn = spongeProjects.collect { it + ':compileJava' }
 
     from files(spongeProjects.collect { project(it).sourceSets.main.output })
 
@@ -75,7 +75,7 @@ task spongeJar(type: Jar) {
  * TASK: Cleans the root output spongeJar file and
  */
 task spongeClean(type: Delete) {
-    logger.info ('Cleaning sponge directories and jar files...')
+    logger.info('Cleaning sponge directories and jar files...')
 
     delete 'build'
     delete "../output/${archive}"
@@ -89,8 +89,8 @@ task spongeClean(type: Delete) {
 /**
  * TASK: Copy the compiled sponge jar into an output directory easier to access.
  */
-task spongeCopy (type: Copy) {
-    logger.info ('Copying jar file from build directory into root output directory...')
+task spongeCopy(type: Copy) {
+    logger.info('Copying jar file from build directory into root output directory...')
 
     from "build/libs/${archive}"
     into '../output'
@@ -102,7 +102,7 @@ task spongeCopy (type: Copy) {
 /**
  * TASK: Utilize all sponge tasks to create and manage the Sponge Jar file
  */
-task makeSponge (dependsOn: ['spongeClean', 'spongeJar', 'spongeCopy']) {
+task makeSponge(dependsOn: ['spongeClean', 'spongeJar', 'spongeCopy']) {
     spongeJar.mustRunAfter spongeClean
     spongeCopy.mustRunAfter spongeJar
 

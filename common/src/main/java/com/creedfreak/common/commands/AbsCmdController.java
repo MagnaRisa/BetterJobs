@@ -6,16 +6,15 @@ import com.creedfreak.common.exceptions.CommandNotFoundException;
 
 import java.util.HashMap;
 
-public abstract class AbsCmdController
-{
+public abstract class AbsCmdController {
+
 	protected ICraftyProfessions mPlugin;
 	private HashMap<String, ICommand> mCommandMap;
 
 	/**
 	 * Default constructor
 	 */
-	public AbsCmdController (ICraftyProfessions plugin)
-	{
+	public AbsCmdController (ICraftyProfessions plugin) {
 		mPlugin = plugin;
 		mCommandMap = new HashMap<> ();
 	}
@@ -31,8 +30,7 @@ public abstract class AbsCmdController
 	 *
 	 * @param cmd The command to add to the map
 	 */
-	protected void registerCommand (ICommand cmd)
-	{
+	protected void registerCommand (ICommand cmd) {
 		mCommandMap.put (cmd.cmdName (), cmd);
 	}
 
@@ -41,16 +39,12 @@ public abstract class AbsCmdController
 	 * valid for a CraftyProfession Command.
 	 *
 	 * @param args The Array of arguments to check the length of
-	 *
 	 * @return True If the argument length is > 0
-	 *
 	 * @throws CommandException This Argument is thrown when someone
-	 * issues a command that has zero arguments.
+	 *                          issues a command that has zero arguments.
 	 */
-	protected boolean checkArgsLength (String... args) throws CommandException
-	{
-		if (!(args.length > 0))
-		{
+	protected boolean checkArgsLength (String... args) throws CommandException {
+		if (!(args.length > 0)) {
 			throw new CommandException ("Too Few Arguments in command ", args);
 		}
 
@@ -62,17 +56,13 @@ public abstract class AbsCmdController
 	 * the parameter arg.
 	 *
 	 * @param arg The string to hash to the command map and retrieve the command
-	 *
 	 * @return The ICommand with the specified command name.
-	 *
 	 * @throws CommandNotFoundException If mCommandMap.get returns null then we
-	 *         know that the command is not in the map and that we need to throw
-	 *         the exception.
+	 *                                  know that the command is not in the map and that we need to throw
+	 *                                  the exception.
 	 */
-	protected ICommand loadCommand (String arg) throws CommandNotFoundException
-	{
-		if (mCommandMap.get (arg) == null)
-		{
+	protected ICommand loadCommand (String arg) throws CommandNotFoundException {
+		if (mCommandMap.get (arg) == null) {
 			throw new CommandNotFoundException ();
 		}
 

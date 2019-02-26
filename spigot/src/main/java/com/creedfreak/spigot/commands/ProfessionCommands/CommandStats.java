@@ -1,8 +1,8 @@
 package com.creedfreak.spigot.commands.ProfessionCommands;
 
-import com.creedfreak.common.container.IPlayer;
-import com.creedfreak.common.commands.ProfessionCommand;
 import com.creedfreak.common.commands.CommandData;
+import com.creedfreak.common.commands.ProfessionCommand;
+import com.creedfreak.common.container.IPlayer;
 
 /**
  * This command when executed will display the users stats
@@ -11,26 +11,24 @@ import com.creedfreak.common.commands.CommandData;
  * command of CommandProfile will give a book with your
  * full statistics within.
  */
-public class CommandStats extends ProfessionCommand
-{
-    private CommandData mCommandData;
+public class CommandStats extends ProfessionCommand {
 
-    public CommandStats ()
-    {
-        super (new CommandData (
-            "stats",
-            "This command will display a simple version of the players stats",
-            "/prof stats",
-            "craftyprofessions.use.stats"
-        ));
-    }
+	private CommandData mCommandData;
 
-    public boolean execute (IPlayer sender, String... args)
-    {
-        sender.sendMessage ("You have issued the command /prof stats");
+	public CommandStats () {
+		super (new CommandData (
+				"stats",
+				"This command will display a simple version of the players stats",
+				"/prof stats",
+				"craftyprofessions.use.stats"
+		));
+	}
 
-        return true;
-    }
+	public boolean execute (IPlayer sender, String... args) {
+		sender.sendMessage ("You have issued the command /prof stats");
+
+		return true;
+	}
 
 
 }

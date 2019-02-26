@@ -1,6 +1,5 @@
 package com.creedfreak.database;
 
-public class TestDatabaseAccess
-{
+public class TestDatabaseAccess {
 
 }

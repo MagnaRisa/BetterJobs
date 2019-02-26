@@ -22,20 +22,20 @@ import java.util.concurrent.*;
  * This task will load an entire users crafty profession data from
  * the database. Once the data is retrieved the runnable builds
  * the player and adds it into the PlayerManager to be used.
- *
+ * <p>
  * The Data Retrieved:
  * - The user information from Users
  * - The user career information from Careers
  * - The user augments for their careers from UserProfHasAugments
- *
+ * <p>
  * Concurrency Policy:
  * All of the internal data can be read but never changed. Since the
  * TaskLoadPlayer state is immutable this class is Thread Safe.
  */
 @ThreadSafe
 @Immutable
-public class TaskLoadPlayer extends DBTask
-{
+public class TaskLoadPlayer extends DBTask {
+
 	private static final String PREFIX = "-TaskLoadPlayer";
 	private static final long INVALID_ID = -1;
 
@@ -47,8 +47,7 @@ public class TaskLoadPlayer extends DBTask
 	 * Default constructor which runs the load player task using
 	 * the UUID of a player within the game.
 	 */
-	public TaskLoadPlayer (UUID playerUUID)
-	{
+	public TaskLoadPlayer (UUID playerUUID) {
 		super (DatabaseTaskType.Query);
 		mPlayerUUID = playerUUID;
 		mPlayerID = INVALID_ID;
@@ -61,8 +60,7 @@ public class TaskLoadPlayer extends DBTask
 	 * When possible this type of constructor should be used for
 	 * quicker retrieval of the users data.
 	 */
-	public TaskLoadPlayer (UUID playerUUID, long playerID)
-	{
+	public TaskLoadPlayer (UUID playerUUID, long playerID) {
 		super (DatabaseTaskType.Query);
 		mPlayerUUID = playerUUID;
 		mPlayerID = playerID;
@@ -70,8 +68,7 @@ public class TaskLoadPlayer extends DBTask
 	}
 
 	// DEBUG: This method needs to be tested!
-	public void run ()
-	{
+	public void run () {
 		String subSystemPrefix = Thread.currentThread ().getName () + PREFIX;
 		IPlayer retPlayer = null;
 		PreparedStatement getPlayer = null;
@@ -86,25 +83,20 @@ public class TaskLoadPlayer extends DBTask
 		FutureTask<List<Profession>> professions = new FutureTask<> (new TaskUserProfessions ());
 		FutureTask<HashMap<Integer, List<Augment>>> augments = new FutureTask<> (new TaskUserAugments ());
 
-		try
-		{
+		try {
 			service.submit (professions);
 			service.submit (augments);
 
-			if (mbUseDatabaseID)
-			{
+			if (mbUseDatabaseID) {
 				getPlayer = mDataPool.dbConnect ().prepareStatement (queryLib.selectUserDataFromDatabaseID);
 				getPlayer.setLong (1, mPlayerID);
-			}
-			else
-			{
+			} else {
 				getPlayer = mDataPool.dbConnect ().prepareStatement (queryLib.selectUserDataFromUUID);
 				getPlayer.setBytes (1, UuidUtil.toBytes (mPlayerUUID));
 			}
 			resultSet = getPlayer.executeQuery ();
 
-			if (resultSet.next ())
-			{
+			if (resultSet.next ()) {
 				List<Profession> playerProfList;
 				HashMap<Integer, List<Augment>> playerProfAugMap;
 
@@ -113,37 +105,30 @@ public class TaskLoadPlayer extends DBTask
 				username = resultSet.getString ("Username");
 				playerLevel = resultSet.getInt ("UserLevel");
 
-				try
-				{
+				try {
 					// Wait on these two get methods until they finish then move ahead.
 					playerProfList = professions.get ();
 					playerProfAugMap = augments.get ();
 
-					for (Profession prof : playerProfList)
-					{
+					for (Profession prof : playerProfList) {
 						List<Augment> profAugments = playerProfAugMap.get (prof.getIdentifier ());
 
-						if (profAugments != null)
-						{
+						if (profAugments != null) {
 							prof.attachAugments (profAugments);
 						}
 					}
 					retPlayer = PlayerManager.Instance ().getPlayerFactory ().buildPlayerWithProfessions (playerID, playerLevel, playerUUID, username, playerProfList);
 					PlayerManager.Instance ().addPlayer (retPlayer);
 				}
-				catch (ExecutionException except)
-				{
+				catch (ExecutionException except) {
 					Logger.Instance ().Error (subSystemPrefix, "Execution Exception while retrieving a player!");
 					except.printStackTrace ();
 				}
-				catch (InterruptedException except)
-				{
-					if (!Thread.currentThread ().isInterrupted ())
-					{
+				catch (InterruptedException except) {
+					if (!Thread.currentThread ().isInterrupted ()) {
 						// If the player is null on interrupt then the player wasn't received.
 						// Thus we still need to get the player, queue up the same task again.
-						if (PlayerManager.Instance ().getPlayer (mPlayerID) == null)
-						{
+						if (PlayerManager.Instance ().getPlayer (mPlayerID) == null) {
 							// TODO: DO more research here to see if this is valid.
 							this.queuePostConditionTask (new TaskLoadPlayer (mPlayerUUID, mPlayerID));
 						}
@@ -152,12 +137,10 @@ public class TaskLoadPlayer extends DBTask
 				}
 			}
 		}
-		catch (SQLException except)
-		{
+		catch (SQLException except) {
 			Logger.Instance ().Error (subSystemPrefix, "Something went wrong while loading player! Reason: " + except.getMessage ());
 		}
-		finally
-		{
+		finally {
 			service.shutdown ();
 			mDataPool.dbCloseResources (getPlayer, resultSet);
 			mDataPool.dbClose ();
@@ -166,17 +149,16 @@ public class TaskLoadPlayer extends DBTask
 
 	/**
 	 * This callable will fetch all of a users professions to load onto a user.
-	 *
+	 * <p>
 	 * Concurrency Policy:
 	 * This class does not publish any internal data. Since there is no publication
 	 * of internal data this class is Thread Safe.
 	 */
 	@ThreadSafe
 	@Immutable
-	private final class TaskUserProfessions implements Callable<List<Profession>>
-	{
-		public List<Profession> call ()
-		{
+	private final class TaskUserProfessions implements Callable<List<Profession>> {
+
+		public List<Profession> call () {
 			String subSystemPrefix = Thread.currentThread ().getName () + PREFIX;
 			List<Profession> professions = new LinkedList<> ();
 			Connection connection = mDataPool.dbConnect ();
@@ -184,14 +166,12 @@ public class TaskLoadPlayer extends DBTask
 			PreparedStatement profStatement = null;
 			ResultSet profResultSet = null;
 
-			try
-			{
+			try {
 				profStatement = connection.prepareStatement (queryLib.selectUserCareers);
 				profStatement.setLong (1, mPlayerID);
 				profResultSet = profStatement.executeQuery ();
 
-				while (profResultSet.next ())
-				{
+				while (profResultSet.next ()) {
 					int level = profResultSet.getInt ("Level");
 					int prestigeLevel = profResultSet.getInt ("PrestigeLevel");
 					double currentExp = profResultSet.getDouble ("CurrentExp");
@@ -205,12 +185,10 @@ public class TaskLoadPlayer extends DBTask
 							profStatus, level, prestigeLevel, currentExp, totalExp));
 				}
 			}
-			catch (SQLException except)
-			{
+			catch (SQLException except) {
 				Logger.Instance ().Error (subSystemPrefix, "SQL Error while retrieving player professions! SQLState: " + except.getSQLState ());
 			}
-			finally
-			{
+			finally {
 				mDataPool.dbCloseResources (profStatement, profResultSet);
 				mDataPool.dbClose ();
 			}
@@ -226,52 +204,44 @@ public class TaskLoadPlayer extends DBTask
 	 * into a Map of LinkedLists where each ProfessionID has a list of augments
 	 * that are associated with it. If a profession doesn't have any augments the
 	 * corresponding Map key that is associated with a ProfessionID will return null.
-	 *
+	 * <p>
 	 * Concurrency Policy:
 	 * This class does not publish any internal data. Since there is no publication
 	 * of internal data this class is Thread Safe.
 	 */
 	@ThreadSafe
 	@Immutable
-	private final class TaskUserAugments implements Callable<HashMap<Integer, List<Augment>>>
-	{
-		public HashMap<Integer, List<Augment>> call ()
-		{
+	private final class TaskUserAugments implements Callable<HashMap<Integer, List<Augment>>> {
+
+		public HashMap<Integer, List<Augment>> call () {
 			String subSystemPrefix = Thread.currentThread ().getName () + PREFIX;
 			HashMap<Integer, List<Augment>> augments = new HashMap<> ();
 			PreparedStatement statement = null;
 			ResultSet resultSet = null;
 
-			try
-			{
+			try {
 				statement = mDataPool.dbConnect ().prepareStatement (queryLib.selectUserProfessionAugs);
 				statement.setLong (1, mPlayerID);
 				resultSet = statement.executeQuery ();
 
-				while (resultSet.next ())
-				{
+				while (resultSet.next ()) {
 					Augment augment = Augment.lookupAugment (resultSet.getInt ("AugmentID"));
 					Integer professionID = resultSet.getInt ("ProfessionID");
 
-					if (augments.containsKey (professionID))
-					{
+					if (augments.containsKey (professionID)) {
 						augments.get (professionID).add (augment);
-					}
-					else
-					{
+					} else {
 						List<Augment> newAugList = new ArrayList<> ();
 						newAugList.add (augment);
 						augments.put (professionID, newAugList);
 					}
 				}
 			}
-			catch (SQLException except)
-			{
+			catch (SQLException except) {
 				Logger.Instance ().Error (subSystemPrefix, "Error while fetching user " +
 						"profession augments! SQLState Error " + except.getSQLState ());
 			}
-			finally
-			{
+			finally {
 				mDataPool.dbCloseResources (statement, resultSet);
 				mDataPool.dbClose ();
 			}

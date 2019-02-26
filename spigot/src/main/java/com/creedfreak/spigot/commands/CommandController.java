@@ -4,11 +4,12 @@ import com.creedfreak.common.ICraftyProfessions;
 import com.creedfreak.common.commands.AbsCmdController;
 import com.creedfreak.common.commands.ICommand;
 import com.creedfreak.common.container.IPlayer;
-import com.creedfreak.spigot.commands.DatabaseCommands.*;
-import com.creedfreak.spigot.commands.ProfessionCommands.*;
 import com.creedfreak.common.container.PlayerManager;
 import com.creedfreak.common.database.databaseConn.Database;
-import com.creedfreak.common.exceptions.*;
+import com.creedfreak.common.exceptions.CommandException;
+import com.creedfreak.common.exceptions.CommandNotFoundException;
+import com.creedfreak.spigot.commands.DatabaseCommands.*;
+import com.creedfreak.spigot.commands.ProfessionCommands.*;
 import org.bukkit.Bukkit;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
@@ -23,10 +24,9 @@ import java.util.UUID;
  * will be unable to be disabled but in terms of feature commands there will
  * be disabling of those commands.
  */
-public class CommandController extends AbsCmdController implements CommandExecutor
-{
-	public CommandController (ICraftyProfessions plugin)
-	{
+public class CommandController extends AbsCmdController implements CommandExecutor {
+
+	public CommandController (ICraftyProfessions plugin) {
 		super (plugin);
 
 		initializeCommands ();
@@ -36,55 +36,40 @@ public class CommandController extends AbsCmdController implements CommandExecut
 	 * Processes the commands for players issuing CraftyProfessions Commands
 	 *
 	 * @param sender The sender of the command
-	 *
-	 * @param cmd The command that is being issued
-	 *
-	 * @param label The label of the command
-	 *
-	 * @param args The arguments of the command, this can range from few arguments to a couple.
-	 *
+	 * @param cmd    The command that is being issued
+	 * @param label  The label of the command
+	 * @param args   The arguments of the command, this can range from few arguments to a couple.
 	 * @return True  - If the command succeeds
-	 *         False - If the command fails
+	 * False - If the command fails
 	 */
 	@Override
-	public boolean onCommand (CommandSender sender, Command cmd, String label, String... args)
-	{
+	public boolean onCommand (CommandSender sender, Command cmd, String label, String... args) {
 		boolean retVal;
 		Player player = obtainBukkitPlayer (sender);
 		IPlayer mPlayer;
 		ICommand command;
 
-		if (player == null)
-		{
+		if (player == null) {
 			sender.sendMessage ("Only players can run these commands!");
 			retVal = false;
-		}
-		else
-		{
-			try
-			{
-				if (checkArgsLength (args))
-				{
+		} else {
+			try {
+				if (checkArgsLength (args)) {
 					command = loadCommand (args[0]);
 
 					// TODO: The issue: We have to have some way to retrieve the player by DB ID.
 					mPlayer = PlayerManager.Instance ().getPlayerByUUID (player.getUniqueId ());
 
-					try
-					{
+					try {
 						command.execute (mPlayer, args);
 					}
-					catch (final CommandException ex)
-					{
+					catch (final CommandException ex) {
 						String message = ex.getMessage ();
 						String executedCommand = ex.getExecutedCommand ();
 
-						if (null == executedCommand)
-						{
+						if (null == executedCommand) {
 							player.sendMessage (message);
-						}
-						else
-						{
+						} else {
 							player.sendMessage (message + " for command " + executedCommand);
 						}
 //						player.sendMessage (ex.getMessage ());
@@ -93,19 +78,16 @@ public class CommandController extends AbsCmdController implements CommandExecut
 					}
 				}
 			}
-			catch (final CommandException except)
-			{
+			catch (final CommandException except) {
 				player.sendMessage (except.getMessage () + except.getExecutedCommand ());
 			}
-			catch (final CommandNotFoundException ex)
-			{
+			catch (final CommandNotFoundException ex) {
 				// Load the Help command and display all usable commands for a regular user.
 				//	        	mPlayer = PlayerManager.Instance ().getPlayer (player.getUniqueId ());
 				//	        	command = loadCommand ();
 				player.sendMessage (ex.getMessage ());
 			}
-			finally
-			{
+			finally {
 				retVal = true;
 			}
 		}
@@ -113,8 +95,7 @@ public class CommandController extends AbsCmdController implements CommandExecut
 		return retVal;
 	}
 
-	protected void initializeCommands ()
-	{
+	protected void initializeCommands () {
 		Database db = mPlugin.getDatabase ();
 
 		/*Profession Command Registration*/
@@ -140,8 +121,7 @@ public class CommandController extends AbsCmdController implements CommandExecut
 	}
 
 	/*Obtained from MobArena Code as the unwrapping of a CommandSender*/
-	private Player obtainBukkitPlayer (CommandSender sender)
-	{
+	private Player obtainBukkitPlayer (CommandSender sender) {
 		Player player = (Player) sender;
 		UUID playerUUID = player.getUniqueId ();
 		return Bukkit.getPlayer (playerUUID);
