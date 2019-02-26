@@ -3,6 +3,9 @@ package com.creedfreak.common.professions;
 import com.creedfreak.common.container.WageTableHandler;
 import com.creedfreak.common.utility.Logger;
 
+import java.util.ArrayList;
+import java.util.List;
+
 /**
  * This is the Abstract Class for a Profession. This will be
  * the class in which all Professions are inherited from and
@@ -11,11 +14,15 @@ import com.creedfreak.common.utility.Logger;
  */
 public abstract class Profession
 {
-    private IWageTable mWageTable;
+    private final IWageTable mWageTable;
+	private final Integer mProfessionID;
+
+	private List<Augment> mAugments;
     private float mWagePool;
 
-    protected Profession (TableType type)
+    protected Profession (TableType type, Integer internalID)
     {
+    	mProfessionID = internalID;
         mWageTable = WageTableHandler.getInstance ().GetWageTable (type);
 
         if (null == mWageTable)
@@ -29,8 +36,10 @@ public abstract class Profession
      */
     protected Profession (Profession prof)
     {
+    	this.mProfessionID = prof.mProfessionID;
         this.mWageTable = prof.mWageTable;
         this.mWagePool = prof.mWagePool;
+        this.mAugments = new ArrayList<> (prof.mAugments);
     }
     
     /**
@@ -39,6 +48,21 @@ public abstract class Profession
      */
     public abstract Profession shallowCopy ();
 
+	/**
+	 * Attach an augment list to the profession
+	 */
+	public void attachAugments (List<Augment> augList)
+    {
+    	mAugments = augList;
+    }
+
+	/**
+	 * Return the internal identifier of the Profession.
+	 */
+	public Integer getIdentifier ()
+    {
+    	return mProfessionID;
+    }
     /**
      * This method is used to return the Name of the Profession
      * to use in other places.

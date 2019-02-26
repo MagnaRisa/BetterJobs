@@ -3,7 +3,6 @@ package com.creedfreak.spigot.container;
 import com.creedfreak.common.container.PlayerManager;
 import com.creedfreak.common.professions.TableType;
 import com.creedfreak.common.utility.Logger;
-import com.google.common.primitives.UnsignedLong;
 import com.creedfreak.common.container.IPlayer;
 import com.creedfreak.common.professions.Profession;
 import org.bukkit.entity.Player;
@@ -18,10 +17,9 @@ import java.util.concurrent.ConcurrentHashMap;
 public class SpigotPlayer implements IPlayer
 {
     // This is the players primary key within the database
-    private UnsignedLong mPlayerID;
+    private final Long mPlayerID;
     private Player mPlayer;
 
-    // May not need the player pool if the wages are stored within the players Professions.
     private float mPlayerPool;
     private boolean mPrintEarnedWages;
 
@@ -35,13 +33,14 @@ public class SpigotPlayer implements IPlayer
      * This is the Default Constructor for the CraftyPlayer object in which
      * a player will be initialized from the Crafty Professions database.
      *
-     * @param dbID The players database ID, this is unique to the database.
+     * @param internalID The players database ID, this is unique to the database.
      * @param currentDBuname The current players name stored in the database.
      * @param playerLevel The players overall Level retrieved from the database.
      */
-    public SpigotPlayer (UnsignedLong dbID, String currentDBuname, Integer playerLevel, Player player)
+    public SpigotPlayer (Long internalID, String currentDBuname,
+                         Integer playerLevel, Player player)
     {
-        mPlayerID = dbID;
+        mPlayerID = internalID;
         mProfessions = new ConcurrentHashMap<> ();
 
         mPlayerPool = 0.0f;
@@ -56,6 +55,18 @@ public class SpigotPlayer implements IPlayer
 
 	    mPrintEarnedWages = false;
     }
+
+	public SpigotPlayer (Long internalID, String currentDBuname,
+	                     Integer playerLevel, Player player,
+	                     List<Profession> professions)
+	{
+		this(internalID, currentDBuname, playerLevel, player);
+		for (Profession prof : professions)
+		{
+			mProfessions.put (prof.type (), prof);
+		}
+	}
+
     /**
      * This method will return the UUID of the CPPlayer
      *
@@ -85,7 +96,7 @@ public class SpigotPlayer implements IPlayer
 	/**
 	 * @return The database identifier of the player.
 	 */
-	public UnsignedLong getInternalID ()
+	public Long getInternalID ()
     {
     	return mPlayerID;
     }

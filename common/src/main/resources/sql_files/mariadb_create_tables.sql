@@ -36,6 +36,7 @@ CREATE TABLE IF NOT EXISTS Professions
 (
 	ProfessionID INT NOT NULL AUTO_INCREMENT,
 	ProfessionName VARCHAR (25) NOT NULL,
+  InternalName VARCHAR (25) NOT NULL,
 	Description TEXT DEFAULT NULL,
 	WageTableRef VARCHAR (30) NOT NULL,
 	

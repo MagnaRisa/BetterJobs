@@ -68,7 +68,7 @@ public class CommandController extends AbsCmdController implements CommandExecut
 					command = loadCommand (args[0]);
 
 					// TODO: The issue: We have to have some way to retrieve the player by DB ID.
-					mPlayer = PlayerManager.Instance ().getPlayer (player.getUniqueId ());
+					mPlayer = PlayerManager.Instance ().getPlayerByUUID (player.getUniqueId ());
 
 					try
 					{

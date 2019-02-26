@@ -130,7 +130,7 @@ public class ProfessionsDAO
                 Level = resultSet.getInt ("Level");
                 PrestigeLevel = resultSet.getInt ("PrestigeLevel");
 
-                loaded.add (ProfessionBuilder.dbBuild (ProfName, ProfStatus, Level, PrestigeLevel, ExpCurrent, ExpTotal));
+                // loaded.add (ProfessionBuilder.dbBuild (ProfName, ProfStatus, Level, PrestigeLevel, ExpCurrent, ExpTotal));
             }
         }
         catch (SQLException except)

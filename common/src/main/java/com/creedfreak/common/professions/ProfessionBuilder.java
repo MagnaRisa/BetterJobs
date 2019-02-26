@@ -7,16 +7,17 @@ public class ProfessionBuilder
      *
      * @return A Profession whose data is retrieved from the database.
      */
-    public static Profession dbBuild (String profName, String profStatus, int level,
-        int presitgeLevel, double expCurrent, double expTotal)
+    public static Profession dbBuild (String internalName, Integer internalID, String profStatus,
+                                      int level, int prestigeLevel, double expCurrent,
+                                      double expTotal)
     {
-        String lowerProfName = profName.toLowerCase ();
+        String lowerProfName = internalName.toLowerCase ();
         Profession newProf;
 
         switch (lowerProfName)
         {
-            case "the miner":
-                newProf = new ProfMiner (profStatus, level, presitgeLevel, expCurrent, expTotal);
+            case "miner":
+                newProf = new ProfMiner (internalID, profStatus, level, prestigeLevel, expCurrent, expTotal);
                 break;
             default:
                 newProf = null;

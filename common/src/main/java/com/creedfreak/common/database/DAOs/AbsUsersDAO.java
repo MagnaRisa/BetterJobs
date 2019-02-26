@@ -1,6 +1,5 @@
 package com.creedfreak.common.database.DAOs;
 
-import com.creedfreak.common.database.queries.queryLib;
 import com.creedfreak.common.professions.Profession;
 import com.creedfreak.common.utility.Logger;
 import com.creedfreak.common.utility.UuidUtil;
@@ -216,7 +215,7 @@ public abstract class AbsUsersDAO
 		try
 		{
 			conn.setAutoCommit (false);
-			getPlayer = conn.prepareStatement (queryLib.selectUserData);
+			// getPlayer = conn.prepareStatement (queryLib.selectUserData);
 
 			for (UUID uuid : values)
 			{
@@ -285,7 +284,7 @@ public abstract class AbsUsersDAO
 
 		try
 		{
-			getPlayer = mDatabase.dbConnect ().prepareStatement (queryLib.selectUserData);
+			// getPlayer = mDatabase.dbConnect ().prepareStatement (queryLib.selectUserData);
 			getPlayer.setBytes (1, UuidUtil.toBytes (userID));
 			resultSet = getPlayer.executeQuery ();
 
@@ -365,7 +364,7 @@ public abstract class AbsUsersDAO
 	{
 		List<Profession> professions;
 
-		professions = mProfessionsDAO.loadSubset (player.getInternalID (), player.getUsername ());
+		// professions = mProfessionsDAO.loadSubset (player.getInternalID (), player.getUsername ());
 
 //		for (Profession prof : professions)
 //		{
@@ -373,7 +372,7 @@ public abstract class AbsUsersDAO
 //			mAugmentDAO.fetchProfAugments (prof, player.getDBIdentifier ());
 //		}
 
-		player.registerProfession (professions);
+		// player.registerProfession (professions);
 	}
 	
 	/**

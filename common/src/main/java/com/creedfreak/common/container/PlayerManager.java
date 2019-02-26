@@ -1,9 +1,10 @@
 package com.creedfreak.common.container;
 
-import com.creedfreak.common.concurrent.DatabaseWorkerQueue;
-import com.creedfreak.common.database.DAOs.AbsUsersDAO;
+import com.creedfreak.common.concurrent.database.DatabaseWorkerQueue;
+import com.creedfreak.common.concurrent.database.tasks.TaskCheckUserExist;
+import com.creedfreak.common.concurrent.database.tasks.TaskSavePlayer;
+import com.creedfreak.common.database.databaseConn.Database;
 import com.creedfreak.common.utility.Logger;
-import com.google.common.primitives.UnsignedLong;
 import net.jcip.annotations.GuardedBy;
 
 import java.util.UUID;
@@ -28,14 +29,12 @@ public final class PlayerManager
     private static final String PM_PREFIX = "PlayerManager";
 	private static final PlayerManager mPlayerManager = new PlayerManager ();
 
-    private AbsUsersDAO mUsersDAO;
     private Logger mLogger;
-    
-    // TODO: Create new thread pool here to handle database
-
 	private DatabaseWorkerQueue mWorkerQueue;
-    private ConcurrentHashMap<UnsignedLong, IPlayer> mPlayerList;
-    private ConcurrentHashMap<UUID, UnsignedLong> mInternalIDCache;
+	private IPlayerFactory mPlayerFactory;
+
+    private ConcurrentHashMap<Long, IPlayer> mPlayerList;
+    private ConcurrentHashMap<UUID, Long> mInternalIDCache;
 
     private PlayerManager () { }
 
@@ -54,25 +53,31 @@ public final class PlayerManager
      * This method will create the database task thread pool which will handle all of the
      * threads associated with running tasks with the Database.
      *
-     * @param usersDAO The interface between the players and the database.
+     * @param factory The player factory interface.
      */
-    public synchronized void preparePlayerManager (AbsUsersDAO usersDAO, int initialThreadCount)
+    public synchronized void preparePlayerManager (Database dataPool, IPlayerFactory factory, int initialThreadCount)
     {
-        mUsersDAO = usersDAO;
         mPlayerList = new ConcurrentHashMap<> ();
         mInternalIDCache = new ConcurrentHashMap<> ();
 	    mLogger = Logger.Instance ();
-	    
-	    mWorkerQueue = new DatabaseWorkerQueue (mUsersDAO, initialThreadCount);
+
+	    mPlayerFactory = factory;
+	    mWorkerQueue = new DatabaseWorkerQueue (dataPool, initialThreadCount);
 	    
         mLogger.Debug (PM_PREFIX, "Initialization of the PlayerManager is completed!");
     }
+
+    public IPlayerFactory getPlayerFactory () { return mPlayerFactory; }
     /**
      * This method will save all of the players to the database
      */
-    public void saveAllPlayers ()
+    public synchronized void updatePlayers ()
     {
-        mUsersDAO.updateAll (mPlayerList.values ());
+    	for (IPlayer player : mPlayerList.values ())
+	    {
+	    	// TODO: Loop and update all players in the PlayerManager
+	    	// mWorkerQueue.addTask ();
+	    }
     }
 
     /**
@@ -82,12 +87,11 @@ public final class PlayerManager
      *
      * @param internalID - The Player to remove from the Manager.
      */
-    public synchronized void removePlayer (UnsignedLong internalID)
+    public synchronized void removePlayer (Long internalID)
     {
     	IPlayer player = mPlayerList.get (internalID);
     	
     	// TODO: Send task to DB Thread
-    	mUsersDAO.update (player);
     	
     	mInternalIDCache.remove (player.getUUID ());
         mPlayerList.remove (internalID);
@@ -115,51 +119,33 @@ public final class PlayerManager
 	 */
 	public void savePlayer (UUID uniqueID, String username)
     {
-    	// TODO: Send this task up to the database.
-        mUsersDAO.save (uniqueID, username);
+        mWorkerQueue.addTask (new TaskSavePlayer (uniqueID, username));
     }
 
     /**
-     * This method will load a player from the database into the PlayerManager's internal
-     * ConcurrentHashMap.
+     * This method will load a player into the internal Player Map
      *
-     * TODO: We can spare the creation of the player to the DB thread as a Future task. Once the future is done we simple load the player into the manager.
-     *
-     * @param playerUUID - The Player in which to load from the database
+     * @param playerUUID - The player uuid of the player to load.
      */
-    public synchronized boolean loadPlayer (UUID playerUUID)
+    public synchronized void loadPlayer (UUID playerUUID)
     {
-    	boolean succeed = false;
-    	if (mUsersDAO.checkExist (playerUUID))
-	    {
-		    IPlayer player;
-			player = mUsersDAO.load (playerUUID);
-			mUsersDAO.fetchUserProfessions (player);
-
-			mInternalIDCache.put (player.getUUID (), player.getInternalID ());
-			mPlayerList.put (player.getInternalID (), player);
-			succeed = true;
-	    }
-    	return succeed;
+    	// This will check to see if the player exists and handles the
+	    // saving or loading of a player depending on the outcome.
+    	mWorkerQueue.addTask (new TaskCheckUserExist (playerUUID));
     }
 	
 	/**
 	 * Allows the updating of a single player from within the PlayerManager.
 	 *
-	 * @param internalID The internal database ID assigned to the player.
-	 *
-	 * @return Whether or not the update is successful.
+	 * @param internalID The player uuid of the player to load
 	 */
-	public synchronized boolean updatePlayer (UnsignedLong internalID)
+	public synchronized void updatePlayer (Long internalID)
     {
     	IPlayer player = mPlayerList.get (internalID);
-    	boolean bUpdate = (null != player);
-    	
-    	if (bUpdate)
+    	if (player != null)
 	    {
-	    	mUsersDAO.update (player);
+	    	// TODO: Queue up a new TaskUpdatePlayer
 	    }
-	    return bUpdate;
     }
 
     /**
@@ -172,8 +158,18 @@ public final class PlayerManager
      *
      * @return The player specified by their database ID
      */
-    public IPlayer getPlayer (UnsignedLong internalID)
+    public IPlayer getPlayer (Long internalID)
     {
         return mPlayerList.get (internalID);
+    }
+
+    public IPlayer getPlayerByUUID (UUID playerUUID)
+    {
+    	return mPlayerList.get (mInternalIDCache.get (playerUUID));
+    }
+
+    public void cleanupPlayerManager ()
+    {
+    	mWorkerQueue.safeShutdown ();
     }
 }

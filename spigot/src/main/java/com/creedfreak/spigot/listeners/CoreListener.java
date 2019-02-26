@@ -2,10 +2,8 @@ package com.creedfreak.spigot.listeners;
 
 import com.creedfreak.common.ICraftyProfessions;
 import com.creedfreak.common.container.IPlayer;
-import com.creedfreak.common.database.DAOs.AbsUsersDAO;
 import com.creedfreak.spigot.CraftyProfessionsSpigot;
 import com.creedfreak.common.container.PlayerManager;
-import com.creedfreak.spigot.database.SpigotUsersDAO;
 import net.milkbowl.vault.economy.Economy;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
@@ -26,25 +24,18 @@ import org.bukkit.event.player.PlayerQuitEvent;
 public class CoreListener implements Listener
 {
     private CraftyProfessionsSpigot mCraftyProf;
-    private AbsUsersDAO mUserDAO;
     private Economy mEconomy;
 
     public CoreListener (ICraftyProfessions professions)
     {
 	    mCraftyProf = (CraftyProfessionsSpigot) professions;
-		mUserDAO = new SpigotUsersDAO (mCraftyProf.getDatabase ());
     }
 
 
     @EventHandler
     public void onPlayerJoin (PlayerJoinEvent event)
     {
-        Player eventPlayer = event.getPlayer ();
-
-        if (!PlayerManager.Instance ().loadPlayer (eventPlayer.getUniqueId ()))
-        {
-        	PlayerManager.Instance ().savePlayer (eventPlayer.getUniqueId (), eventPlayer.getName ());
-        }
+        PlayerManager.Instance ().loadPlayer (event.getPlayer ().getUniqueId ());
     }
 
     @EventHandler
@@ -52,7 +43,10 @@ public class CoreListener implements Listener
     {
         Player eventPlayer = event.getPlayer ();
 
-        PlayerManager.Instance ().removePlayer (eventPlayer.getUniqueId ());
+        // Removing a player from the manager will always cause an update task on the player.
+
+	    // TODO: Fix the removal of a player
+	    //PlayerManager.Instance ().removePlayer (eventPlayer.getUniqueId ());
     }
 
     @EventHandler
@@ -71,8 +65,8 @@ public class CoreListener implements Listener
         }
         */
 
-        // TODO: This needs testing before moving on
-        eventFocus = PlayerManager.Instance ().getPlayer (player.getUniqueId ());
+        // TODO: Implement this task with the ID Cache
+        // eventFocus = PlayerManager.Instance ().getPlayer (player.getUniqueId ());
         // eventFocus.doWork (event.getBlock ().getType ().name ());
 
         player.sendMessage ("Block Broken was " + event.getBlock ().getType ().name ());

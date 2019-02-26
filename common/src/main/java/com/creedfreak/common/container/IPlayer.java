@@ -2,9 +2,7 @@ package com.creedfreak.common.container;
 
 import com.creedfreak.common.professions.Profession;
 import com.creedfreak.common.professions.TableType;
-import com.google.common.primitives.UnsignedLong;
 
-import java.math.BigDecimal;
 import java.util.Collection;
 import java.util.List;
 import java.util.UUID;
@@ -35,7 +33,7 @@ public interface IPlayer
 	/**
 	 * @return The database identifier of the player.
 	 */
-	UnsignedLong getInternalID ();
+	Long getInternalID ();
 
     /**
      * Sends a message to the target player.
@@ -91,13 +89,4 @@ public interface IPlayer
      * @param elementName - The name of the block that was broken.
      */
     void doWork (String elementName);
-
-
-	/**
-	 * Format the query parameter to be returned as a bound query with the encapsulated data.
-	 * This never includes passwords or important data. This specifically includes the
-	 * state data of a player at the given instance this method is called. This is used
-	 * to format queries to the database to store players and their corresponding information.
-	 */
-	String[] formatPlayerQuery (String query);
 }

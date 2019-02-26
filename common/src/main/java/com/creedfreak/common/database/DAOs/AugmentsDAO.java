@@ -3,7 +3,7 @@ package com.creedfreak.common.database.DAOs;
 import com.creedfreak.common.professions.Profession;
 import com.google.common.primitives.UnsignedLong;
 import com.creedfreak.common.database.databaseConn.Database;
-import com.creedfreak.common.professions.IAugment;
+import com.creedfreak.common.professions.Augment;
 
 import java.util.Collection;
 import java.util.List;
@@ -17,7 +17,7 @@ public class AugmentsDAO
         mDatabase = database;
     }
 
-    public void save (IAugment row)
+    public void save (Augment row)
     {
         // Save the augment here.
     }
@@ -27,17 +27,17 @@ public class AugmentsDAO
         // Delete the augment based on it's Id
     }
 
-    public void update (IAugment row)
+    public void update (Augment row)
     {
         // Update a single row in the augments table.
     }
 
-    public void updateAll (Collection<IAugment> augments)
+    public void updateAll (Collection<Augment> augments)
     {
     	// Update a list of IAugments
     }
 
-    public  List<IAugment> loadAll ()
+    public  List<Augment> loadAll ()
     {
         return null;
     }
@@ -47,7 +47,7 @@ public class AugmentsDAO
 
     }
 
-    public IAugment load ()
+    public Augment load ()
     {
     	return null;
     }

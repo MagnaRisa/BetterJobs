@@ -109,19 +109,19 @@ INSERT INTO Augments (AugmentName, AugShorthand, MinLevel, Description) VALUES (
 "Description goes here.");
 
 -- ID: 9
-INSERT INTO Augments (AugmentName, AugShorthand, MinLevel, Description) VALUES ("Minimum [Token] Bonus", "MinTokBonus", 1, 
+INSERT INTO Augments (AugmentName, AugShorthand, MinLevel, Description) VALUES ("Minimum [Token] Bonus", "MinTokenBonus", 1,
 "Description goes here.");
 
 -- ID: 10
-INSERT INTO Augments (AugmentName, AugShorthand, MinLevel, Description) VALUES ("Standard [Token] Bonus", "StdTokBonus", 10, 
+INSERT INTO Augments (AugmentName, AugShorthand, MinLevel, Description) VALUES ("Standard [Token] Bonus", "StdTokenBonus", 10,
 "Description goes here");
 
 -- ID: 11
-INSERT INTO Augments (AugmentName, AugShorthand, MinLevel, Description) VALUES ("Improved [Token] Bonus", "ImpTokBonus", 25, 
+INSERT INTO Augments (AugmentName, AugShorthand, MinLevel, Description) VALUES ("Improved [Token] Bonus", "ImpTokenBonus", 25,
 "Description goes here.");
 
 -- ID: 12
-INSERT INTO Augments (AugmentName, AugShorthand, MinLevel, Description) VALUES ("Maximum [Token] Bonus", "MaxTokBonus", 45,
+INSERT INTO Augments (AugmentName, AugShorthand, MinLevel, Description) VALUES ("Maximum [Token] Bonus", "MaxTokenBonus", 45,
 "Description goes here.");
 
 -- ID: 13

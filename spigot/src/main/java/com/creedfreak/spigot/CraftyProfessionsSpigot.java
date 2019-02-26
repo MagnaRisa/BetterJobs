@@ -5,7 +5,7 @@ import com.creedfreak.common.AbsConfigController;
 import com.creedfreak.common.ICraftyProfessions;
 import com.creedfreak.common.container.WageTableHandler;
 import com.creedfreak.common.utility.Logger;
-import com.creedfreak.spigot.database.SpigotUsersDAO;
+import com.creedfreak.spigot.container.SpigotPlayerFactory;
 import com.creedfreak.spigot.commands.CommandController;
 import com.creedfreak.spigot.config.ConfigController;
 import com.creedfreak.common.container.PlayerManager;
@@ -93,7 +93,7 @@ public class CraftyProfessionsSpigot extends JavaPlugin implements ICraftyProfes
     
         /* This does more than just initialize the PlayerManager. Please read the docs on PlayerManager
         * to see all that is going on under the hood. */
-        PlayerManager.Instance ().preparePlayerManager (new SpigotUsersDAO (mDatabase));
+        PlayerManager.Instance ().preparePlayerManager (mDatabase, new SpigotPlayerFactory (), 1);
         
         mLogger.Debug ("Initialization of CraftyProfessions Completed!");
     }
@@ -105,12 +105,8 @@ public class CraftyProfessionsSpigot extends JavaPlugin implements ICraftyProfes
     @Override
     public void onDisable ()
     {
-        /*Saving The configs will happen once the commenting yaml parser is implemented,
-        right now we will only be reading from the configs although we will eventually
-        be writing to the config files at a later date.*/
-
-        // this.saveConfig ();
-        // mConfigController.saveConfigs ();
+	    // Finish up Database Tasks and Shutdown Thread Pool
+	    PlayerManager.Instance ().cleanupPlayerManager ();
     }
 
     /**

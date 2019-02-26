@@ -1,19 +1,12 @@
 package com.creedfreak.common.professions;
 
-import java.util.List;
-
 public class ProfMiner extends Profession
 {
-    public static final String PROF_NAME = "Miner";
+    private static final String PROF_NAME = "Miner";
     private final TableType mType = TableType.Miner;
 
     // This is the Users current Miner Status i.e. Miner_Payout, Ore_Affinity, etc...
     private String mMinerStatus;
-
-    // These are the Augments a user has for this profession.
-    // Note that these are not used to calculate the modifiers
-    // after this list is initialized.
-    private List<IAugment> mAugments;
 
     int mProfLevel;
     int mPrestigeLevel;
@@ -35,7 +28,9 @@ public class ProfMiner extends Profession
      */
     public ProfMiner ()
     {
-        super (TableType.Miner);
+    	// TODO: the internalID needs to be handled correctly either with an
+	    //  internal enum that has the database id's or just handle the zero
+        super (TableType.Miner, 0);
 
         mMinerStatus = "default";
         mProfLevel = 0;
@@ -46,23 +41,23 @@ public class ProfMiner extends Profession
         mExpierenceBonus = 0f;
         mIncomeBonus = 0f;
         mTokenBonus = 0f;
-
-        mAugments = null;
     }
 
     /**
      * Constructs the database related profession with a specific user. This is
      * used if the player is already in the database with stats in the profession.
      *
+     * @param internalID - The internal database identifier of the profession.
      * @param status - The current status of the profession
      * @param level - The current level of the user in this profession
      * @param prestigeLevel - The prestige level of the user in this profession
      * @param currentExp - The current exp of the current level the user has in this profession
      * @param totalExp -  The total amount of exp total the user has gained in this profession
      */
-    public ProfMiner (String status, int level, int prestigeLevel, double currentExp, double totalExp) throws NullPointerException
+    public ProfMiner (Integer internalID, String status, int level,
+                      int prestigeLevel, double currentExp, double totalExp) throws NullPointerException
     {
-        super(TableType.Miner);
+        super(TableType.Miner, internalID);
 
         mMinerStatus = status;
 
@@ -87,8 +82,6 @@ public class ProfMiner extends Profession
         mExpierenceBonus = miner.mExpierenceBonus;
         mIncomeBonus = miner.mIncomeBonus;
         mTokenBonus = miner.mTokenBonus;
-        
-        mAugments = miner.mAugments;
     }
     
     public Profession shallowCopy ()

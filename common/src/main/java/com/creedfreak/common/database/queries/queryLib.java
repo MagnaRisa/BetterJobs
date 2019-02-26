@@ -9,11 +9,21 @@ package com.creedfreak.common.database.queries;
  */
 public final class queryLib
 {
+	public static final String checkUserExist
+			= "SELECT UUID, UserID, Username "
+			+ "FROM Users "
+			+ "WHERE UUID = ?";
+
     // Grab the User and their internal DB ID.
-    public static final String selectUserData
+    public static final String selectUserDataFromUUID
             = "SELECT * "
             + "FROM Users "
             + "WHERE UUID = ?";
+
+	public static final String selectUserDataFromDatabaseID
+			= "SELECT * "
+			+ "FROM Users "
+			+ "WHERE UserID = ?";
 
     // If they have any Careers or SideJobs we need to grab them.
     public static final String selectUserCareers
@@ -30,7 +40,7 @@ public final class queryLib
             + "AND Users.UserID = Careers.UserID "
             + "AND Professions.ProfessionID = Careers.ProfessionID";
 
-    private static final String selectUserSideJobs
+    public static final String selectUserSideJobs
             = "SELECT * "
             + "FROM Users, SideJobs, SubProfessions "
             + "WHERE Users.UserID = ? "
@@ -38,16 +48,13 @@ public final class queryLib
             + "AND SubProfessions.SubProfessionID = SideJobs.SubProfessionID";
 
     // Select a (User, Profession) pair's augments.
-    private static final String selectUserProfessionAugs
+    public static final String selectUserProfessionAugs
             = "SELECT * "
-            + "FROM Careers, UserProfHasAugments "
-            + "WHERE Careers.UserID = ? "
-            + "AND UserProfHasAugments.ProfessionID = ? "
-            + "AND Careers.UserID = UserProfHasAugments.UserID "
-            + "AND Careers.ProfessionID = UserProfHasAugments.ProfessionID";
+            + "FROM UserProfHasAugments "
+            + "WHERE UserID = ? ";
 
     // Select a (User, SubProfession) pair's augments
-    private static final String selectUserSideJobAugs
+    public static final String selectUserSideJobAugs
             = "SELECT * "
             + "FROM SideJobs, UserSideJobHasAugments "
             + "WHERE Careers.UserID = ? "

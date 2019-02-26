@@ -86,3 +86,6 @@ gradle-app.setting
 
 # Custom scripts that don't need to be versioned.
 *.spt
+
+# Any and all local library files
+lib/

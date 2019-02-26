@@ -14,11 +14,11 @@ public class SpongePlayer implements IPlayer
 {
 	private Player mPlayer;
 
-	private UnsignedLong mPlayerID ;
+	private Long mPlayerID ;
 	private String  mDBUsername;
 	private Integer mPlayerLevel;
 
-	public SpongePlayer (UnsignedLong dbID, String currentDBuname, Integer playerLevel, Player player)
+	public SpongePlayer (Long dbID, String currentDBuname, Integer playerLevel, Player player)
 	{
 		mPlayerID = dbID;
 		mDBUsername = currentDBuname;
@@ -31,7 +31,7 @@ public class SpongePlayer implements IPlayer
 		return mPlayer.getUniqueId ();
 	}
 
-	public UnsignedLong getInternalID ()
+	public Long getInternalID ()
 	{
 		return mPlayerID;
 	}
