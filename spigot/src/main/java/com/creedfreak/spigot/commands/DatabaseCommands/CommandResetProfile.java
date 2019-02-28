@@ -3,7 +3,7 @@ package com.creedfreak.spigot.commands.DatabaseCommands;
 import com.creedfreak.common.commands.CommandData;
 import com.creedfreak.common.commands.DatabaseCommand;
 import com.creedfreak.common.container.IPlayer;
-import com.creedfreak.common.database.databaseConn.Database;
+import com.creedfreak.common.database.connection.Database;
 
 /**
  * This command will reset a players CraftyPlayer and corresponding database object to whatever the given arguments

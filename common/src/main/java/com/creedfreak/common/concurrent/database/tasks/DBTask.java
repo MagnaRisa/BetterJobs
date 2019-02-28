@@ -1,6 +1,6 @@
 package com.creedfreak.common.concurrent.database.tasks;
 
-import com.creedfreak.common.database.databaseConn.Database;
+import com.creedfreak.common.database.connection.Database;
 import com.creedfreak.common.utility.Logger;
 
 import java.util.concurrent.ExecutorService;

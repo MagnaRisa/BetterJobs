@@ -3,8 +3,8 @@ package com.creedfreak.spigot.commands.DatabaseCommands;
 import com.creedfreak.common.commands.CommandData;
 import com.creedfreak.common.commands.DatabaseCommand;
 import com.creedfreak.common.container.IPlayer;
-import com.creedfreak.common.database.databaseConn.Database;
-import com.creedfreak.common.database.databaseConn.MySQL_Conn;
+import com.creedfreak.common.database.connection.Database;
+import com.creedfreak.common.database.connection.MySQL_Conn;
 import com.creedfreak.common.utility.Pair;
 
 import java.util.List;

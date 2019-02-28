@@ -203,3 +203,11 @@ CREATE TABLE IF NOT EXISTS SideJobSpecificAugments
 	CONSTRAINT SideJobSpecificAugments_AugmentID_FK FOREIGN KEY (AugmentID)
 		REFERENCES Augments (AugmentID) ON DELETE CASCADE
 ) Engine=InnoDB CHARACTER SET utf8 COLLATE utf8_bin;
+
+-- Create the settings table. This will house useful information about the database.
+CREATE TABLE IF NOT EXISTS Settings
+(
+  SettingID INT NOT NULL AUTO_INCREMENT,
+  SettingName VARCHAR (25) NOT NULL,
+  Active BOOLEAN NOT NULL DEFAULT FALSE
+) Engine=InnoDB CHARACTER SET utf8 COLLATE utf8_bin;

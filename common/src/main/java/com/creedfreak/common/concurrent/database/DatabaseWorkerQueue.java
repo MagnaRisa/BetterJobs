@@ -1,7 +1,7 @@
 package com.creedfreak.common.concurrent.database;
 
 import com.creedfreak.common.concurrent.database.tasks.DBTask;
-import com.creedfreak.common.database.databaseConn.Database;
+import com.creedfreak.common.database.connection.Database;
 import net.jcip.annotations.ThreadSafe;
 
 import java.util.concurrent.ExecutorService;

@@ -3,7 +3,7 @@ package com.creedfreak.spigot.commands.DatabaseCommands;
 import com.creedfreak.common.commands.CommandData;
 import com.creedfreak.common.commands.DatabaseCommand;
 import com.creedfreak.common.container.IPlayer;
-import com.creedfreak.common.database.databaseConn.Database;
+import com.creedfreak.common.database.connection.Database;
 
 /**
  * This command will handle the backing up of players in one database to another database,

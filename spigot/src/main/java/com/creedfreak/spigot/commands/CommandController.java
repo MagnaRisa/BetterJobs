@@ -5,7 +5,7 @@ import com.creedfreak.common.commands.AbsCmdController;
 import com.creedfreak.common.commands.ICommand;
 import com.creedfreak.common.container.IPlayer;
 import com.creedfreak.common.container.PlayerManager;
-import com.creedfreak.common.database.databaseConn.Database;
+import com.creedfreak.common.database.connection.Database;
 import com.creedfreak.common.exceptions.CommandException;
 import com.creedfreak.common.exceptions.CommandNotFoundException;
 import com.creedfreak.spigot.commands.DatabaseCommands.*;

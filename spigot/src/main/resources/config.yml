@@ -13,8 +13,11 @@ DatabaseType: SQLite
 # for the MySQL database.
 MySQL:
   # The Hostname of your SQL database
-  # Example: localhost:3306 or 127.0.0.1:3306
-  host: localhost:3306
+  # Example: localhost or 127.0.0.1
+  host: localhost
+
+  # The specified port to by used by SQL
+  port: 3306
 
   # The name of the database to use
   db_name: cp_testing

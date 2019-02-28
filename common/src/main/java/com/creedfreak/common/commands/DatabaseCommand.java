@@ -1,7 +1,7 @@
 package com.creedfreak.common.commands;
 
 import com.creedfreak.common.container.IPlayer;
-import com.creedfreak.common.database.databaseConn.Database;
+import com.creedfreak.common.database.connection.Database;
 import com.creedfreak.common.exceptions.CommandException;
 
 /**

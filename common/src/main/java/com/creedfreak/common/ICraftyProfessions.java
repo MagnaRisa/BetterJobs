@@ -1,7 +1,7 @@
 package com.creedfreak.common;
 
 import com.creedfreak.common.commands.AbsCmdController;
-import com.creedfreak.common.database.databaseConn.Database;
+import com.creedfreak.common.database.connection.Database;
 
 import java.io.File;
 import java.io.InputStream;

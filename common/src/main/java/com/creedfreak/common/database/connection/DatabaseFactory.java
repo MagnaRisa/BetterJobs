@@ -1,4 +1,4 @@
-package com.creedfreak.common.database.databaseConn;
+package com.creedfreak.common.database.connection;
 
 import com.creedfreak.common.AbsConfigController;
 import com.creedfreak.common.ICraftyProfessions;
@@ -15,12 +15,13 @@ public class DatabaseFactory {
 			db = new SQLite_Conn (plugin, config);
 		} else if (dbType.equalsIgnoreCase ("mysql")) {
 			String host = config.getString ("MySQL.host");
+			int port = config.getInt ("MySQL.port");
 			String database = config.getString ("MySQL.db_name");
 			String user = config.getString ("MySQL.user");
 			String identifier = config.getString ("MySQL.password");
 
 			Logger.Instance ().Info (Database.DATABASE_PREFIX, "Constructing MySQL Connection.");
-			db = new MySQL_Conn (plugin, config, host, database, user,
+			db = new MySQL_Conn (plugin, config, host, port, database, user,
 					identifier);
 		}
 

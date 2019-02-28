@@ -50,6 +50,7 @@ CREATE TABLE IF NOT EXISTS SubProfessions
 (
 	SubProfessionID INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
 	SubProfessionName VARCHAR (25) NOT NULL,
+  InternalName VARCHAR (25) NOT NULL,
 	Description TEXT DEFAULT NULL,
 	WageTableRef VARCHAR (30) NOT NULL,
 	TotalAugSlots INT UNSIGNED DEFAULT 0,
@@ -201,4 +202,12 @@ CREATE TABLE IF NOT EXISTS SideJobSpecificAugments
 		REFERENCES SubProfessions (SubProfessionID) ON DELETE CASCADE,
 	CONSTRAINT SideJobSpecificAugments_AugmentID_FK FOREIGN KEY (AugmentID)
 		REFERENCES Augments (AugmentID) ON DELETE CASCADE
+);
+
+-- Create the settings table. This will house useful information about the database.
+CREATE TABLE IF NOT EXISTS Settings
+(
+  SettingID INT NOT NULL AUTOINCREMENT,
+  SettingName VARCHAR (25) NOT NULL,
+  Active INT NOT NULL DEFAULT 0
 );

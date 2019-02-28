@@ -35,23 +35,23 @@ INSERT INTO Professions (ProfessionName, InternalName, WageTableRef, Description
 -- ---------------------------------------
 
 -- ID: 1
-INSERT INTO SubProfessions (SubProfessionName, WageTableRef, Description) VALUES ("The Arrow Smith", "arrow_smith", "arrow_smith_wage.json",
+INSERT INTO SubProfessions (SubProfessionName, InternalName, WageTableRef, Description) VALUES ("The Arrow Smith", "arrow_smith", "arrow_smith_wage.json",
 "Arrows, what a pain to craft…. Why would I want to craft all of those kewl new arrows? Now with the backing of payment for crafting such objects, maybe you’ll find a use for them.");
 
 -- ID: 2
-INSERT INTO SubProfessions (SubProfessionName, WageTableRef, Description) VALUES ("The Enchanter", "enchanter", "enchanter_wage.json",
+INSERT INTO SubProfessions (SubProfessionName, InternalName, WageTableRef, Description) VALUES ("The Enchanter", "enchanter", "enchanter_wage.json",
 "Have you ever lost all of your gear in the void and regretted the beautiful grind to get it back? Well fear no more *cough cough Malathier cough* because now there is an incentive to the grind by getting paid per enchantment.");
 
 -- ID: 3
-INSERT INTO SubProfessions (SubProfessionName, WageTableRef, Description) VALUES ("The Alchemist", "alchemist", "alchemist_wage.json",
+INSERT INTO SubProfessions (SubProfessionName, InternalName, WageTableRef, Description) VALUES ("The Alchemist", "alchemist", "alchemist_wage.json",
 "Is that a wart I see on your nose? Oh that is just your face, become the wicked witch and brew up dem potions to have more money to spend on your dark arts.");
 
 -- ID: 4
-INSERT INTO SubProfessions (SubProfessionName, WageTableRef, Description) VALUES ("The Merchant", "merchant", "merchant_wage.json",
+INSERT INTO SubProfessions (SubProfessionName, InternalName, WageTableRef, Description) VALUES ("The Merchant", "merchant", "merchant_wage.json",
 "Become the pompous arrogant Merchant when you trade with those weird unisex people from the far distant Nose-Opolis.");
 
 -- ID: 5
-INSERT INTO SubProfessions (SubProfessionName, WageTableRef, Description) VALUES ("The Chef", "chef", "chef_wage.json",
+INSERT INTO SubProfessions (SubProfessionName, InternalName, WageTableRef, Description) VALUES ("The Chef", "chef", "chef_wage.json",
 "When you gotta eat, you gotta eat. Fear no more about buying your food from the store! In stead get paid when you cook your food.");
 
 -- ----------------------------------------
@@ -134,3 +134,8 @@ INSERT INTO Augments (AugmentName, AugShorthand, MinLevel, Description) VALUES (
 INSERT INTO BonusTypes (BonusType) VALUES ("Experience");
 INSERT INTO BonusTypes (BonusType) VALUES ("Income");
 INSERT INTO BonusTypes (BonusType) VALUES ("[Token]");
+
+-- ----------------------------------
+-- Insertions for the Settings Table
+-- ----------------------------------
+INSERT INTO Settings (SettingName, Active) VALUES ("Setup", 1);

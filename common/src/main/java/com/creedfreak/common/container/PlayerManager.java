@@ -3,7 +3,7 @@ package com.creedfreak.common.container;
 import com.creedfreak.common.concurrent.database.DatabaseWorkerQueue;
 import com.creedfreak.common.concurrent.database.tasks.TaskCheckUserExist;
 import com.creedfreak.common.concurrent.database.tasks.TaskSavePlayer;
-import com.creedfreak.common.database.databaseConn.Database;
+import com.creedfreak.common.database.connection.Database;
 import com.creedfreak.common.utility.Logger;
 import net.jcip.annotations.GuardedBy;
 
@@ -30,7 +30,7 @@ public final class PlayerManager {
 	private static final PlayerManager mPlayerManager = new PlayerManager ();
 
 	private Logger mLogger;
-	private DatabaseWorkerQueue mWorkerQueue;
+	private DatabaseWorkerQueue mWorkerQueue = null;
 	private IPlayerFactory mPlayerFactory;
 
 	private ConcurrentHashMap<Long, IPlayer> mPlayerList;
@@ -160,6 +160,8 @@ public final class PlayerManager {
 	}
 
 	public void cleanupPlayerManager () {
-		mWorkerQueue.safeShutdown ();
+		if (mWorkerQueue != null) {
+			mWorkerQueue.safeShutdown ();
+		}
 	}
 }
