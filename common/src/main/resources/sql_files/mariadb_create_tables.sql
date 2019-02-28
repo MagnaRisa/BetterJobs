@@ -49,6 +49,7 @@ CREATE TABLE IF NOT EXISTS SubProfessions
 (
 	SubProfessionID INT NOT NULL AUTO_INCREMENT,
 	SubProfessionName VARCHAR (25) NOT NULL,
+  ProfessionName VARCHAR (25) NOT NULL,
 	Description TEXT DEFAULT NULL,
 	WageTableRef VARCHAR (30) NOT NULL,
 	TotalAugSlots INT UNSIGNED DEFAULT 0,

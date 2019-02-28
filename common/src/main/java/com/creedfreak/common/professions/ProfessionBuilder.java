@@ -17,6 +17,21 @@ public class ProfessionBuilder {
 			case "miner":
 				newProf = new ProfMiner (internalID, profStatus, level, prestigeLevel, expCurrent, expTotal);
 				break;
+			case "angler":
+				newProf = null;
+				break;
+			case "lumberjack":
+				newProf = null;
+				break;
+			case "knight":
+				newProf = null;
+				break;
+			case "architect":
+				newProf = null;
+				break;
+			case "farmer":
+				newProf = null;
+				break;
 			default:
 				newProf = null;
 		}
@@ -27,16 +42,31 @@ public class ProfessionBuilder {
 	/**
 	 * Builds a profession for the first time for a user who doesn't have information in the database.
 	 *
-	 * @param profession - The Profession to Build
+	 * @param internalName - The Profession to Build
 	 * @return The specified Profession
 	 */
-	public static Profession buildDefault (String profession) {
-		String lowerProfName = profession.toLowerCase ();
+	public static Profession buildDefault (String internalName) {
+		String lowerProfName = internalName.toLowerCase ();
 		Profession newProf;
 
 		switch (lowerProfName) {
 			case "miner":
 				newProf = new ProfMiner ();
+				break;
+			case "angler":
+				newProf = null;
+				break;
+			case "lumberjack":
+				newProf = null;
+				break;
+			case "knight":
+				newProf = null;
+				break;
+			case "architect":
+				newProf = null;
+				break;
+			case "farmer":
+				newProf = null;
 				break;
 			default:
 				newProf = null;
