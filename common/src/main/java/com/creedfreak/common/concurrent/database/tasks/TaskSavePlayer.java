@@ -29,11 +29,10 @@ public class TaskSavePlayer extends DBTask {
 	public void run () {
 		final Logger logger = Logger.Instance ();
 		final String subSystemPrefix = Thread.currentThread ().getName () + PREFIX;
-		final Connection conn = mDataPool.dbConnect ();
-		PreparedStatement savePlayer = null;
 
-		try {
-			savePlayer = conn.prepareStatement (insertUser);
+		try (Connection conn = mDataPool.dbConnect ();
+			PreparedStatement savePlayer = conn.prepareStatement (insertUser)) {
+			
 			savePlayer.setBytes (1, UuidUtil.toBytes (mPlayerID));
 			savePlayer.setString (2, mUsername);
 
@@ -49,10 +48,6 @@ public class TaskSavePlayer extends DBTask {
 				logger.Error (subSystemPrefix, "DataPool not set, can't execute task!");
 			}
 			except.printStackTrace ();
-		}
-		finally {
-			mDataPool.dbCloseResources (savePlayer);
-			mDataPool.dbClose ();
 		}
 	}
 }

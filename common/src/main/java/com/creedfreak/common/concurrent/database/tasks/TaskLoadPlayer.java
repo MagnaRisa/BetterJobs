@@ -2,7 +2,8 @@ package com.creedfreak.common.concurrent.database.tasks;
 
 import com.creedfreak.common.container.IPlayer;
 import com.creedfreak.common.container.PlayerManager;
-import com.creedfreak.common.database.queries.queryLib;
+import com.creedfreak.common.database.connection.Database;
+import com.creedfreak.common.database.queries.QueryLib;
 import com.creedfreak.common.professions.Augment;
 import com.creedfreak.common.professions.Profession;
 import com.creedfreak.common.professions.ProfessionBuilder;
@@ -70,9 +71,10 @@ public class TaskLoadPlayer extends DBTask {
 	// DEBUG: This method needs to be tested!
 	public void run () {
 		String subSystemPrefix = Thread.currentThread ().getName () + PREFIX;
-		IPlayer retPlayer = null;
-		PreparedStatement getPlayer = null;
+		Connection connection = mDataPool.dbConnect ();
+		PreparedStatement statement = null;
 		ResultSet resultSet = null;
+		IPlayer retPlayer;
 
 		Long playerID;
 		UUID playerUUID;
@@ -88,13 +90,13 @@ public class TaskLoadPlayer extends DBTask {
 			service.submit (augments);
 
 			if (mbUseDatabaseID) {
-				getPlayer = mDataPool.dbConnect ().prepareStatement (queryLib.selectUserDataFromDatabaseID);
-				getPlayer.setLong (1, mPlayerID);
+				statement = connection.prepareStatement (QueryLib.selectUserDataFromDatabaseID);
+				statement.setLong (1, mPlayerID);
 			} else {
-				getPlayer = mDataPool.dbConnect ().prepareStatement (queryLib.selectUserDataFromUUID);
-				getPlayer.setBytes (1, UuidUtil.toBytes (mPlayerUUID));
+				statement = connection.prepareStatement (QueryLib.selectUserDataFromUUID);
+				statement.setBytes (1, UuidUtil.toBytes (mPlayerUUID));
 			}
-			resultSet = getPlayer.executeQuery ();
+			resultSet = statement.executeQuery ();
 
 			if (resultSet.next ()) {
 				List<Profession> playerProfList;
@@ -142,8 +144,8 @@ public class TaskLoadPlayer extends DBTask {
 		}
 		finally {
 			service.shutdown ();
-			mDataPool.dbCloseResources (getPlayer, resultSet);
-			mDataPool.dbClose ();
+			Database.CloseResources (resultSet, statement);
+			Database.CloseConnection (connection);
 		}
 	}
 
@@ -167,7 +169,7 @@ public class TaskLoadPlayer extends DBTask {
 			ResultSet profResultSet = null;
 
 			try {
-				profStatement = connection.prepareStatement (queryLib.selectUserCareers);
+				profStatement = connection.prepareStatement (QueryLib.selectUserCareers);
 				profStatement.setLong (1, mPlayerID);
 				profResultSet = profStatement.executeQuery ();
 
@@ -179,8 +181,7 @@ public class TaskLoadPlayer extends DBTask {
 					Integer internalID = profResultSet.getInt ("ProfessionID");
 					String internalName = profResultSet.getString ("InternalName");
 					String profStatus = profResultSet.getString ("ProfStatus");
-
-					// TODO: Fix the Profesion Builder and build the plugin.
+					
 					professions.add (ProfessionBuilder.dbBuild (internalName, internalID,
 							profStatus, level, prestigeLevel, currentExp, totalExp));
 				}
@@ -189,8 +190,8 @@ public class TaskLoadPlayer extends DBTask {
 				Logger.Instance ().Error (subSystemPrefix, "SQL Error while retrieving player professions! SQLState: " + except.getSQLState ());
 			}
 			finally {
-				mDataPool.dbCloseResources (profStatement, profResultSet);
-				mDataPool.dbClose ();
+				Database.CloseResources (profResultSet, profStatement);
+				Database.CloseConnection (connection);
 			}
 
 			return professions;
@@ -216,11 +217,12 @@ public class TaskLoadPlayer extends DBTask {
 		public HashMap<Integer, List<Augment>> call () {
 			String subSystemPrefix = Thread.currentThread ().getName () + PREFIX;
 			HashMap<Integer, List<Augment>> augments = new HashMap<> ();
+			Connection connection = mDataPool.dbConnect ();
 			PreparedStatement statement = null;
 			ResultSet resultSet = null;
 
 			try {
-				statement = mDataPool.dbConnect ().prepareStatement (queryLib.selectUserProfessionAugs);
+				statement = connection.prepareStatement (QueryLib.selectUserProfessionAugs);
 				statement.setLong (1, mPlayerID);
 				resultSet = statement.executeQuery ();
 
@@ -242,8 +244,8 @@ public class TaskLoadPlayer extends DBTask {
 						"profession augments! SQLState Error " + except.getSQLState ());
 			}
 			finally {
-				mDataPool.dbCloseResources (statement, resultSet);
-				mDataPool.dbClose ();
+				Database.CloseResources (resultSet, statement);
+				Database.CloseConnection (connection);
 			}
 			return augments;
 		}

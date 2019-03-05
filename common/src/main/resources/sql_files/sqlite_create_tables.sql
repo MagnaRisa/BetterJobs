@@ -207,7 +207,7 @@ CREATE TABLE IF NOT EXISTS SideJobSpecificAugments
 -- Create the settings table. This will house useful information about the database.
 CREATE TABLE IF NOT EXISTS Settings
 (
-  SettingID INT NOT NULL AUTOINCREMENT,
+  SettingID INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
   SettingName VARCHAR (25) NOT NULL,
   Active INT NOT NULL DEFAULT 0
 );

@@ -2,6 +2,7 @@ package com.creedfreak.common.database.connection;
 
 import com.creedfreak.common.AbsConfigController;
 import com.creedfreak.common.ICraftyProfessions;
+import com.creedfreak.common.database.queries.QueryLib;
 import com.creedfreak.common.utility.Logger;
 import com.creedfreak.common.utility.SQLReader;
 import com.creedfreak.common.utility.TimeUtil;
@@ -60,47 +61,52 @@ public abstract class Database {
 	/**
 	 * The method will close the connection/s of the database.
 	 */
-	public abstract void dbClose ();
+	public abstract void shutdown ();
 
 	/**
 	 * Closes the prepared statement and result set passed in.
 	 *
-	 * @param stmt The statement to close.
 	 * @param set The result set to close.
+	 * @param stmt The statement to close.
 	 */
-	public static void dbCloseResources (PreparedStatement stmt, ResultSet set) {
+	public static void CloseResources (ResultSet set, PreparedStatement stmt) {
 		try {
 			if (set != null) {
 				set.close ();
 			}
-		}
-		catch (SQLException exception) {
-			mLogger.Error (DATABASE_PREFIX, "Failed to close result set " + exception.getMessage ());
-		}
-
-		try {
 			if (stmt != null) {
 				stmt.close ();
 			}
 		}
 		catch (SQLException exception) {
-			mLogger.Error (DATABASE_PREFIX, "Failed to close prepared statement " + exception.getMessage ());
+			mLogger.Error (DATABASE_PREFIX, "Failed to close a database resource " + exception.getMessage ());
 		}
 	}
 
 	/**
-	 * Closes the prepared statement passed in.
-	 *
-	 * @param stmt The statement to close.
+	 * Closes a prepared statement
 	 */
-	public static void dbCloseResources (PreparedStatement stmt) {
+	public static void CloseResources (PreparedStatement stmt) {
 		try {
 			if (stmt != null) {
 				stmt.close ();
 			}
 		}
 		catch (SQLException exception) {
-			mLogger.Error (DATABASE_PREFIX, "Failed to close prepared statement " + exception.getMessage ());
+			mLogger.Error (DATABASE_PREFIX, "Failed to close prepared resource " + exception.getMessage ());
+		}
+	}
+	
+	/**
+	 * Close a connection.
+	 */
+	public static void CloseConnection (Connection conn) {
+		try {
+			if (conn != null) {
+				conn.close ();
+			}
+		} catch (SQLException except) {
+			mLogger.Error (DATABASE_PREFIX, "Failed to close database connection " + except.getMessage ());
 		}
 	}
 
@@ -143,22 +149,20 @@ public abstract class Database {
 	 * This method will create the database tables/entities.
 	 */
 	protected boolean createTables () {
-		Connection connection = this.dbConnect ();
 		SQLReader reader = new SQLReader ();
+		Connection connection = this.dbConnect ();
 		PreparedStatement statement = null;
 		boolean retVal;
 		String sqlStmt;
 
 		try {
 			reader.openReader (mPlugin.openResource (this.getCreateTableStmts ()));
-
 			sqlStmt = reader.readStatement ();
 
 			while (!sqlStmt.equals (SQLReader.EOF)) {
 				statement = connection.prepareStatement (sqlStmt);
 				statement.execute ();
-
-				// executeStatement (sqlStmt, connection);
+				
 				if (sqlStmt.contains (SQL_CREATE_STMT)) {
 					mNumTables++;
 				}
@@ -171,8 +175,8 @@ public abstract class Database {
 			retVal = false;
 		}
 		finally {
-			dbCloseResources (statement);
-			dbClose ();
+			CloseResources (statement);
+			CloseConnection (connection);
 			reader.closeReader ();
 		}
 		return retVal;
@@ -192,7 +196,6 @@ public abstract class Database {
 
 		try {
 			reader.openReader (mPlugin.openResource (SQL_INSERT_STATEMENTS));
-
 			sqlStmt = reader.readStatement ();
 
 			while (!sqlStmt.equals (SQLReader.EOF)) {
@@ -212,8 +215,8 @@ public abstract class Database {
 			retVal =  false;
 		}
 		finally {
-			dbCloseResources (statement);
-			dbClose ();
+			CloseResources (statement);
+			CloseConnection (connection);
 			reader.closeReader ();
 		}
 		return retVal;
@@ -227,26 +230,20 @@ public abstract class Database {
 	 * */
 	private boolean checkDBExists () {
 		boolean tablesExist = false;
-		PreparedStatement statement = null;
-		ResultSet resultSet = null;
-		Connection conn = this.dbConnect ();
-		String sqlQuery =
-				"SELECT SettingName, Active " +
-				"FROM Settings " +
-				"WHERE SettingName = 'Setup'";
+//		Connection connection = this.dbConnect ();
+//		PreparedStatement statement = null;
+//		ResultSet resultSet = null;
 
-		try {
-			statement = conn.prepareStatement (sqlQuery);
-			resultSet = statement.executeQuery ();
+		try (Connection connection = this.dbConnect ();
+			PreparedStatement statement = connection.prepareStatement (QueryLib.checkDBEstablished);
+			ResultSet resultSet = statement.executeQuery ()) {
+			
 			tablesExist = resultSet.next ();
 		}
 		catch (SQLException exception) {
 			mLogger.Info (DATABASE_PREFIX, "Could not locate tables! Database has not been created yet, this is normal.");
 		}
-		finally {
-			dbCloseResources (statement, resultSet);
-			dbClose ();
-		}
+		
 		return tablesExist;
 	}
 }

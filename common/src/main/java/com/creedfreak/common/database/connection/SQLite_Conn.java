@@ -59,17 +59,16 @@ public class SQLite_Conn extends Database {
 
 		return mConnection;
 	}
-
-	/**
-	 * Closes the database connection.
-	 */
-	public void dbClose () {
+	
+	public void shutdown () {
 		try {
 			if (mConnection != null) {
-				mConnection.close ();
+				if (!mConnection.isClosed ()) {
+					mConnection.close ();
+				}
 			}
 		} catch (SQLException except) {
-			mLogger.Warn (Database.DATABASE_PREFIX, "Could not close database connection: " + except.getMessage ());
+			mLogger.Error (Database.DATABASE_PREFIX, "Something went wrong while disabling the database: " + except.getMessage ());
 		}
 	}
 

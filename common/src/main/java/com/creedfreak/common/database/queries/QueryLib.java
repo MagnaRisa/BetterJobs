@@ -7,7 +7,8 @@ package com.creedfreak.common.database.queries;
  * any type of SQL Injection while keeping all of the queries in one
  * easy to read and modify class.
  */
-public final class queryLib {
+public final class QueryLib
+{
 
 	public static final String checkUserExist
 			= "SELECT UUID, UserID, Username "
@@ -61,4 +62,13 @@ public final class queryLib {
 			+ "AND UserSideJobHasAugments.SubProfessionID = ? "
 			+ "AND Careers.UserID = UserSideJobHasAugments.UserID "
 			+ "AND Careers.SubProfessionID = UserSideJobHasAugments.SubProfessionID";
+	
+	public static final String checkDBEstablished
+			= "SELECT * "
+			+ "FROM Settings "
+			+ "WHERE SettingName = 'Setup'";
+	
+	public static final String checkSettings
+			= "SELECT * "
+			+ "FROM Settings ";
 }

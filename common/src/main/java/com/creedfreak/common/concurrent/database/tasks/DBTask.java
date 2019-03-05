@@ -56,8 +56,7 @@ public abstract class DBTask implements Runnable {
 		Delete (false),
 		Insert (false),
 		Query (true),
-		Check (true),
-		Poison (false);
+		Check (true);
 
 		private boolean bReturnable;
 
@@ -67,17 +66,6 @@ public abstract class DBTask implements Runnable {
 
 		public boolean getReturnable () {
 			return bReturnable;
-		}
-	}
-
-	public final class PoisonPill extends DBTask {
-
-		PoisonPill () {
-			super (DatabaseTaskType.Poison);
-		}
-
-		public void run () {
-			Logger.Instance ().Debug ("DB Thread", "Found poison pill, shutting down gracefully!");
 		}
 	}
 }

@@ -55,8 +55,8 @@ public class SQLReader {
 		try {
 			mSQLReader.close ();
 		}
-		catch (IOException exception) {
-			Logger.Instance ().Error (systemPrefix, "Could Not Close Resource:" + exception);
+		catch (IOException | NullPointerException except) {
+			Logger.Instance ().Error (systemPrefix, "Could Not Close Resource:" + except);
 		}
 	}
 

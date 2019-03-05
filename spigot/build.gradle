@@ -105,7 +105,17 @@ task spigotJar(type: Jar) {
     archiveName = archive
     dependsOn = spigotProjects.collect { it + ':compileJava' }
 
-    from files(spigotProjects.collect { project(it).sourceSets.main.output })
+    manifest {
+        attributes (
+            "Class-Path": project(':common').configurations.provided.asFileTree.files.collect { 'CraftyProfessions/' + it.getName() }.join(' ')
+        )
+    }
+
+    from {
+        files (
+            spigotProjects.collect { project(it).sourceSets.main.output },
+        )
+    }
 
     group = 'CP Spigot'
     description = 'Build the Spigot Jar file of CraftyProfessions'

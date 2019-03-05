@@ -65,7 +65,17 @@ task spongeJar(type: Jar) {
     archiveName = archive
     dependsOn = spongeProjects.collect { it + ':compileJava' }
 
-    from files(spongeProjects.collect { project(it).sourceSets.main.output })
+    manifest {
+        attributes (
+                "Class-Path": project(':common').configurations.provided.asFileTree.files.collect { 'CraftyProfessions/' + it.getName() }.join(' ')
+        )
+    }
+
+    from {
+        files (
+                spongeProjects.collect { project(it).sourceSets.main.output },
+        )
+    }
 
     group = 'CP Sponge'
     description = 'Build the Sponge Jar file of CraftyProfessions'

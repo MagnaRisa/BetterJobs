@@ -40,6 +40,11 @@ subprojects {
 
 allprojects {
     group = 'CraftyProfessions'
+
+    configurations {
+        provided
+        compile.extendsFrom(provided)
+    }
 }
 
 repositories {
