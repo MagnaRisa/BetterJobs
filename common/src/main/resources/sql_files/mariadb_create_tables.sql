@@ -15,6 +15,7 @@
  DROP TABLE IF EXISTS SubProfessions;
  DROP TABLE IF EXISTS Professions;
  DROP TABLE IF EXISTS Users;
+ DROP TABLE IF EXISTS Settings;
 
 -- Create the User Table
 CREATE TABLE IF NOT EXISTS Users
