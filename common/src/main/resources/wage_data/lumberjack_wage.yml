@@ -1,0 +1,16 @@
+# This is the main table for the Lumberjack_Payout
+Lumberjack_Payout :
+# 6 types of logs
+   LOG(0) : 0.15
+   LOG(1) : 0.03
+   LOG(2) : 0.15
+   LOG(3) : 0.03
+   LOG_2(0) : 0.15
+   LOG_2(1) : 0.015
+# 6 types of leaves
+   LEAVES(0) : 0.005
+   LEAVES(1) : 0.005
+   LEAVES(2) : 0.005
+   LEAVES(3) : 0.005
+   LEAVES_2(0) : 0.005
+   LEAVES_2(1) : 0.005
